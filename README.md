@@ -79,9 +79,9 @@ Before using luminateExtend.js, there are a few basic steps you must follow:
 Including the library
 ---------------------
 
-Once you've uploaded luminateExtend.js to your website, including the library on a page is easy -- simply 
-add the following script tag to the head, somewhere below where jQuery is included. Change out the 
-file path as needed, depending on where you uploaded the file.
+Once you've uploaded luminateExtend.js to your website, including the library on a page is easy &mdash; 
+simply add the following script tag to the head, somewhere below where jQuery is included. Change out 
+the file path as needed, depending on where you uploaded the file.
 
 ```  html
 <script src="../js/luminateExtend.js"></script>
@@ -167,8 +167,8 @@ The init method accepts an object containing the following:
    An object containing [authentication](http://open.convio.com/api/#main.auth_token.html) information 
    for the current user. This object contains `token`, the authentication token string, and `type`, 
    either "auth" or "sso_auth_token", depending on how the token was obtained. If you don't have an 
-   authentication token for the user, not a problem -- [luminateExtend.api](#apiObj) will automatically 
-   obtain a token when it needs one.
+   authentication token for the user, not a problem &mdash; [luminateExtend.api](#apiObj) will 
+   automatically obtain a token when it needs one.
  
  * path
    
