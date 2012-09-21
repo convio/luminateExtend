@@ -246,8 +246,8 @@ The api object contains the following:
    For older browsers which do not support CORS, namely IE8 and IE9, window.postMessage is *always* used. 
    (Note that the Microsoft-proprietary XDomainRequest is not used because of its limitations, most 
    importantly, the inability to set the Content-Type request header and the same-scheme policy.) For 
-   even *older* browsers which do not support window.postMessage, this method falls back to using a hash 
-   change transport.
+   even *older* browsers such as IE7 which do not support window.postMessage, this method falls back to 
+   using a hash change transport.
    
    The request method accepts one argument, an options object containing the following:
    
