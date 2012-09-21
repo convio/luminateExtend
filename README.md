@@ -160,7 +160,7 @@ The init method accepts an object containing the following:
  * apiKey
    
    The API Key for your organization's Luminate Online website. When using the library within Luminate 
-   Online, this can be defined dynamically using "[[S0:CONVIO_APIKEY]]".
+   Online, this can be defined dynamically using "[[S0:CONVIO_API_KEY]]".
  
  * auth
    
