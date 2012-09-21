@@ -242,11 +242,12 @@ The api object contains the following:
    header. By default, the request method uses XHR in these browsers. However, as currently the API does 
    not respond with the Access-Control-Allow-Credentials header needed to send cookies with cross-domain 
    requests, for any request that requires cookies (i.e. any request that requires authentication), 
-   window.postMessage is used instead. For older browsers which do not support CORS, namely IE8 and IE9, 
-   window.postMessage is *always* used. (Note that the Microsoft-proprietary XDomainRequest is not used 
-   because of its limitations, most importantly, the inability to set the Content-Type request header and 
-   the same-scheme policy.) For even older browsers which do not support window.postMessage, this method  
-   falls back to using a hash change transport.
+   [window.postMessage](https://developer.mozilla.org/en-US/docs/DOM/window.postMessage) is used instead. 
+   For older browsers which do not support CORS, namely IE8 and IE9, window.postMessage is *always* used. 
+   (Note that the Microsoft-proprietary XDomainRequest is not used because of its limitations, most 
+   importantly, the inability to set the Content-Type request header and the same-scheme policy.) For 
+   even *older* browsers which do not support window.postMessage, this method falls back to using a hash 
+   change transport.
    
    The request method accepts one argument, an options object containing the following:
    
@@ -315,8 +316,8 @@ The api object contains the following:
     - The value for `useHTTP` is determined by the protocol of the form action, or if the form action is 
     relative, by the protocol of the requesting page.
     - The values for `callback` and `requiresAuth` are set using an HTML5 data- attribute, 
-    data-luminateApi. This attribute should be an object. As the callback is a string, it should be 
-    defined in the global scope.
+    data-luminateApi. This attribute should be an object. Note that as the callback is provided as a 
+    string, it must be defined in the global scope.
    
    Here is an example of a fully functional login form, which will call the globally-defined 
    loginCallback after login:
@@ -337,7 +338,7 @@ The api object contains the following:
 luminateExtend.sessionVars
 --------------------------
 
-`luminateExtend.sessionVars` is used to set Luminate Online session variables.
+`luminateExtend.sessionVars` is used to manage Luminate Online session variables.
 
 The sessionVars object contains the following:
 
