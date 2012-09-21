@@ -306,15 +306,15 @@ The api object contains the following:
    
    When the request method is called ...
    
-    1. The value for `api` is determined by the form action, which can be either an absolute reference to 
+    - The value for `api` is determined by the form action, which can be either an absolute reference to 
     the API URL or a relative reference to the API servlet.
-    2. The value for `contentType` is set to the value of the enctype attribute if defined.
-    3. Any query strings included in the form action are passed as `data`.
-    4. The form's ID is passed as the value for `form`, and if the form has no ID, one is added.
-    5. The value for `requestType` is determined by the form method.
-    6. The value for `useHTTP` is determined by the protocol of the form action, or if the form action is 
+    - The value for `contentType` is set to the value of the enctype attribute if defined.
+    - Any query strings included in the form action are passed as `data`.
+    - The form's ID is passed as the value for `form`, and if the form has no ID, one is added.
+    - The value for `requestType` is determined by the form method.
+    - The value for `useHTTP` is determined by the protocol of the form action, or if the form action is 
     relative, by the protocol of the requesting page.
-    7. The values for `callback` and `requiresAuth` are set using an HTML5 data- attribute, 
+    - The values for `callback` and `requiresAuth` are set using an HTML5 data- attribute, 
     data-luminateApi. This attribute should be an object. As the callback is a string, it should be 
     defined in the global scope.
    
