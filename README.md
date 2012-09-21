@@ -64,7 +64,7 @@ Before using luminateExtend.js, there are a few basic steps you must follow:
    
    The library uses a hidden request to this PageBuilder page to handle cross-domain communication in 
    older browsers (and, in some cases, all browsers). See the description of 
-   [luminateExtend.api](#apiObj) for more details.
+   [luminateExtend.api.request](#apiObj) for more details.
  
  * Upload luminateExtend_client.html to your external website
    
@@ -448,7 +448,7 @@ The utils object contains the following:
    });
    ```
    
-   The simpleDateFormat accepts two arguments:
+   The simpleDateFormat method accepts two arguments:
    
    **unformattedDate:** The date to be formatted. Can be provided as either an ISO-8601 string, or as a 
    JavaScript Date object.
@@ -475,9 +475,10 @@ luminateExtend.js includes support for the following browsers:
 Reporting issues
 ----------------
 
-Should you encounter any issues when using this library, please report them here, using the "Issues" tab 
-above. If you have general questions about the library, or about the API in general, the fastest way 
-to get answers is to use the [Open APIs](http://community.convio.com/t5/Open-APIs/ct-p/OpenAPIs) section 
-on http://community.convio.com.
+Should you encounter any issues when using this library, please report them here, using the 
+["Issues"](https://github.com/noahcooper/luminateExtend/issues) tab above. If you have general 
+questions about the library, or about the API in general, the fastest way to get answers is to use 
+the [Open APIs](http://community.convio.com/t5/Open-APIs/ct-p/OpenAPIs) section on 
+http://community.convio.com.
 
 Enjoy!
