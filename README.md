@@ -1,7 +1,7 @@
 luminateExtend.js
 =================
 
-Version: 1.0 (21-SEP-2012)
+Version: 1.0 (21-SEP-2012)  
 Requires: jQuery v1.7+
 
 luminateExtend.js is a JavaScript library for use with 
@@ -11,22 +11,22 @@ luminateExtend.js is a JavaScript library for use with
 sprinkled in. The library includes support for [all major browsers](#libBrowsers), and can be used both 
 within and outside of Luminate Online.
 
-*TL;DR:* you can add donation forms and stuff to your organization's Drupal or Wordpress (or whatever) 
+**TL;DR:** you can add donation forms and stuff to your organization's Drupal or Wordpress (or whatever) 
 website!
 
 <a name="libToc"></a>
 Table of contents
 -----------------
 
-[Basic setup](#libSetup)
-[Including the library](#includingLib)
-[The luminateExtend object](#luminateExtendObj)
-[luminateExtend.library](#libraryObj)
-[luminateExtend.init](#initObj)
-[luminateExtend.api](#apiObj)
-[luminateExtend.sessionVars](#sessionVarsObj)
-[luminateExtend.utils](#utilsObj)
-[Browser support](#libBrowsers)
+[Basic setup](#libSetup)  
+[Including the library](#includingLib)  
+[The luminateExtend object](#luminateExtendObj)  
+[luminateExtend.library](#libraryObj)  
+[luminateExtend.init](#initObj)  
+[luminateExtend.api](#apiObj)  
+[luminateExtend.sessionVars](#sessionVarsObj)  
+[luminateExtend.utils](#utilsObj)  
+[Browser support](#libBrowsers)  
 [Reporting issues](#libIssues)
 
 <a name="libSetup"></a>
@@ -306,23 +306,24 @@ The api object contains the following:
    
    When the request method is called ...
    
-   1. The value for `api` is determined by the form action, which can be either an absolute reference to 
-   the API URL or a relative reference to the API servlet.
-   2. The value for `contentType` is set to the value of the enctype attribute if defined.
-   3. Any query strings included in the form action are passed as `data`.
-   4. The form's ID is passed as the value for `form`, and if the form has no ID, one is added.
-   5. The value for `requestType` is determined by the form method.
-   6. The value for `useHTTP` is determined by the protocol of the form action, or if the form action is 
-   relative, by the protocol of the requesting page.
-   7. The values for `callback` and `requiresAuth` are set using an HTML5 data- attribute, 
-   data-luminateApi. This attribute should be an object. As the callback is a string, it should be 
-   defined in the global scope.
+    1. The value for `api` is determined by the form action, which can be either an absolute reference to 
+    the API URL or a relative reference to the API servlet.
+    2. The value for `contentType` is set to the value of the enctype attribute if defined.
+    3. Any query strings included in the form action are passed as `data`.
+    4. The form's ID is passed as the value for `form`, and if the form has no ID, one is added.
+    5. The value for `requestType` is determined by the form method.
+    6. The value for `useHTTP` is determined by the protocol of the form action, or if the form action is 
+    relative, by the protocol of the requesting page.
+    7. The values for `callback` and `requiresAuth` are set using an HTML5 data- attribute, 
+    data-luminateApi. This attribute should be an object. As the callback is a string, it should be 
+    defined in the global scope.
    
    Here is an example of a fully functional login form, which will call the globally-defined 
    loginCallback after login:
    
    ``` html
-   <form method="POST" action="http://www.myorganization.com/site/CRConsAPI" class="luminateApi" data-luminateApi='{"callback": "loginCallback"}'>
+   <form method="POST" action="http://www.myorganization.com/site/CRConsAPI" class="luminateApi" 
+   data-luminateApi='{"callback": "loginCallback"}'>
      <input type="hidden" name="method" value="login" />
      <p><label for="login_username">Username:</label><br />
      <input id="login_username" name="user_name" /></p>
@@ -468,6 +469,7 @@ luminateExtend.js includes support for the following browsers:
  * Chrome 2+
  * Safari 4+ 
  * Opera 9+
+ * Android
 
 <a name="libIssues">
 Reporting issues
