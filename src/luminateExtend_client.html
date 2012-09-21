@@ -1,0 +1,20 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
+<script>
+$(function() {
+  var hashData = function(name) {
+    return decodeURIComponent(window.location.hash.split('&' + name + '=')[1].split('&')[0]);
+  }, 
+  hashTransportFrameId = hashData('hashTransportFrameId'), 
+  responseData = $.parseJSON(hashData('responseData')), 
+  topLib = parent.parent.luminateExtend;
+  
+  topLib.api.request.hashTransportEventHandler.handler(hashTransportFrameId, responseData);
+});
+</script>
+</head>
+<body>
+</body>
+</html>

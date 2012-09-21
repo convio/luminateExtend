@@ -1,0 +1,121 @@
+[[?xgetAuthx::x[[S334:action]]x::
+  [[U8:application/javascript]]
+  [[?
+    [[?[[S0:CONVIO_API_CROSSDOMAINS_TRUSTED]]::[[E130:"[[S50:Referer]]" dup dup "://" indexof 3 + swap length substring dup 0 swap "/" indexof substring]]::T::]]
+    [[?[[S0:CONVIO_API_CROSSDOMAINS_TRUSTED]]::*.[[E130:"[[S50:Referer]]" dup dup "://" indexof 3 + swap length substring dup 0 swap "/" indexof substring]]::T::]]
+    [[?[[S0:CONVIO_API_CROSSDOMAINS_TRUSTED]]::*.[[E130:"[[S50:Referer]]" dup dup "." indexof 1 + swap length substring dup 0 swap "/" indexof substring]]::T::]]
+  ::T::
+    [[?xx::x[[S334:callback]]x::::[[S334:callback]](]]{
+      "auth": {
+        "token": "[[S86:true]]", 
+        "type": "auth"
+      }, 
+      "sessionCookie": "[[E130:"[[T7:PixelServer]]" dup dup "?" indexof 1 + swap length substring]]"
+    }[[?xx::x[[S334:callback]]x::::)]]
+  ::
+    [[?xx::x[[S334:callback]]x::::[[S334:callback]](]]{
+       "error": "Requesting domain is not included in CONVIO_API_CROSSDOMAINS_TRUSTED"
+    }[[?xx::x[[S334:callback]]x::::)]]
+  ]]
+::
+[[?xpostMessagex::x[[S334:action]]x::
+  [[?
+    [[?[[S0:CONVIO_API_CROSSDOMAINS_TRUSTED]]::[[E130:"[[S50:Referer]]" dup dup "://" indexof 3 + swap length substring dup 0 swap "/" indexof substring]]::T::]]
+    [[?[[S0:CONVIO_API_CROSSDOMAINS_TRUSTED]]::*.[[E130:"[[S50:Referer]]" dup dup "://" indexof 3 + swap length substring dup 0 swap "/" indexof substring]]::T::]]
+    [[?[[S0:CONVIO_API_CROSSDOMAINS_TRUSTED]]::*.[[E130:"[[S50:Referer]]" dup dup "." indexof 1 + swap length substring dup 0 swap "/" indexof substring]]::T::]]
+  ::T::
+    <!DOCTYPE html>
+    <html>
+    <head>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
+    <script>
+    $(function() {
+      var postMessageHandler = function(e) {
+        var postMessageSource = e.source, 
+        postMessageOrigin = e.origin, 
+        postMessageData = $.parseJSON(e.data);
+        
+        $.ajax({
+          contentType: postMessageData.requestContentType, 
+          data: postMessageData.requestData, 
+          success: function(data) {
+            postMessageSource.postMessage('{' + 
+              '"postMessageFrameId": "' + postMessageData.postMessageFrameId + '", ' +
+              '"response": "' + encodeURIComponent(data) + '"' +
+            '}', postMessageOrigin);
+          }, 
+          type: postMessageData.requestType, 
+          url: postMessageData.requestUrl
+        });
+      };
+      
+      if(typeof window.addEventListener != 'undefined') {
+        window.addEventListener('message', postMessageHandler, false);
+      }
+      else if(typeof window.attachEvent != 'undefined') {
+        window.attachEvent('onmessage', postMessageHandler);
+      }
+    });
+    </script>
+    </head>
+    <body>
+    </body>
+    </html>
+  ::
+    <!DOCTYPE html>
+    <html>
+    <head>
+    </head>
+    <body>
+    </body>
+    </html>
+  ]]
+::
+[[?xhashTransportx::x[[S334:action]]x::
+  [[?
+    [[?[[S0:CONVIO_API_CROSSDOMAINS_TRUSTED]]::[[E130:"[[S50:Referer]]" dup dup "://" indexof 3 + swap length substring dup 0 swap "/" indexof substring]]::T::]]
+    [[?[[S0:CONVIO_API_CROSSDOMAINS_TRUSTED]]::*.[[E130:"[[S50:Referer]]" dup dup "://" indexof 3 + swap length substring dup 0 swap "/" indexof substring]]::T::]]
+    [[?[[S0:CONVIO_API_CROSSDOMAINS_TRUSTED]]::*.[[E130:"[[S50:Referer]]" dup dup "." indexof 1 + swap length substring dup 0 swap "/" indexof substring]]::T::]]
+  ::T::
+    <!DOCTYPE html>
+    <html>
+    <head>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
+    <script>
+    $(function() {
+      var hashData = function(name) {
+        return decodeURIComponent(window.location.hash.split('&' + name + '=')[1].split('&')[0]);
+      };
+      
+      $.ajax({
+        contentType: hashData('requestContentType'), 
+        data: hashData('requestData'), 
+        success: function(data) {
+          var hashTransportFrameId = hashData('hashTransportFrameId'), 
+          hashTransportUrl = hashData('hashTransportClientUrl');
+          
+          hashTransportUrl += '#&hashTransportFrameId=' + hashTransportFrameId + '&responseData=' + 
+                              encodeURIComponent(data);
+          
+          $('#luminateApiHashResponseFrame').attr('src', hashTransportUrl);
+        }, 
+        type: hashData('requestType'), 
+        url: hashData('requestUrl')
+      });
+    });
+    </script>
+    </head>
+    <body>
+    <iframe id="luminateApiHashResponseFrame" name="luminateApiHashResponseFrame" />
+    </body>
+    </html>
+  ::
+    <!DOCTYPE html>
+    <html>
+    <head>
+    </head>
+    <body>
+    </body>
+    </html>
+  ]]
+::]]]]]]
