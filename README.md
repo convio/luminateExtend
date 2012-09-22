@@ -160,7 +160,7 @@ The init method accepts an object containing the following:
 `apiCommon`
 
 An object containing the [common parameters](http://open.convio.com/api/#main.common_parameters.html) 
-to use with all API requests, including `categoryId`, `centerId`, `source`, and `subSource`.
+to use with all API requests, including **categoryId**, **centerId**, **source**, and **subSource**.
 
 `apiKey`
 
@@ -170,15 +170,15 @@ Online, this can be defined dynamically using "[[S0:CONVIO_API_KEY]]".
 `auth`
 
 An object containing [authentication](http://open.convio.com/api/#main.auth_token.html) information for 
-the current user. This object contains `token`, the authentication token string, and `type`, either 
+the current user. This object contains **token**, the authentication token string, and **type**, either 
 "auth" or "sso_auth_token", depending on how the token was obtained. If you don't have an authentication 
 token for the user, not a problem &mdash; [luminateExtend.api](#apiObj) will automatically obtain a token 
 when it needs one.
  
 `path`
 
-An object containing the URL path to your organization's Luminate Online website. `nonsecure` is the path 
-for requests made over HTTP, e.g. "http://www.myorganization.com/site/". `secure` is the path for 
+An object containing the URL path to your organization's Luminate Online website. **nonsecure** is the path 
+for requests made over HTTP, e.g. "http://www.myorganization.com/site/". **secure** is the path for 
 requests made over HTTPS, e.g. "https://secure2.convio.net/myorg/site/".
 
 <a name="globalObj"></a>
@@ -296,6 +296,12 @@ false for pages served over HTTP or true for pages served over HTTPS.
 The getAuth method is used to retrieve an auth token for the current user. The resulting token is stored 
 in luminateExtend.global. This method is automatically called by the request method if requiresAuth is 
 true and no auth token has been defined.
+
+``` js
+luminateExtend.api.getAuth();
+```
+
+The getAuth method accepts one argument, an options object containing the following:
 
 **callback:** The callback to be used after the auth token is retrieved. Note that unlike the request 
 method, the callback is passed no data.
