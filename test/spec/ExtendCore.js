@@ -1,4 +1,4 @@
-describe("ExtendCore", function() {
+describe("Extend Core", function() {
   var config, version = '1.0';
 
   beforeEach(function() {
@@ -15,15 +15,19 @@ describe("ExtendCore", function() {
     });
   });
 
-  it("should have a version", function() {
-    expect(luminateExtend.library.version).toEqual(version);
+  describe("Static Methods", function() {
+    it("should have a version", function() {
+      expect(luminateExtend.library.version).toEqual(version);
+    });
+
+    it("can update global setting", function() {
+      var updatedAPIKey = '987654321';
+
+      luminateExtend.global.update('apiKey', updatedAPIKey); 
+
+      expect(luminateExtend.global.apiKey).toEqual(updatedAPIKey);
+    });
   });
 
-  it("can update global setting", function() {
-    var updatedAPIKey = '987654321';
-
-    luminateExtend.global.update('apiKey', updatedAPIKey); 
-
-    expect(luminateExtend.global.apiKey).toEqual(updatedAPIKey);
-  });
 });
+
