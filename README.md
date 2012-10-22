@@ -25,7 +25,7 @@ Table of contents
 [luminateExtend.init](#initObj)  
 [luminateExtend.global](#globalObj)  
 [luminateExtend.api](#apiObj)  
-[luminateExtend.tags](#tagsObj)
+[luminateExtend.tags](#tagsObj)  
 [luminateExtend.sessionVars](#sessionVarsObj)  
 [luminateExtend.utils](#utilsObj)  
 [Browser support](#libBrowsers)  
@@ -397,6 +397,16 @@ The parse method accepts two arguments:
 **tagType:** The types of luminate tags to be evaluated, provided either as a string for a single type, or 
 an array for multiple types. The string "all" can be used to evaluate all luminate tags. Currently the only 
 supported tag type is "cons". If no value is provided, the default is "all".
+
+luminate:cons tags are evaluated using the [getUser](http://open.convio.com/api/#constituent_api) API 
+method. The field attribute is used to indicate which constituent field should be rendered.
+
+``` html
+Welcome back, <luminate:cons field="name.first"></luminate:cons>!
+```
+
+If the field specified does not exist, or if the constituent is not logged in, the parse method will 
+fail silently.
 
 **selector:** A selector for an element in which to limit the search for luminate tags. If no value is 
 provided, the default is "body".
