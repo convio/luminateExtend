@@ -96,7 +96,7 @@ uploaded the file.
 If you aren't yet including jQuery on your website, use the Google CDN.
 
 ```  html
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
 <script src="../js/luminateExtend.js"></script>
 ```
 
@@ -544,9 +544,9 @@ Browser support
 luminateExtend.js includes support for the following browsers:
 
  * IE7+
- * Firefox 3.5+
+ * Firefox 3.6+
  * Chrome 2+
- * Safari 4+ 
+ * Safari 4+
  * Opera 9+
  * Android
 
