@@ -1,8 +1,8 @@
 /*
  * luminateExtend.js
- * Version: 1.0 (21-SEP-2012)
- * Requires: jQuery v1.7+
- * Includes: SimpleDateFormatJS v1.0 (https://github.com/noahcooper/SimpleDateFormatJS)
+ * Version: 1.2 (22-OCT-2012)
+ * Requires: jQuery v1.6.4+
+ * Includes: SimpleDateFormatJS v1.1 (https://github.com/noahcooper/SimpleDateFormatJS)
  */
 
 (function($) {
@@ -30,7 +30,7 @@
                     ((luminateExtend.global.sessionCookie) ? ('&' + luminateExtend.global.sessionCookie) : '') + 
                     ((data) ? ('&' + data) : '');
     return serverUrl;
-  };  
+  };
   
   /* library core */
   window.luminateExtend = function(initOptions) {
@@ -42,7 +42,7 @@
   
   /* library info */
   luminateExtend.library = {
-    version: '1.0'
+    version: '1.2'
   };
   
   /* global settings */
@@ -93,166 +93,177 @@
     return luminateExtend;
   };
   
-  /* api core */
-  luminateExtend.api = {
-    bind: function(selector) {
-      selector = selector || 'form.luminateApi';
-      
-      if($(selector).length > 0) {
-        $(selector).each(function() {
-          if(this.nodeName.toLowerCase() == 'form') {
-            $(this).on('submit', function(e) {
-              e.cancelBubble = true;
-              e.returnValue  = false;
-              if(e.stopPropagation) {
-                e.stopPropagation();
-                e.preventDefault();
+  /* api */
+  luminateExtend.api = function(requestOptions) {
+    /* make luminateExtend.api an alias for the request method if called directly */
+    if(requestOptions) {
+      luminateExtend.api.request(requestOptions);
+    }
+  };
+  
+  luminateExtend.api.bind = function(selector) {
+    selector = selector || 'form.luminateApi';
+    
+    if($(selector).length > 0) {
+      $(selector).each(function() {
+        if(this.nodeName.toLowerCase() == 'form') {
+          $(this).bind('submit', function(e) {
+            e.cancelBubble = true;
+            e.returnValue  = false;
+            if(e.stopPropagation) {
+              e.stopPropagation();
+              e.preventDefault();
+            }
+            
+            var submitTimestamp = new Date().getTime();
+            
+            if(!$(this).attr('id')) {
+              $(this).attr('id', 'luminateApi-' + submitTimestamp);
+            }
+            
+            var formAction = $(this).attr('action'), 
+            formActionQuery = formAction.split('?'), 
+            formApiData = $(this).data('luminateapi'), 
+            
+            requestApi = (formActionQuery[0].indexOf('/site/') != -1) ? 
+                         formActionQuery[0].split('/site/')[1] : formActionQuery[0], 
+            requestCallback = null, 
+            requestContentType = $(this).attr('enctype'), 
+            requestData = (formActionQuery.length > 1) ? formActionQuery[1] : '', 
+            requestForm = '#' + $(this).attr('id'), 
+            requestRequiresAuth = false, 
+            requestType = $(this).attr('method'), 
+            requestUseHTTPS = false;
+            
+            if(formApiData) {
+              if(formApiData.callback) {
+                requestCallback = stringToObj(formApiData.callback);
               }
-              
-              var submitTimestamp = new Date().getTime();
-              
-              if(!$(this).attr('id')) {
-                $(this).attr('id', 'luminateApi-' + submitTimestamp);
+              if(formApiData.requiresAuth && formApiData.requiresAuth == 'true') {
+                requestRequiresAuth = true;
               }
-              
-              var formAction = $(this).attr('action'), 
-              formActionQuery = formAction.split('?'), 
-              formApiData = $(this).data('luminateapi'), 
-              
-              requestApi = (formActionQuery[0].indexOf('/site/') != -1) ? 
-                           formActionQuery[0].split('/site/')[1] : formActionQuery[0], 
-              requestCallback = null, 
-              requestContentType = $(this).attr('enctype'), 
-              requestData = (formActionQuery.length > 1) ? formActionQuery[1] : '', 
-              requestForm = '#' + $(this).attr('id'), 
-              requestRequiresAuth = false, 
-              requestType = $(this).attr('method'), 
-              requestUseHTTPS = false;
-              
-              if(formApiData) {
-                if(formApiData.callback) {
-                  requestCallback = stringToObj(formApiData.callback);
-                }
-                if(formApiData.requiresAuth && formApiData.requiresAuth == 'true') {
-                  requestRequiresAuth = true;
-                }
-                if(formAction.indexOf('https:') == 0 || 
-                   (window.location.protocol == 'https:' && formAction.indexOf('http') == -1)) {
-                  requestUseHTTPS = true;
-                }
+              if(formAction.indexOf('https:') == 0 || 
+                 (window.location.protocol == 'https:' && formAction.indexOf('http') == -1)) {
+                requestUseHTTPS = true;
               }
-              
-              luminateExtend.api.request({
-                api: requestApi, 
-                callback: requestCallback, 
-                contentType: requestContentType, 
-                data: requestData, 
-                form: requestForm,  
-                requestType: requestType, 
-                requiresAuth: requestRequiresAuth, 
-                useHTTPS: requestUseHTTPS
-              });
+            }
+            
+            luminateExtend.api.request({
+              api: requestApi, 
+              callback: requestCallback, 
+              contentType: requestContentType, 
+              data: requestData, 
+              form: requestForm,  
+              requestType: requestType, 
+              requiresAuth: requestRequiresAuth, 
+              useHTTPS: requestUseHTTPS
             });
-          }
-        });
-      }
+          });
+        }
+      });
+    }
+    
+    return luminateExtend;
+  };
+  
+  luminateExtend.api.getAuth = function(options) {
+    /* don't try to get an auth token if there's already a request outstanding */
+    if(luminateExtend.api.getAuthLoad) {
+      luminateExtend.api.getAuthLoad = false;
       
-      return luminateExtend;
-    }, 
-    
-    getAuth: function(options) {
-      /* don't try to get an auth token if there's already a request outstanding */
-      if(luminateExtend.api.getAuthLoad) {
-        luminateExtend.api.getAuthLoad = false;
-        
-        var settings = $.extend({
-          callback: null, 
-          returnLib: true, 
-          useHTTPS: false
-        }, options || {});
-        
-        $.ajax({
-          dataType: 'jsonp', 
-          success: function(data) {
-            luminateExtend.global.update(data);
-            luminateExtend.api.getAuthLoad = true;
-            
-            if(settings.callback != null) {
-              settings.callback();
-            }
-            
-            if(settings.returnLib) {
-              return luminateExtend;
-            }
-          }, 
-          url: buildServerUrl(settings.useHTTPS, 'action=getAuth&callback=?')
-        });
-      }
-      else {
-        var retryGetAuth = function() {
-          luminateExtend.api.getAuth(options); 
-        }, 
-        t = setTimeout(retryGetAuth, 1000);
-      }
-    }, 
-    
-    getAuthLoad: true, 
-    
-    request: function(options) {
       var settings = $.extend({
-        api: null, 
         callback: null, 
-        contentType: 'application/x-www-form-urlencoded', 
-        data: '', 
-        form: null, 
-        requestType: 'GET', 
-        requiresAuth: false, 
-        useHashTransport: false, 
-        useHTTPS: null
+        returnLib: true, 
+        useHTTPS: false
       }, options || {});
       
-      switch(settings.api.toLowerCase()) {
-        case 'addressbook':
-          settings.api = 'CRAddressBookAPI';
-          break;
-        case 'advocacy':
-          settings.api = 'CRAdvocacyAPI';
-          break;
-        case 'connect':
-          settings.api = 'CRConnectAPI';
-          break;
-        case 'cons':
-          settings.api = 'CRConsAPI';
-          break;
-        case 'content':
-          settings.api = 'CRContentAPI';
-          break;
-        case 'datasync':
-          settings.api = 'CRDataSyncAPI';
-          break;
-        case 'donation':
-          settings.api = 'CRDonationAPI';
-          break;
-        case 'event':
-          settings.api = 'CROrgEventAPI';
-          break;
-        case 'group':
-          settings.api = 'CRGroupAPI';
-          break;
-        case 'orgevent':
-          settings.api = 'CROrgEventAPI';
-          break;
-        case 'recurring':
-          settings.api = 'CRRecurringAPI';
-          break;
-        case 'survey':
-          settings.api = 'CRSurveyAPI';
-          break;
-        case 'teamraiser':
-          settings.api = 'CRTeamraiserAPI';
-          break;
-      }
-      
+      $.ajax({
+        dataType: 'jsonp', 
+        success: function(data) {
+          luminateExtend.global.update(data);
+          luminateExtend.api.getAuthLoad = true;
+          
+          if(settings.callback != null) {
+            settings.callback();
+          }
+          
+          if(settings.returnLib) {
+            return luminateExtend;
+          }
+        }, 
+        url: buildServerUrl(settings.useHTTPS, 'action=getAuth&callback=?')
+      });
+    }
+    else {
+      var retryGetAuth = function() {
+        luminateExtend.api.getAuth(options); 
+      }, 
+      t = setTimeout(retryGetAuth, 1000);
+    }
+  };
+  
+  luminateExtend.api.getAuthLoad = true;
+  
+  luminateExtend.api.request = function(options) {
+    var settings = $.extend({
+      api: null, 
+      callback: null, 
+      contentType: 'application/x-www-form-urlencoded', 
+      data: '', 
+      form: null, 
+      requestType: 'GET', 
+      requiresAuth: false, 
+      useHashTransport: false, 
+      useHTTPS: null
+    }, options || {});
+    
+    switch(settings.api.toLowerCase()) {
+      case 'addressbook':
+        settings.api = 'CRAddressBookAPI';
+        break;
+      case 'advocacy':
+        settings.api = 'CRAdvocacyAPI';
+        break;
+      case 'connect':
+        settings.api = 'CRConnectAPI';
+        break;
+      case 'cons':
+        settings.api = 'CRConsAPI';
+        break;
+      case 'content':
+        settings.api = 'CRContentAPI';
+        break;
+      case 'datasync':
+        settings.api = 'CRDataSyncAPI';
+        break;
+      case 'donation':
+        settings.api = 'CRDonationAPI';
+        break;
+      case 'event':
+        settings.api = 'CROrgEventAPI';
+        break;
+      case 'group':
+        settings.api = 'CRGroupAPI';
+        break;
+      case 'orgevent':
+        settings.api = 'CROrgEventAPI';
+        break;
+      case 'recurring':
+        settings.api = 'CRRecurringAPI';
+        break;
+      case 'survey':
+        settings.api = 'CRSurveyAPI';
+        break;
+      case 'teamraiser':
+        settings.api = 'CRTeamraiserAPI';
+        break;
+    }
+    
+    /* don't make the request unless we have all the required data */
+    if(luminateExtend.global.path.nonsecure && luminateExtend.global.path.nonsecure != null && 
+       luminateExtend.global.path.secure && luminateExtend.global.path.secure != null && 
+       luminateExtend.global.apiKey && luminateExtend.global.apiKey != null && 
+       settings.api) {
       if(settings.contentType != 'multipart/form-data') {
         settings.contentType = 'application/x-www-form-urlencoded';
       }
@@ -277,10 +288,10 @@
       else if(settings.data.indexOf('&response_format=') == -1) {
         settings.data += '&response_format=json';
       }
-      if(luminateExtend.global.source != null && settings.data.indexOf('&source=') == -1) {
+      if(luminateExtend.global.apiCommon.source != null && settings.data.indexOf('&source=') == -1) {
         settings.data += '&source=' + luminateExtend.global.apiCommon.source;
       }
-      if(luminateExtend.global.subSource != null && settings.data.indexOf('&sub_source=') == -1) {
+      if(luminateExtend.global.apiCommon.subSource != null && settings.data.indexOf('&sub_source=') == -1) {
         settings.data += '&sub_source=' + luminateExtend.global.apiCommon.subSource;
       }
       if(settings.data.indexOf('&suppress_response_codes=') == -1) {
@@ -394,10 +405,7 @@
           postMessageFrameId = 'luminateApiPostMessage' + postMessageTimestamp, 
           postMessageUrl = buildServerUrl(settings.useHTTPS, 'action=postMessage');
           
-          if(settings.requiresAuth && settings.data.indexOf('&' + luminateExtend.global.auth.type + '=') == -1) {
-            settings.data += '&' + luminateExtend.global.auth.type + '=' + luminateExtend.global.auth.token;
-          }
-          settings.data += '&' + luminateExtend.global.sessionCookie + '&ts=' + postMessageTimestamp;
+          settings.data += '&ts=' + postMessageTimestamp;
           
           if(!luminateExtend.api.request.postMessageEventHandler) {
             luminateExtend.api.request.postMessageEventHandler = {};
@@ -405,7 +413,12 @@
             luminateExtend.api.request.postMessageEventHandler.handler = function(e) {
               var parsedData = $.parseJSON(e.data), 
               messageFrameId = parsedData.postMessageFrameId, 
-              responseData = $.parseJSON(decodeURIComponent(parsedData.response));
+              responseData = $.parseJSON(decodeURIComponent(parsedData.response)), 
+              globalData = parsedData.global;
+              
+              if(globalData) {
+                luminateExtend.global.update(globalData);
+              }
               
               if(luminateExtend.api.request.postMessageEventHandler[messageFrameId]) {
                 luminateExtend.api.request.postMessageEventHandler[messageFrameId](messageFrameId, responseData);
@@ -413,7 +426,7 @@
             };
             
             if(typeof window.addEventListener != 'undefined') {
-              window.addEventListener('message', luminateExtend.api.request.postMessageEventHandler.handler);
+              window.addEventListener('message', luminateExtend.api.request.postMessageEventHandler.handler, false);
             }
             else if(typeof window.attachEvent != 'undefined') {
               window.attachEvent('onmessage', luminateExtend.api.request.postMessageEventHandler.handler);
@@ -439,8 +452,6 @@
               if(callbackFn) {
                 callbackFn(data);
               }
-              
-              return luminateExtend;
             }
             else {
               var newAuthCallback = function() {
@@ -453,7 +464,7 @@
             }
             
             $('#' + frameId).remove();
-                
+            
             delete luminateExtend.api.request.postMessageEventHandler[frameId];
           };
           
@@ -461,7 +472,7 @@
                            'name="' + postMessageFrameId + '" id="' + postMessageFrameId + '">' +  
                            '</iframe>');
           
-          $('#' + postMessageFrameId).on('load', function() {
+          $('#' + postMessageFrameId).bind('load', function() {
             var postMessageString = '{' + 
                                       '"postMessageFrameId": "' + $(this).attr('id') + '", ' + 
                                       '"requestUrl": "' + requestUrl + '", ' + 
@@ -486,10 +497,7 @@
           hashTransportClientUrl = window.location.protocol + '//' + document.domain + 
                                    '/luminateExtend_client.html';
           
-          if(settings.requiresAuth && settings.data.indexOf('&' + luminateExtend.global.auth.type + '=') == -1) {
-            settings.data += '&' + luminateExtend.global.auth.type + '=' + luminateExtend.global.auth.token;
-          }
-          settings.data += '&' + luminateExtend.global.sessionCookie + '&ts=' + hashTransportTimestamp;
+          settings.data += '&ts=' + hashTransportTimestamp;
           
           hashTransportUrl += '#&hashTransportClientUrl=' + encodeURIComponent(hashTransportClientUrl) + 
                               '&hashTransportFrameId=' + hashTransportFrameId + '&requestUrl=' + 
@@ -534,11 +542,13 @@
       }
       
       var getAuthToken = false;
-      if(settings.requiresAuth && luminateExtend.global.auth.token == null) {
-        getAuthToken = true;
-      }
-      else if(!isLuminateOnlineAndSameProtocol && luminateExtend.global.sessionCookie == null) {
-        getAuthToken = true;
+      if(useAjax == true) {
+        if(settings.requiresAuth && luminateExtend.global.auth.token == null) {
+          getAuthToken = true;
+        }
+        else if(!isLuminateOnlineAndSameProtocol && luminateExtend.global.sessionCookie == null) {
+          getAuthToken = true;
+        }
       }
       
       if(getAuthToken) {
@@ -567,6 +577,48 @@
         luminateExtend.utils.ping(pingOptions);
       }
     }
+  };
+  
+  /* luminate tags */
+  luminateExtend.tags = function(tagType, selector) {
+    /* make luminateExtend.tags an alias for the parse method if called directly */
+    luminateExtend.tags.parse(tagType, selector);
+  };
+  luminateExtend.tags.parse = function(tagType, selector) {
+    tagType = tagType || 'all';
+    if(tagType == 'all') {
+      tagType = ['cons'];
+    }
+    else {
+      tagType = luminateExtend.utils.ensureArray(tagType);
+    }
+    selector = selector || 'body';
+    
+    $.each(tagType, function() {
+      if(tagType == 'cons') {
+        var consTags = $(selector).find(document.getElementsByTagName('luminate:cons'));
+        if(consTags.length > 0) {
+          var parseConsTags = function(data) {
+            consTags.each(function() {
+              if(data.getConsResponse) {
+                $(this).replaceWith(stringToObj($(this).attr('field'), data.getConsResponse));
+              }
+              else {
+                $(this).remove();
+              }
+            });
+          };
+          
+          luminateExtend.api.request({
+            api: 'cons', 
+            callback: parseConsTags, 
+            data: 'method=getUser', 
+            requestType: 'POST', 
+            requiresAuth: true
+          });
+        }
+      }
+    });
   };
   
   /* public helper functions */
@@ -598,7 +650,7 @@
       $('body').append('<img style="position: absolute; left: -999em; top: 0;" ' + 
                        'id="' + pingImgId + '" />');
       
-      $('#' + pingImgId).on('load', function() {
+      $('#' + pingImgId).bind('load', function() {
         $(this).remove();
         
         if(settings.callback != null) {
@@ -810,7 +862,8 @@
                                      .replace(/MM/g, dateParts.month)
                                      .replace(/M/g, oneDigitNumber(dateParts.month))
                                      .replace(/march/g, 'March')
-                                     .replace(/may/g, 'May');
+                                     .replace(/may/g, 'May')
+                                     .replace(/Mayo/g, 'mayo');
         
         var formattedDayNames = ['Sunday', 
                                  'Monday', 

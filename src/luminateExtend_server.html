@@ -1,3 +1,7 @@
+[[?COMMENT::::::
+luminateExtend_server.html
+Version: 1.2 (22-OCT-2012)
+]]
 [[?xgetAuthx::x[[S334:action]]x::
   [[U8:application/javascript]]
   [[?
@@ -33,19 +37,33 @@
       var postMessageHandler = function(e) {
         var postMessageSource = e.source, 
         postMessageOrigin = e.origin, 
-        postMessageData = $.parseJSON(e.data);
+        postMessageData = $.parseJSON(e.data), 
+        requestData = postMessageData.requestData, 
+        authToken = '[[S86:true]]', 
+        sessionCookie = '[[E130:"[[T7:PixelServer]]" dup dup "?" indexof 1 + swap length substring]]';
+        
+        if(requestData.indexOf('&auth=') == -1) {
+          requestData += '&auth=' + authToken;
+        }
         
         $.ajax({
           contentType: postMessageData.requestContentType, 
-          data: postMessageData.requestData, 
+          data: requestData, 
           success: function(data) {
             postMessageSource.postMessage('{' + 
-              '"postMessageFrameId": "' + postMessageData.postMessageFrameId + '", ' +
-              '"response": "' + encodeURIComponent(data) + '"' +
+              '"postMessageFrameId": "' + postMessageData.postMessageFrameId + '", ' + 
+              '"response": "' + encodeURIComponent(data) + '", ' + 
+              '"global": {' + 
+                '"auth": {' + 
+                  '"token": "' + authToken + '",' + 
+                  '"type": "auth"' + 
+                '},' + 
+                '"sessionCookie": "' + sessionCookie + '"' + 
+              '}' + 
             '}', postMessageOrigin);
           }, 
           type: postMessageData.requestType, 
-          url: postMessageData.requestUrl
+          url: postMessageData.requestUrl + '?' + sessionCookie
         });
       };
       
@@ -85,22 +103,35 @@
     $(function() {
       var hashData = function(name) {
         return decodeURIComponent(window.location.hash.split('&' + name + '=')[1].split('&')[0]);
-      };
+      }, 
+      requestData = hashData('requestData'), 
+      authToken = '[[S86:true]]', 
+      sessionCookie = '[[E130:"[[T7:PixelServer]]" dup dup "?" indexof 1 + swap length substring]]';
+      
+      if(requestData.indexOf('&auth=') == -1) {
+        requestData += '&auth=' + authToken;
+      }
       
       $.ajax({
         contentType: hashData('requestContentType'), 
-        data: hashData('requestData'), 
+        data: requestData, 
         success: function(data) {
           var hashTransportFrameId = hashData('hashTransportFrameId'), 
           hashTransportUrl = hashData('hashTransportClientUrl');
           
           hashTransportUrl += '#&hashTransportFrameId=' + hashTransportFrameId + '&responseData=' + 
-                              encodeURIComponent(data);
+                              encodeURIComponent(data) + '&globalData=' + encodeURIComponent('{' + 
+                                '"auth": {' + 
+                                  '"token": "' + authToken + '",' + 
+                                  '"type": "auth"' + 
+                                '},' + 
+                                '"sessionCookie": "' + sessionCookie + '"' + 
+                              '}');
           
           $('#luminateApiHashResponseFrame').attr('src', hashTransportUrl);
         }, 
         type: hashData('requestType'), 
-        url: hashData('requestUrl')
+        url: hashData('requestUrl') + '?' + sessionCookie
       });
     });
     </script>

@@ -1,8 +1,8 @@
 luminateExtend.js
 =================
 
-Version: 1.0 (21-SEP-2012)  
-Requires: jQuery v1.7+
+Version: 1.2 (22-OCT-2012)  
+Requires: jQuery v1.6.4+
 
 luminateExtend.js is a JavaScript library for use with 
 [Luminate Online](http://www.convio.com/our-products/luminate/fundraising.html), a product of Blackbaud. 
@@ -25,6 +25,7 @@ Table of contents
 [luminateExtend.init](#initObj)  
 [luminateExtend.global](#globalObj)  
 [luminateExtend.api](#apiObj)  
+[luminateExtend.tags](#tagsObj)
 [luminateExtend.sessionVars](#sessionVarsObj)  
 [luminateExtend.utils](#utilsObj)  
 [Browser support](#libBrowsers)  
@@ -291,6 +292,20 @@ authentication. If true, an auth token is automatically appended to the request 
 this setting is ignored. Otherwise, the default depends on the protocol of the requesting page, meaning 
 false for pages served over HTTP or true for pages served over HTTPS.
 
+Note that as of v1.1, luminateExtend.api is an alias for the request method when called directly.
+
+```  js
+var myLoginTestCallback = function(data) {
+  console.log(data);
+};
+
+luminateExtend.api({
+  api: 'cons', 
+  callback: myLoginTestCallback, 
+  data: 'method=loginTest'
+});
+```
+
 `getAuth`
 
 The getAuth method is used to retrieve an auth token for the current user. The resulting token is stored 
@@ -347,6 +362,44 @@ data-luminateApi='{"callback": "loginCallback"}'>
   <p><input type="submit" value="Log In" /></p>
 </form>
 ```
+
+<a name="tagsObj"></a>
+luminateExtend.tags
+-------------------
+
+As of v1.2, `luminateExtend.tags` allows for using "luminate tags" which are evaluated client-side. 
+The purpose of these tags is to simplify the process of embedding dynamic content from Luminate Online. 
+Currently this is limited to presenting logged in users with information from their constituent record 
+using `luminate:cons` tags.
+
+``` html
+Welcome back, <luminate:cons field="name.first"></luminate:cons>!
+```
+
+The tags object contains the following:
+
+`parse`
+
+This method is used to parse all luminate tags of the specified type within a given selector.
+
+``` js
+luminateExtend.tags.parse();
+```
+
+luminateExtend.tags is an alias for the parse method when called directly.
+
+``` js
+luminateExtend.tags();
+```
+
+The parse method accepts two arguments:
+
+**tagType:** The types of luminate tags to be evaluated, provided either as a string for a single type, or 
+an array for multiple types. The string "all" can be used to evaluate all luminate tags. Currently the only 
+supported tag type is "cons". If no value is provided, the default is "all".
+
+**selector:** A selector for an element in which to limit the search for luminate tags. If no value is 
+provided, the default is "body".
 
 <a name="sessionVarsObj"></a>
 luminateExtend.sessionVars
