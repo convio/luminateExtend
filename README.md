@@ -1,7 +1,7 @@
 luminateExtend.js
 =================
 
-Version: 1.2 (22-OCT-2012)  
+Version: 1.3 (28-FEB-2013)  
 Requires: jQuery v1.6.4+
 
 luminateExtend.js is a JavaScript library for use with 
@@ -66,8 +66,7 @@ Before using luminateExtend.js, there are a few basic steps you must follow:
    [luminateExtend_server.html](https://github.com/noahcooper/luminateExtend/blob/master/luminateExtend_server.html).
    
    The library uses a hidden request to this PageBuilder page to handle cross-domain communication in 
-   older browsers (and, in some cases, all browsers). See the description of 
-   [luminateExtend.api.request](#apiObj) for more details.
+   older browsers. See the description of [luminateExtend.api.request](#apiObj) for more details.
  
  * Upload luminateExtend_client.html to your external website
    
@@ -96,7 +95,7 @@ uploaded the file.
 If you aren't yet including jQuery on your website, use the Google CDN.
 
 ```  html
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
 <script src="../js/luminateExtend.js"></script>
 ```
 
@@ -167,7 +166,7 @@ to use with all API requests, including **categoryId**, **centerId**, **source**
 
 The API Key for your organization's Luminate Online website. When using the library within Luminate 
 Online, this can be defined dynamically using "[[S0:CONVIO_API_KEY]]".
- 
+
 `auth`
 
 An object containing [authentication](http://open.convio.com/api/#main.auth_token.html) information for 
@@ -175,7 +174,15 @@ the current user. This object contains **token**, the authentication token strin
 "auth" or "sso_auth_token", depending on how the token was obtained. If you don't have an authentication 
 token for the user, not a problem &mdash; [luminateExtend.api](#apiObj) will automatically obtain a token 
 when it needs one.
- 
+
+`locale`
+
+The locale for the current user's session, comprised of an ISO-639 language code and an ISO-3166 country 
+code. Currently supported values are "en_US", "es_US", "en_CA", "fr_CA", "en_GB", and "en_AU". (Note that 
+the list of possible values varies by organization.) When a value is provided, the locale session variable 
+is immediately set, it is included in each API request, and the the default locale is set when using the 
+[simpleDateFormat method](#utilsObj).
+
 `path`
 
 An object containing the URL path to your organization's Luminate Online website. **nonsecure** is the path 
@@ -248,16 +255,14 @@ luminateExtend.api.request({
 
 The API supports the [Cross-Origin Resource Sharing (CORS)](http://www.w3.org/TR/cors/) spec. With CORS, 
 modern browsers including Firefox 3.5+, Chrome 2+, Safari 4+, Opera 12+, and IE10+ allow for natively 
-making cross-domain XMLHttpRequests thanks to the Access-Control-Allow-Origin HTTP response header. By 
-default, the request method uses XHR in these browsers. However, as currently the API does not respond 
-with the Access-Control-Allow-Credentials header needed to send cookies with cross-domain requests, for 
-any request that requires cookies (i.e. any request that requires authentication), 
-[window.postMessage](https://developer.mozilla.org/en-US/docs/DOM/window.postMessage) is used instead. 
-For older browsers which do not support CORS, namely IE8 and IE9, window.postMessage is *always* used. 
-(Note that the Microsoft-proprietary XDomainRequest is not used because of its limitations, most 
-importantly, the inability to set the Content-Type request header and the same-scheme policy.) For even 
-*older* browsers such as IE7 which do not support window.postMessage, this method falls back to using a 
-hash change transport.
+making cross-domain XMLHttpRequests thanks to the Access-Control-Allow-Origin HTTP response header. The 
+request method uses XHR in these browsers, and as of v1.3, sets the withCredentials property to true to 
+allow for cookies to be sent with each request. For older browsers which do not support CORS, namely IE8 
+and IE9, [window.postMessage](https://developer.mozilla.org/en-US/docs/DOM/window.postMessage) is used as 
+a polyfill. (Note that the Microsoft-proprietary XDomainRequest is not used because of its limitations, 
+most importantly, the inability to set the Content-Type request header and the same-scheme policy.) For 
+even *older* browsers such as IE7 which do not support window.postMessage, this method falls back to using 
+a hash change transport.
 
 The request method accepts one argument, an options object containing the following:
 
@@ -321,8 +326,11 @@ The getAuth method accepts one argument, an options object containing the follow
 **callback:** The callback to be used after the auth token is retrieved. Note that unlike the request 
 method, the callback is passed no data.
 
+**useCache:** A boolean indicating whether or not to use the existing authentication token if one is 
+available. The default is true.
+
 **useHTTPS:** A boolean indicating whether or not to use HTTPS when making the request.
- 
+
 `bind`
 
 The bind method is used to simplify the process of authoring HTML forms that are intended to call the API 
@@ -528,12 +536,17 @@ $.each(teamraisers, function() {
 });
 ```
 
-The simpleDateFormat method accepts two arguments:
+The simpleDateFormat method accepts three arguments:
 
 **unformattedDate:** The date to be formatted. Can be provided as either an ISO-8601 string, or as a 
 JavaScript Date object.
 
 **pattern:** The pattern to use when formatting the date.
+
+**locale:** The locale for returned dates. The names of months and days will be returned in the locale 
+provided. For example, if the locale is es_US, "d 'de' MMMM 'de' yyyy" will return a date such as 
+"6 de julio de 2012". If locale is fr_CA, "'le' d MMMM yyyy k'h'mm" will return a date such as 
+"le 6 juillet 2012 13h00". If no value is provided, the global locale is used.
 
 See [SimpleDateFormatJS](https://github.com/noahcooper/SimpleDateFormatJS) for additional documentation.
 
@@ -544,7 +557,7 @@ Browser support
 luminateExtend.js includes support for the following browsers:
 
  * IE7+
- * Firefox 3.6+
+ * Firefox 3.5+
  * Chrome 2+
  * Safari 4+
  * Opera 9+

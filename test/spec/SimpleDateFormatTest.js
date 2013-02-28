@@ -48,9 +48,7 @@ describe("SimpleDateFormat", function() {
       expect( sdf(dateObj.unformatted, "M/d/yy", 'en_CA') ).not.toBe( "28/1/70" );
     });
 
-    // TODO: https://github.com/noahcooper/luminateExtend/issues/16
-    // TODO: https://github.com/noahcooper/luminateExtend/issues/17
-    xit("given null pattern, should honor locale setting", function() {
+    it("given null pattern, should honor locale setting", function() {
       luminateExtend.global.update('locale', 'en_GB'); 
 
       expect( sdf(dateObj.unformatted, null) ).toBe( '28/1/70' );
@@ -289,8 +287,7 @@ describe("SimpleDateFormat", function() {
         expect( sdf( esUSApril, 'MMMM', 'es_US') ).toBe( 'abril' );
       });
 
-      // TODO: https://github.com/noahcooper/luminateExtend/issues/18
-      xit("should get May correct", function() {
+      it("should get May correct", function() {
         var esUSMay = new Date(esUSDateClone.valueOf());
         esUSMay.setMonth(4);
 
@@ -435,8 +432,7 @@ describe("SimpleDateFormat", function() {
         expect( sdf( frCAApril, 'MMMM', 'fr_CA') ).toBe( 'avril' );
       });
 
-      // TODO: https://github.com/noahcooper/luminateExtend/issues/18
-      xit("should get May correct", function() {
+      it("should get May correct", function() {
         var frCAMay = new Date(frCADateClone.valueOf());
         frCAMay.setMonth(4);
 

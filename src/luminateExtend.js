@@ -1,19 +1,18 @@
 /*
  * luminateExtend.js
- * Version: 1.2 (22-OCT-2012)
+ * Version: 1.3 (28-FEB-2013)
  * Requires: jQuery v1.6.4+
- * Includes: SimpleDateFormatJS v1.1 (https://github.com/noahcooper/SimpleDateFormatJS)
+ * Includes: SimpleDateFormatJS v1.2 (https://github.com/noahcooper/SimpleDateFormatJS)
  */
 
 (function($) {
   /* private helper functions */
   var stringToObj = function(str, obj) {
-    obj = obj || window;
-    var objReturn = obj;
+    var objReturn = obj || window;
     
     if(str) {
       var strParts = str.split('.');
-      for(i = 0; i < strParts.length; i++) {
+      for(var i = 0; i < strParts.length; i++) {
         if(i < (strParts.length - 1) && !objReturn[strParts[i]]) {
           objReturn[strParts[i]] = {};
         }
@@ -25,24 +24,22 @@
   }, 
   
   buildServerUrl = function(useHTTPS, data) {
-    var serverUrl = ((useHTTPS) ? (luminateExtend.global.path.secure + 'S') : luminateExtend.global.path.nonsecure) + 
+    var serverUrl = (useHTTPS ? (luminateExtend.global.path.secure + 'S') : luminateExtend.global.path.nonsecure) + 
                     'PageServer?pagename=luminateExtend_server&pgwrap=n' + 
-                    ((luminateExtend.global.sessionCookie) ? ('&' + luminateExtend.global.sessionCookie) : '') + 
-                    ((data) ? ('&' + data) : '');
+                    (luminateExtend.global.sessionCookie ? ('&' + luminateExtend.global.sessionCookie) : '') + 
+                    (data ? ('&' + data) : '');
     return serverUrl;
   };
   
   /* library core */
   window.luminateExtend = function(initOptions) {
     /* make luminateExtend an alias for the init method if called directly */
-    if(initOptions) {
-      luminateExtend.init(initOptions);
-    }
+    luminateExtend.init(initOptions || {});
   };
   
   /* library info */
   luminateExtend.library = {
-    version: '1.2'
+    version: '1.3'
   };
   
   /* global settings */
@@ -96,9 +93,7 @@
   /* api */
   luminateExtend.api = function(requestOptions) {
     /* make luminateExtend.api an alias for the request method if called directly */
-    if(requestOptions) {
-      luminateExtend.api.request(requestOptions);
-    }
+    luminateExtend.api.request(requestOptions || {});
   };
   
   luminateExtend.api.bind = function(selector) {
@@ -167,36 +162,43 @@
   };
   
   luminateExtend.api.getAuth = function(options) {
+    var settings = $.extend({
+      callback: null, 
+      useCache: true, 
+      useHTTPS: false
+    }, options || {});
+    
     /* don't try to get an auth token if there's already a request outstanding */
     if(luminateExtend.api.getAuthLoad) {
       luminateExtend.api.getAuthLoad = false;
       
-      var settings = $.extend({
-        callback: null, 
-        returnLib: true, 
-        useHTTPS: false
-      }, options || {});
-      
-      $.ajax({
-        dataType: 'jsonp', 
-        success: function(data) {
-          luminateExtend.global.update(data);
-          luminateExtend.api.getAuthLoad = true;
-          
-          if(settings.callback != null) {
-            settings.callback();
-          }
-          
-          if(settings.returnLib) {
-            return luminateExtend;
-          }
-        }, 
-        url: buildServerUrl(settings.useHTTPS, 'action=getAuth&callback=?')
-      });
+      if(settings.useCache && luminateExtend.global.auth && luminateExtend.global.auth.token && 
+         luminateExtend.global.auth.token != null && luminateExtend.global.auth.type && 
+         luminateExtend.global.auth.type != null) {
+        luminateExtend.api.getAuthLoad = true;
+        
+        if(settings.callback != null) {
+          settings.callback();
+        }
+      }
+      else {
+        $.ajax({
+          dataType: 'jsonp', 
+          success: function(data) {
+            luminateExtend.global.update(data);
+            luminateExtend.api.getAuthLoad = true;
+            
+            if(settings.callback != null) {
+              settings.callback();
+            }
+          }, 
+          url: buildServerUrl(settings.useHTTPS, 'action=getAuth&callback=?')
+        });
+      }
     }
     else {
       var retryGetAuth = function() {
-        luminateExtend.api.getAuth(options); 
+        luminateExtend.api.getAuth(settings);
       }, 
       t = setTimeout(retryGetAuth, 1000);
     }
@@ -217,53 +219,20 @@
       useHTTPS: null
     }, options || {});
     
-    switch(settings.api.toLowerCase()) {
-      case 'addressbook':
-        settings.api = 'CRAddressBookAPI';
-        break;
-      case 'advocacy':
-        settings.api = 'CRAdvocacyAPI';
-        break;
-      case 'connect':
-        settings.api = 'CRConnectAPI';
-        break;
-      case 'cons':
-        settings.api = 'CRConsAPI';
-        break;
-      case 'content':
-        settings.api = 'CRContentAPI';
-        break;
-      case 'datasync':
-        settings.api = 'CRDataSyncAPI';
-        break;
-      case 'donation':
-        settings.api = 'CRDonationAPI';
-        break;
-      case 'event':
-        settings.api = 'CROrgEventAPI';
-        break;
-      case 'group':
-        settings.api = 'CRGroupAPI';
-        break;
-      case 'orgevent':
-        settings.api = 'CROrgEventAPI';
-        break;
-      case 'recurring':
-        settings.api = 'CRRecurringAPI';
-        break;
-      case 'survey':
-        settings.api = 'CRSurveyAPI';
-        break;
-      case 'teamraiser':
-        settings.api = 'CRTeamraiserAPI';
-        break;
+    var servletShorthand = ['addressbook', 'advocacy', 'connect', 'cons', 'content', 'datasync', 'donation', 
+                            'event', 'group', 'orgevent', 'recurring', 'survey', 'teamraiser'];
+    if($.inArray(settings.api.toLowerCase(), servletShorthand) >= 0) {
+      /* add "CR", capitalize the first letter, and add "API" */
+      settings.api = 'CR' + settings.api.charAt(0).toUpperCase() + settings.api.slice(1).toLowerCase() + 'API';
+      /* special cases where a letter in the middle of the servlet name needs to be capitalized */
+      settings.api = settings.api.replace('Addressbook', 'AddressBook').replace('Datasync', 'DataSync');
     }
     
     /* don't make the request unless we have all the required data */
-    if(luminateExtend.global.path.nonsecure && luminateExtend.global.path.nonsecure != null && 
-       luminateExtend.global.path.secure && luminateExtend.global.path.secure != null && 
-       luminateExtend.global.apiKey && luminateExtend.global.apiKey != null && 
-       settings.api) {
+    if(luminateExtend.global.path && luminateExtend.global.path.nonsecure && 
+       luminateExtend.global.path.nonsecure != null && luminateExtend.global.path.secure && 
+       luminateExtend.global.path.secure != null && luminateExtend.global.apiKey && 
+       luminateExtend.global.apiKey != null && settings.api) {
       if(settings.contentType != 'multipart/form-data') {
         settings.contentType = 'application/x-www-form-urlencoded';
       }
@@ -297,16 +266,14 @@
       if(settings.data.indexOf('&suppress_response_codes=') == -1) {
         settings.data += '&suppress_response_codes=true';
       }
+      if(luminateExtend.global.locale != null && settings.data.indexOf('&s_locale=') == -1) {
+        settings.data += '&s_locale=' + luminateExtend.global.locale;
+      }
       if(settings.data.indexOf('&v=') == -1) {
         settings.data += '&v=1.0';
       }
       
-      if(settings.requestType.toLowerCase() == 'post') {
-        settings.requestType = 'POST';
-      }
-      else {
-        settings.requestType = 'GET';
-      }
+      settings.requestType = (settings.requestType.toLowerCase() == 'post') ? 'POST' : 'GET';
       
       var requestUrl = 'http://', 
       requestPath = luminateExtend.global.path.nonsecure.split('http://')[1];
@@ -327,18 +294,14 @@
       var isLuminateOnlineAndSameProtocol = false, 
       useAjax = false, 
       usePostMessage = false;
-      if(window.location.protocol == requestUrl.split('//')[0] && document.domain == requestPath.split('/')[0] && !settings.useHashTransport) {
+      if(window.location.protocol == requestUrl.split('//')[0] && document.domain == requestPath.split('/')[0] && 
+         !settings.useHashTransport) {
         isLuminateOnlineAndSameProtocol = true, 
         useAjax = true;
       }
       else {
         var requestXHR = new XMLHttpRequest();
-        /* don't use AJAX if auth is required as API does not send Access-Control-Allow-Credentials 
-           response header needed to make use of CORS withCredentials (E-61857) */
-        if('withCredentials' in requestXHR && !settings.requiresAuth && 
-           !((settings.data.indexOf('&method=login') != -1 && 
-              settings.data.indexOf('&method=loginTest') == -1) || 
-             settings.data.indexOf('&method=logout') != -1) && !settings.useHashTransport) {
+        if('withCredentials' in requestXHR && !settings.useHashTransport) {
           useAjax = true;
         }
         else if('postMessage' in window && !settings.useHashTransport) {
@@ -354,7 +317,7 @@
           if(settings.requiresAuth && settings.data.indexOf('&' + luminateExtend.global.auth.type + '=') == -1) {
             settings.data += '&' + luminateExtend.global.auth.type + '=' + luminateExtend.global.auth.token;
           }
-          settings.data += '&' + luminateExtend.global.sessionCookie + '&ts=' + ajaxTimestamp;
+          settings.data += '&ts=' + ajaxTimestamp;
           
           $.ajax({
             contentType: settings.contentType, 
@@ -390,12 +353,16 @@
                 };
                 luminateExtend.api.getAuth({
                   callback: newAuthCallback, 
+                  useCache: false, 
                   useHTTPS: settings.useHTTPS
                 });
               }
             }, 
             type: settings.requestType, 
-            url: requestUrl
+            url: requestUrl, 
+            xhrFields: {
+              withCredentials: true
+            }
           });
         };
       }
@@ -459,6 +426,7 @@
               };
               luminateExtend.api.getAuth({
                 callback: newAuthCallback, 
+                useCache: false, 
                 useHTTPS: settings.useHTTPS
               });
             }
@@ -542,19 +510,14 @@
       }
       
       var getAuthToken = false;
-      if(useAjax == true) {
-        if(settings.requiresAuth && luminateExtend.global.auth.token == null) {
-          getAuthToken = true;
-        }
-        else if(!isLuminateOnlineAndSameProtocol && luminateExtend.global.sessionCookie == null) {
-          getAuthToken = true;
-        }
+      if(settings.requiresAuth || 
+         (!useAjax && !isLuminateOnlineAndSameProtocol && luminateExtend.global.sessionCookie == null)) {
+        getAuthToken = true;
       }
       
       if(getAuthToken) {
         luminateExtend.api.getAuth({
           callback: doRequest, 
-          returnLib: false, 
           useHTTPS: settings.useHTTPS
         });
       }
@@ -572,7 +535,7 @@
         pingOptions.callback = callback;
       }
       if(varName) {
-        pingOptions.data = 's_' + varName + '=' + ((varValue) ? varValue : '');
+        pingOptions.data = 's_' + varName + '=' + (varValue || '');
         
         luminateExtend.utils.ping(pingOptions);
       }
@@ -644,8 +607,10 @@
       var pingTimestamp = new Date().getTime(), 
       pingImgId = 'luminatePing' + pingTimestamp, 
       pingUrl = ((window.location.protocol == 'https:') ? luminateExtend.global.path.secure : 
-                 luminateExtend.global.path.nonsecure) + 'PixelServer' + 
-                ((settings.data == null) ? '' : ('?' + settings.data));
+                 luminateExtend.global.path.nonsecure) + 'EstablishSession?' + 
+                ((settings.data == null) ? '' : (settings.data + '&')) + 'NEXTURL=' + 
+                encodeURIComponent(((window.location.protocol == 'https:') ? luminateExtend.global.path.secure : 
+                 luminateExtend.global.path.nonsecure) + 'PixelServer');
       
       $('body').append('<img style="position: absolute; left: -999em; top: 0;" ' + 
                        'id="' + pingImgId + '" />');
@@ -666,11 +631,11 @@
     simpleDateFormat: function(unformattedDate, pattern, locale) {
       locale = locale || luminateExtend.global.locale;
       locale = (locale == 'es_US' || locale == 'en_CA' || locale == 'fr_CA' || 
-                locale == 'en_GB') ? locale : 'en_US';
-      pattern = pattern || ((this.locale == 'en_CA' || this.locale == 'fr_CA' || 
-                             this.locale == 'en_GB') ? 'd/M/yy' : 'M/d/yy');
+                locale == 'en_GB' || locale == 'en_AU') ? locale : 'en_US';
+      pattern = pattern || ((locale == 'en_CA' || locale == 'fr_CA' || 
+                             locale == 'en_GB' || locale == 'en_AU') ? 'd/M/yy' : 'M/d/yy');
       unformattedDate = unformattedDate || new Date();
-      if(!(unformattedDate instanceof Date)) { 
+      if(!(unformattedDate instanceof Date)) {
         var unformattedDateParts = unformattedDate.split('T')[0].split('-'), 
         unformattedDateTimeParts = (unformattedDate.split('T').length > 1) ? unformattedDate.split('T')[1]
                                                                                             .split('.')[0]
@@ -686,14 +651,14 @@
       var oneDigitNumber = function(num) {
         num = '' + num;
         return (num.indexOf('0') == 0 && num != '0') ? num.substring(1) : num;
-      };
+      }, 
       
-      var twoDigitNumber = function(num) {
+      twoDigitNumber = function(num) {
         num = Number(num);
         return (isNaN(num)) ? '00' : (((num < 10) ? '0' : '') + num);
-      };
+      }, 
       
-      var dateParts = {
+      dateParts = {
         month: twoDigitNumber(unformattedDate.getMonth() + 1), 
         date: twoDigitNumber(unformattedDate.getDate()), 
         year: twoDigitNumber(unformattedDate.getFullYear()), 
@@ -715,9 +680,9 @@
       }
       dateParts.hour12 = twoDigitNumber(dateParts.hour12);
       
-      var formattedDate;
+      var formattedDate, 
       
-      var patternReplace = function(patternPart) {
+      patternReplace = function(patternPart) {
         var patternPartFormatted = patternPart.replace(/yy+(?=y)/g, 'yy')
                                               .replace(/MMM+(?=M)/g, 'MMM')
                                               .replace(/d+(?=d)/g, 'd')
@@ -725,16 +690,16 @@
                                               .replace(/a+(?=a)/g, '')
                                               .replace(/k+(?=k)/g, 'k')
                                               .replace(/h+(?=h)/g, 'h')
-                                              .replace(/m+(?=m)/g, 'm');
+                                              .replace(/m+(?=m)/g, 'm'), 
         
-        var formattedPart = patternPartFormatted.replace(/yyy/g, dateParts.year)
+        formattedPart = patternPartFormatted.replace(/yyy/g, dateParts.year)
                                                 .replace(/yy/g, dateParts.year.substring(2))
                                                 .replace(/y/g, dateParts.year)
                                                 .replace(/dd/g, dateParts.date)
                                                 .replace(/d/g, oneDigitNumber(dateParts.date)), 
         
         adjustTimePattern = function(timeParts, timePatternPart, operator) {
-          for(i = 1; i < timeParts.length; i++) {
+          for(var i = 1; i < timeParts.length; i++) {
             if(!isNaN(timeParts[i].substring(0, 1))) {
               var timePartOperand = timeParts[i].substring(0, 2);
               timeParts[i] = timeParts[i].substring(2);
@@ -844,17 +809,17 @@
         }
         if(locale == 'fr_CA') {
           formattedMonthNames = ['janvier', 
-                                 'f&#233;vrier', 
+                                 'f&' + '#233;vrier', 
                                  'mars', 
                                  'avril', 
                                  'mai', 
                                  'juin', 
                                  'juillet', 
-                                 'ao&#251;t', 
+                                 'ao&' + '#251;t', 
                                  'septembre', 
                                  'octobre', 
                                  'novembre', 
-                                 'd&#233;cembre'];
+                                 'd&' + '#233;cembre'];
         }
         formattedPart = formattedPart.replace(/MMMM/g, formattedMonthNames[Number(dateParts.month) - 1])
                                      .replace(/MMM/g, formattedMonthNames[Number(dateParts.month) - 1]
@@ -876,10 +841,10 @@
           formattedDayNames = ['domingo', 
                                'lunes', 
                                'martes', 
-                               'mi&eacute;rcoles', 
+                               'mi&' + 'eacute;rcoles', 
                                'jueves', 
                                'viernes', 
-                               's&aacute;bado'];
+                               's&' + 'aacute;bado'];
         }
         if(locale == 'fr_CA') {
           formattedDayNames = ['dimanche', 
@@ -910,7 +875,7 @@
         var formatPatternParts = pattern.replace(/\'+(?=\')/g, '\'\'').split('\'\'');
         if(formatPatternParts.length == 1) {
           formatPatternParts = pattern.split('\'');
-          for(i = 0; i < formatPatternParts.length; i++) {
+          for(var i = 0; i < formatPatternParts.length; i++) {
             if(i % 2 == 0) {
               formatPatternParts[i] = patternReplace(formatPatternParts[i]);
             }
@@ -918,9 +883,9 @@
           return formatPatternParts.join('');
         }
         else {
-          for(i = 0; i < formatPatternParts.length; i++) {
+          for(var i = 0; i < formatPatternParts.length; i++) {
             formatPatternParts2 = formatPatternParts[i].split('\'');
-            for(j = 0; j < formatPatternParts2.length; j++) {
+            for(var j = 0; j < formatPatternParts2.length; j++) {
               if(j % 2 == 0) {
                 formatPatternParts2[j] = patternReplace(formatPatternParts2[j]);
               }

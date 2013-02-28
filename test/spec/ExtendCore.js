@@ -1,5 +1,5 @@
 describe("Extend Core", function() {
-  var config, version = '1.0';
+  var config, version = '1.3';
 
   beforeEach(function() {
     $(function() {
