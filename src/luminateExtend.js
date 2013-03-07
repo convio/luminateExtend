@@ -1,6 +1,6 @@
 /*
  * luminateExtend.js
- * Version: 1.3 (28-FEB-2013)
+ * Version: 1.3.1 (07-MAR-2013)
  * Requires: jQuery v1.6.4+
  * Includes: SimpleDateFormatJS v1.2 (https://github.com/noahcooper/SimpleDateFormatJS)
  */
@@ -23,12 +23,63 @@
     return objReturn;
   }, 
   
+  validateLocale = function(locale) {
+    /* if a locale is provided that is not supported, default to "en_US" */
+    if(locale && $.inArray(locale, ['es_US', 'en_CA', 'fr_CA', 'en_GB', 'en_AU']) < 0) {
+      locale = 'en_US';
+    }
+    
+    return locale;
+  }, 
+  
+  setLocale = function(locale) {
+    if(locale && locale != null) {
+      locale = validateLocale(locale);
+      luminateExtend.sessionVars.set('locale', locale);
+    }
+    
+    return locale;
+  }, 
+  
   buildServerUrl = function(useHTTPS, data) {
     var serverUrl = (useHTTPS ? (luminateExtend.global.path.secure + 'S') : luminateExtend.global.path.nonsecure) + 
                     'PageServer?pagename=luminateExtend_server&pgwrap=n' + 
                     (luminateExtend.global.sessionCookie ? ('&' + luminateExtend.global.sessionCookie) : '') + 
                     (data ? ('&' + data) : '');
     return serverUrl;
+  }, 
+  
+  apiCallbackHandler = function(requestSettings, responseData) {
+    var callbackFn = $.noop;
+    if(requestSettings.callback != null) {
+      if(typeof requestSettings.callback === 'function') {
+        callbackFn = requestSettings.callback;
+      }
+      else if(requestSettings.callback.error && responseData.errorResponse) {
+        callbackFn = requestSettings.callback.error;
+      }
+      else if(requestSettings.callback.success && !responseData.errorResponse) {
+        callbackFn = requestSettings.callback.success;
+      }
+    }
+    
+    if(!((requestSettings.data.indexOf('&method=login') != -1 && 
+          requestSettings.data.indexOf('&method=loginTest') == -1) || 
+         requestSettings.data.indexOf('&method=logout') != -1)) {
+      callbackFn(responseData);
+    }
+    
+    /* get a new auth token after login or logout */
+    else {
+      var newAuthCallback = function() {
+        callbackFn(responseData);
+      };
+      luminateExtend.api.getAuth({
+        callback: newAuthCallback, 
+        useCache: false, 
+        useHTTPS: requestSettings.useHTTPS
+      });
+    }
   };
   
   /* library core */
@@ -39,7 +90,7 @@
   
   /* library info */
   luminateExtend.library = {
-    version: '1.3'
+    version: '1.3.1'
   };
   
   /* global settings */
@@ -47,9 +98,19 @@
     update: function(settingName, settingValue) {
       if(settingName) {
         if(settingName.length) {
-          luminateExtend.global[settingName] = settingValue;
+          if(settingValue) {
+            if(settingName == 'locale') {
+              settingValue = setLocale(settingValue);
+            }
+            
+            luminateExtend.global[settingName] = settingValue;
+          }
         }
         else {
+          if(settingName.locale) {
+            settingName.locale = setLocale(settingName.locale);
+          }
+          
           luminateExtend.global = $.extend(luminateExtend.global, settingName);
         }
       }
@@ -77,13 +138,7 @@
       }
     }, options || {});
     
-    if(settings.locale != null && settings.locale != 'es_US' && settings.locale != 'en_CA' && 
-       settings.locale != 'fr_CA' && settings.locale != 'en_GB') {
-      settings.locale = 'en_US';
-    }
-    if(settings.locale != null) {
-      luminateExtend.sessionVars.set('locale', settings.locale);
-    }
+    settings.locale = setLocale(settings.locale);
     
     luminateExtend.global = $.extend(luminateExtend.global, settings);
     
@@ -326,37 +381,7 @@
                application/json (E-62659) */
             dataType: 'json', 
             success: function(data) {
-              var callbackFn;
-              if(settings.callback != null) {
-                callbackFn = settings.callback;
-                if(settings.callback.error && data.errorResponse) {
-                  callbackFn = settings.callback.error;
-                }
-                else if(settings.callback.success) {
-                  callbackFn = settings.callback.success;
-                }
-              }
-              
-              /* get a new auth token after login or logout */
-              if(!((settings.data.indexOf('&method=login') != -1 && 
-                   settings.data.indexOf('&method=loginTest') == -1) || 
-                  settings.data.indexOf('&method=logout') != -1)) {
-                if(callbackFn) {
-                  callbackFn(data);
-                }
-                
-                return luminateExtend;
-              }
-              else {
-                var newAuthCallback = function() {
-                  callbackFn(data);
-                };
-                luminateExtend.api.getAuth({
-                  callback: newAuthCallback, 
-                  useCache: false, 
-                  useHTTPS: settings.useHTTPS
-                });
-              }
+              apiCallbackHandler(settings, data);
             }, 
             type: settings.requestType, 
             url: requestUrl, 
@@ -372,6 +397,9 @@
           postMessageFrameId = 'luminateApiPostMessage' + postMessageTimestamp, 
           postMessageUrl = buildServerUrl(settings.useHTTPS, 'action=postMessage');
           
+          if(settings.requiresAuth && settings.data.indexOf('&' + luminateExtend.global.auth.type + '=') == -1) {
+            settings.data += '&' + luminateExtend.global.auth.type + '=' + luminateExtend.global.auth.token;
+          }
           settings.data += '&ts=' + postMessageTimestamp;
           
           if(!luminateExtend.api.request.postMessageEventHandler) {
@@ -380,12 +408,7 @@
             luminateExtend.api.request.postMessageEventHandler.handler = function(e) {
               var parsedData = $.parseJSON(e.data), 
               messageFrameId = parsedData.postMessageFrameId, 
-              responseData = $.parseJSON(decodeURIComponent(parsedData.response)), 
-              globalData = parsedData.global;
-              
-              if(globalData) {
-                luminateExtend.global.update(globalData);
-              }
+              responseData = $.parseJSON(decodeURIComponent(parsedData.response));
               
               if(luminateExtend.api.request.postMessageEventHandler[messageFrameId]) {
                 luminateExtend.api.request.postMessageEventHandler[messageFrameId](messageFrameId, responseData);
@@ -401,35 +424,7 @@
           }
           
           luminateExtend.api.request.postMessageEventHandler[postMessageFrameId] = function(frameId, data) {
-            var callbackFn;
-            if(settings.callback != null) {
-              callbackFn = settings.callback;
-              if(settings.callback.error && data.errorResponse) {
-                callbackFn = settings.callback.error;
-              }
-              else if(settings.callback.success) {
-                callbackFn = settings.callback.success;
-              }
-            }
-            
-            /* get a new auth token after login or logout */
-            if(!((settings.data.indexOf('&method=login') != -1 && 
-                  settings.data.indexOf('&method=loginTest') == -1) || 
-                 settings.data.indexOf('&method=logout') != -1)) {
-              if(callbackFn) {
-                callbackFn(data);
-              }
-            }
-            else {
-              var newAuthCallback = function() {
-                callbackFn(data);
-              };
-              luminateExtend.api.getAuth({
-                callback: newAuthCallback, 
-                useCache: false, 
-                useHTTPS: settings.useHTTPS
-              });
-            }
+            apiCallbackHandler(settings, data);
             
             $('#' + frameId).remove();
             
@@ -465,6 +460,9 @@
           hashTransportClientUrl = window.location.protocol + '//' + document.domain + 
                                    '/luminateExtend_client.html';
           
+          if(settings.requiresAuth && settings.data.indexOf('&' + luminateExtend.global.auth.type + '=') == -1) {
+            settings.data += '&' + luminateExtend.global.auth.type + '=' + luminateExtend.global.auth.token;
+          }
           settings.data += '&ts=' + hashTransportTimestamp;
           
           hashTransportUrl += '#&hashTransportClientUrl=' + encodeURIComponent(hashTransportClientUrl) + 
@@ -485,18 +483,7 @@
           }
           
           luminateExtend.api.request.hashTransportEventHandler[hashTransportFrameId] = function(frameId, data) {
-            if(settings.callback != null) {
-              var callbackFn = settings.callback;
-              if(settings.callback.error && data.errorResponse) {
-                callbackFn = settings.callback.error;
-              }
-              else if(settings.callback.success) {
-                callbackFn = settings.callback.success;
-              }
-              callbackFn(data);
-              
-              return luminateExtend;
-            }
+            apiCallbackHandler(settings, data);
             
             $('#' + frameId).remove();
             
@@ -509,13 +496,8 @@
         };
       }
       
-      var getAuthToken = false;
       if(settings.requiresAuth || 
          (!useAjax && !isLuminateOnlineAndSameProtocol && luminateExtend.global.sessionCookie == null)) {
-        getAuthToken = true;
-      }
-      
-      if(getAuthToken) {
         luminateExtend.api.getAuth({
           callback: doRequest, 
           useHTTPS: settings.useHTTPS
@@ -548,8 +530,7 @@
     luminateExtend.tags.parse(tagType, selector);
   };
   luminateExtend.tags.parse = function(tagType, selector) {
-    tagType = tagType || 'all';
-    if(tagType == 'all') {
+    if(!tagType || tagType == 'all') {
       tagType = ['cons'];
     }
     else {
@@ -621,8 +602,6 @@
         if(settings.callback != null) {
           settings.callback();
         }
-        
-        return luminateExtend;
       });
       
       $('#' + pingImgId).attr('src', pingUrl);
@@ -630,10 +609,8 @@
     
     simpleDateFormat: function(unformattedDate, pattern, locale) {
       locale = locale || luminateExtend.global.locale;
-      locale = (locale == 'es_US' || locale == 'en_CA' || locale == 'fr_CA' || 
-                locale == 'en_GB' || locale == 'en_AU') ? locale : 'en_US';
-      pattern = pattern || ((locale == 'en_CA' || locale == 'fr_CA' || 
-                             locale == 'en_GB' || locale == 'en_AU') ? 'd/M/yy' : 'M/d/yy');
+      locale = validateLocale(locale);
+      pattern = pattern || (($.inArray(locale, ['en_CA', 'fr_CA', 'en_GB', 'en_AU']) >= 0) ? 'd/M/yy' : 'M/d/yy');
       unformattedDate = unformattedDate || new Date();
       if(!(unformattedDate instanceof Date)) {
         var unformattedDateParts = unformattedDate.split('T')[0].split('-'), 

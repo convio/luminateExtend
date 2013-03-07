@@ -13,10 +13,8 @@ $(function() {
   }, 
   hashTransportFrameId = hashData('hashTransportFrameId'), 
   responseData = $.parseJSON(hashData('responseData')), 
-  globalData = $.parseJSON(hashData('globalData')), 
   topLib = parent.parent.luminateExtend;
   
-  topLib.global.update(globalData);
   topLib.api.request.hashTransportEventHandler.handler(hashTransportFrameId, responseData);
 });
 </script>
