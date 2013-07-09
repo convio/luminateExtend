@@ -1,6 +1,6 @@
 [[?COMMENT::::::
 luminateExtend_server.html
-Version: 1.3.1 (07-MAR-2013)
+Version: 1.4 (09-JUL-2013)
 ]]
 [[?xgetAuthx::x[[S334:action]]x::
   [[U8:application/javascript]]
@@ -14,7 +14,8 @@ Version: 1.3.1 (07-MAR-2013)
         "token": "[[S86:true]]", 
         "type": "auth"
       }, 
-      "sessionCookie": "[[E130:"[[T7:PixelServer]]" dup dup "?" indexof 1 + swap length substring]]"
+      "isJServ": "[[?[[S29:SESSION_TAG]]::JServ::true::false]]", 
+      "sessionCookie": "[[S29:SESSION_TAG]]=[[S29:SESSION_ID]]"
     }[[?xx::x[[S334:callback]]x::::)]]
   ::
     [[?xx::x[[S334:callback]]x::::[[S334:callback]](]]{
@@ -31,7 +32,7 @@ Version: 1.3.1 (07-MAR-2013)
     <!DOCTYPE html>
     <html>
     <head>
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <script>
     $(function() {
       var postMessageHandler = function(e) {
@@ -39,7 +40,8 @@ Version: 1.3.1 (07-MAR-2013)
         postMessageOrigin = e.origin, 
         postMessageData = $.parseJSON(e.data), 
         requestData = postMessageData.requestData, 
-        sessionCookie = '[[E130:"[[T7:PixelServer]]" dup dup "?" indexof 1 + swap length substring]]';
+        isJServ = '[[?[[S29:SESSION_TAG]]::JServ::true::false]]', 
+        sessionCookie = '[[S29:SESSION_TAG]]=[[S29:SESSION_ID]]';
         
         $.ajax({
           contentType: postMessageData.requestContentType, 
@@ -51,7 +53,7 @@ Version: 1.3.1 (07-MAR-2013)
             '}', postMessageOrigin);
           }, 
           type: postMessageData.requestType, 
-          url: postMessageData.requestUrl + '?' + sessionCookie
+          url: postMessageData.requestUrl + (isJServ == 'true' ? '?' : ';') + sessionCookie
         });
       };
       
@@ -86,7 +88,7 @@ Version: 1.3.1 (07-MAR-2013)
     <!DOCTYPE html>
     <html>
     <head>
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <script>
     $(function() {
       var hashData = function(name) {
@@ -94,7 +96,8 @@ Version: 1.3.1 (07-MAR-2013)
       }, 
       requestData = hashData('requestData'), 
       authToken = '[[S86:true]]', 
-      sessionCookie = '[[E130:"[[T7:PixelServer]]" dup dup "?" indexof 1 + swap length substring]]';
+      isJServ = '[[?[[S29:SESSION_TAG]]::JServ::true::false]]', 
+      sessionCookie = '[[S29:SESSION_TAG]]=[[S29:SESSION_ID]]';
       
       if(requestData.indexOf('&auth=') == -1) {
         requestData += '&auth=' + authToken;
@@ -113,7 +116,7 @@ Version: 1.3.1 (07-MAR-2013)
           $('#luminateApiHashResponseFrame').attr('src', hashTransportUrl);
         }, 
         type: hashData('requestType'), 
-        url: hashData('requestUrl') + '?' + sessionCookie
+        url: hashData('requestUrl') + (isJServ == 'true' ? '?' : ';') + sessionCookie
       });
     });
     </script>

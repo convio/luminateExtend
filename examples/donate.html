@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Donate to American Health Society</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <style>
+      body {
+        padding-top: 60px;
+        padding-bottom: 40px;
+      }
+      
+      /* example site styles */
+      #welcome-back { color: #fff; }
+    </style>
+    <link href="css/bootstrap-responsive.min.css" rel="stylesheet">
+    
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="index.html">American Health Society</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li><a href="index.html">Home</a></li>
+              <li class="active"><a href="donate.html">Donate</a></li>
+              <li class="dropdown">
+                <a href="get-involved.html" class="dropdown-toggle" data-toggle="dropdown">Get Involved <b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                  <li><a href="sign-up.html">Get AHS News</a></li>
+                  <li><a href="action-center.html">Action Center</a></li>
+                  <li><a href="walk-for-health.html">Walk for Health</a></li>
+                </ul>
+              </li>
+            </ul>
+            <form class="luminateApi navbar-form pull-right" id="login-form" method="POST" action="http://shortname.convio.net/site/CRConsAPI" data-luminateApi='{"callback": "loginCallback"}'>
+              <input type="hidden" name="method" value="login">
+              <input class="span2" type="text" id="login-username" name="user_name" placeholder="Username">
+              <input class="span2" type="password" id="login-password" name="password" placeholder="Password">
+              <button type="submit" class="btn">Login</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <h1>Donate</h1>
+      <p>You can be a part of the solution &ndash; make a donation to help fund important research. We can't do it without you.</p>
+      <form class="luminateApi donation-form" method="POST" action="https://secure2.convio.net/shortname/site/CRDonationAPI" data-luminateApi='{"callback": "donateCallback"}'>
+        <input type="hidden" name="method" value="donate">
+        <input type="hidden" name="form_id" value="11320">
+        <input type="hidden" name="validate" value="true">
+        <legend>Donation Amount</legend>
+        <label class="radio">
+          <input type="radio" name="level_id" value="13162"> $100
+        </label>
+        <label class="radio">
+          <input type="radio" name="level_id" value="13164"> $50
+        </label>
+        <label class="radio">
+          <input type="radio" name="level_id" value="13161"> $20
+        </label>
+        <label class="radio">
+          <input type="radio" id="level-other" name="level_id" value="13163"> Other amount:
+        </label>
+        <div class="input-prepend">
+          <span class="add-on">$</span><input type="text" class="span2" id="other-amount" name="other_amount" disabled>
+        </div>
+        
+        <legend>Billing Information</legend>
+        <p>Name:</p>
+        <div class="controls-row">
+          <input type="text" class="span3" name="billing.name.first" placeholder="First Name"> 
+          <input type="text" class="span3" name="billing.name.last" placeholder="Last Name">
+        </div>
+        <p>Address:</p>
+        <div class="controls-row">
+          <input type="text" class="span6" name="billing.address.street1" placeholder="Street 1">
+        </div>
+        <div class="controls-row">
+          <input type="text" class="span6" name="billing.address.street2" placeholder="Street 2">
+        </div>
+        <div class="controls-row">
+          <input type="text" class="span2" name="billing.address.city" placeholder="City"> 
+          <select class="span2" name="billing.address.state">
+            <option>State</option>
+            <option value="AK">AK</option>
+            <option value="AL">AL</option>
+            <option value="AR">AR</option>
+            <option value="AZ">AZ</option>
+            <option value="CA">CA</option>
+            <option value="CO">CO</option>
+            <option value="CT">CT</option>
+            <option value="DC">DC</option>
+            <option value="DE">DE</option>
+            <option value="FL">FL</option>
+            <option value="GA">GA</option>
+            <option value="HI">HI</option>
+            <option value="IA">IA</option>
+            <option value="ID">ID</option>
+            <option value="IL">IL</option>
+            <option value="IN">IN</option>
+            <option value="KS">KS</option>
+            <option value="KY">KY</option>
+            <option value="LA">LA</option>
+            <option value="MA">MA</option>
+            <option value="MD">MD</option>
+            <option value="ME">ME</option>
+            <option value="MI">MI</option>
+            <option value="MN">MN</option>
+            <option value="MO">MO</option>
+            <option value="MS">MS</option>
+            <option value="MT">MT</option>
+            <option value="NC">NC</option>
+            <option value="ND">ND</option>
+            <option value="NE">NE</option>
+            <option value="NH">NH</option>
+            <option value="NJ">NJ</option>
+            <option value="NM">NM</option>
+            <option value="NV">NV</option>
+            <option value="NY">NY</option>
+            <option value="OH">OH</option>
+            <option value="OK">OK</option>
+            <option value="OR">OR</option>
+            <option value="PA">PA</option>
+            <option value="RI">RI</option>
+            <option value="SC">SC</option>
+            <option value="SD">SD</option>
+            <option value="TN">TN</option>
+            <option value="TX">TX</option>
+            <option value="UT">UT</option>
+            <option value="VA">VA</option>
+            <option value="VT">VT</option>
+            <option value="WA">WA</option>
+            <option value="WI">WI</option>
+            <option value="WV">WV</option>
+            <option value="WY">WY</option>
+            <option value="AS">AS</option>
+            <option value="FM">FM</option>
+            <option value="GU">GU</option>
+            <option value="MH">MH</option>
+            <option value="MP">MP</option>
+            <option value="PR">PR</option>
+            <option value="PW">PW</option>
+            <option value="VI">VI</option>
+            <option value="AA">AA</option>
+            <option value="AE">AE</option>
+            <option value="AP">AP</option>
+            <option value="AB">AB</option>
+            <option value="BC">BC</option>
+            <option value="MB">MB</option>
+            <option value="NB">NB</option>
+            <option value="NL">NL</option>
+            <option value="NS">NS</option>
+            <option value="NT">NT</option>
+            <option value="NU">NU</option>
+            <option value="ON">ON</option>
+            <option value="PE">PE</option>
+            <option value="QC">QC</option>
+            <option value="SK">SK</option>
+            <option value="YT">YT</option>
+            <option value="None">None</option>
+          </select> 
+          <input type="text" class="span2" name="billing.address.zip" placeholder="ZIP">
+        </div>
+        
+        <legend>Email</legend>
+        <div class="controls-row">
+          <input type="email" class="span6" name="donor.email" placeholder="Email Address">
+        </div>
+        <label class="checkbox">
+          <input type="checkbox" checked> Yes, I'd like to receive email from American Health Society
+        </label>
+        
+        <legend>Payment Information</legend>
+        <div class="controls-row">
+          <input type="text" class="span6" name="card_number" placeholder="Credit Card Number">
+        </div>
+        <div class="controls-row">
+          <input type="text" class="span2" name="card_cvv" placeholder="CVV"> 
+          <select class="span2" name="card_exp_date_month">
+            <option>Month</option>
+            <option value="01">01</option>
+            <option value="02">02</option>
+            <option value="03">03</option>
+            <option value="04">04</option>
+            <option value="05">05</option>
+            <option value="06">06</option>
+            <option value="07">07</option>
+            <option value="08">08</option>
+            <option value="09">09</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+          </select> 
+          <select class="span2" name="card_exp_date_year">
+            <option>Year</option>
+            <option value="2012">2012</option>
+            <option value="2013">2013</option>
+            <option value="2014">2014</option>
+            <option value="2015">2015</option>
+            <option value="2016">2016</option>
+            <option value="2017">2017</option>
+            <option value="2018">2018</option>
+          </select>
+        </div>
+        
+        <div class="form-actions">
+          <button type="submit" id="donate-submit" class="btn btn-primary">Complete Donation</button>
+        </div>
+      </form>
+      <hr>
+      <footer>
+        <p>&copy; American Health Society 2013</p>
+      </footer>
+    </div>
+    
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.js"></script>
+    
+    <script src="js/bootstrap.min.js"></script>
+    
+    <script src="js/luminateExtend.js"></script>
+    <script src="js/luminateExtend-examples.js"></script>
+  </body>
+</html>

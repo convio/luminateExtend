@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Sign Up for News from American Health Society</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <style>
+      body {
+        padding-top: 60px;
+        padding-bottom: 40px;
+      }
+      
+      /* example site styles */
+      #welcome-back { color: #fff; }
+    </style>
+    <link href="css/bootstrap-responsive.min.css" rel="stylesheet">
+    
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="index.html">American Health Society</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li><a href="index.html">Home</a></li>
+              <li><a href="donate.html">Donate</a></li>
+              <li class="dropdown">
+                <a href="get-involved.html" class="dropdown-toggle" data-toggle="dropdown">Get Involved <b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                  <li><a href="sign-up.html">Get AHS News</a></li>
+                  <li><a href="action-center.html">Action Center</a></li>
+                  <li><a href="walk-for-health.html">Walk for Health</a></li>
+                </ul>
+              </li>
+            </ul>
+            <form class="luminateApi navbar-form pull-right" id="login-form" method="POST" action="http://shortname.convio.net/site/CRConsAPI" data-luminateApi='{"callback": "loginCallback"}'>
+              <input type="hidden" name="method" value="login">
+              <input class="span2" type="text" id="login-username" name="user_name" placeholder="Username">
+              <input class="span2" type="password" id="login-password" name="password" placeholder="Password">
+              <button type="submit" class="btn">Login</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <h1>Get AHS News</h1>
+      <p>Sign up today to receive the American Health Society's weekly e-newsletter.</p>
+      <form class="luminateApi survey-form" method="POST" action="http://shortname.convio.net/site/CRSurveyAPI" data-luminateApi='{"callback": "submitSurveyCallback", "requiresAuth": "true"}'>
+        <input type="hidden" name="method" value="submitSurvey">
+        <input type="hidden" name="survey_id" value="18561">
+        <legend>Basic Information</legend>
+        <p>Name:</p>
+        <div class="controls-row">
+          <input type="text" class="span3" name="cons_first_name" placeholder="First Name"> 
+          <input type="text" class="span3" name="cons_last_name" placeholder="Last Name">
+        </div>
+        
+        <legend>Email</legend>
+        <div class="controls-row">
+          <input type="email" class="span6" name="cons_email" placeholder="Email Address">
+        </div>
+        <input type="hidden" name="cons_email_opt_in" value="true">
+        <div class="alert alert-info">
+          By filling out this form, you'll be signed up to receive periodic updates from American Health Society.
+        </div>
+        
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">Sign Me Up</button>
+        </div>
+      </form>
+      <hr>
+      <footer>
+        <p>&copy; American Health Society 2013</p>
+      </footer>
+    </div>
+    
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.js"></script>
+    
+    <script src="js/bootstrap.min.js"></script>
+    
+    <script src="js/luminateExtend.js"></script>
+    <script src="js/luminateExtend-examples.js"></script>
+  </body>
+</html>

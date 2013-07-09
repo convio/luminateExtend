@@ -1,6 +1,6 @@
 /*
  * luminateExtend.js
- * Version: 1.3.1 (07-MAR-2013)
+ * Version: 1.4 (09-JUL-2013)
  * Requires: jQuery v1.6.4+
  * Includes: SimpleDateFormatJS v1.2 (https://github.com/noahcooper/SimpleDateFormatJS)
  */
@@ -43,8 +43,12 @@
   
   buildServerUrl = function(useHTTPS, data) {
     var serverUrl = (useHTTPS ? (luminateExtend.global.path.secure + 'S') : luminateExtend.global.path.nonsecure) + 
-                    'PageServer?pagename=luminateExtend_server&pgwrap=n' + 
-                    (luminateExtend.global.sessionCookie ? ('&' + luminateExtend.global.sessionCookie) : '') + 
+                    'PageServer' + 
+                    ((luminateExtend.global.isJServ && luminateExtend.global.isJServ == 'false' && 
+                      luminateExtend.global.sessionCookie) ? (';' + luminateExtend.global.sessionCookie) : '') + 
+                    '?pagename=luminateExtend_server&pgwrap=n' + 
+                    ((luminateExtend.global.isJServ && luminateExtend.global.isJServ == 'true' && 
+                      luminateExtend.global.sessionCookie) ? ('&' + luminateExtend.global.sessionCookie) : '') + 
                     (data ? ('&' + data) : '');
     return serverUrl;
   }, 
@@ -90,7 +94,7 @@
   
   /* library info */
   luminateExtend.library = {
-    version: '1.3.1'
+    version: '1.4'
   };
   
   /* global settings */
@@ -139,6 +143,10 @@
     }, options || {});
     
     settings.locale = setLocale(settings.locale);
+    
+    /* check if the browser supports CORS and the withCredentials property */
+    var testXHR = new XMLHttpRequest();
+    settings.supportsCORS = ('withCredentials' in testXHR) ? true : false;
     
     luminateExtend.global = $.extend(luminateExtend.global, settings);
     
@@ -237,18 +245,48 @@
         }
       }
       else {
-        $.ajax({
-          dataType: 'jsonp', 
-          success: function(data) {
-            luminateExtend.global.update(data);
-            luminateExtend.api.getAuthLoad = true;
-            
-            if(settings.callback != null) {
-              settings.callback();
+        var getAuthCallback = function(globalData) {
+          luminateExtend.global.update(globalData);
+          luminateExtend.api.getAuthLoad = true;
+          
+          if(settings.callback != null) {
+            settings.callback();
+          }
+        };
+        
+        if(luminateExtend.global.supportsCORS) {
+          $.ajax({
+            data: 'luminateExtend=' + luminateExtend.library.version + '&api_key=' + luminateExtend.global.apiKey + 
+                  '&method=getLoginUrl&response_format=json&v=1.0', 
+            dataType: 'json', 
+            success: function(data) {
+              getAuthCallback({
+                auth: {
+                  type: 'auth', 
+                  token: data.getLoginUrlResponse.token
+                }, 
+                /* check for the session ID in the query string for organizations still on JServ */
+                /* for clients on Tomcat, the session ID is after the servlet name, separated by a semi-colon */
+                isJServ: (data.getLoginUrlResponse.url.indexOf('?') == -1) ? 'false': 'true', 
+                sessionCookie: (data.getLoginUrlResponse.url.indexOf('?') == -1) ? 
+                               data.getLoginUrlResponse.url.split(';')[1] : 
+                               data.getLoginUrlResponse.url.split('?')[1]
+              });
+            }, 
+            url: settings.useHTTPS ? luminateExtend.global.path.secure : luminateExtend.global.path.nonsecure + 
+                 'CRConsAPI', 
+            xhrFields: {
+              withCredentials: true
             }
-          }, 
-          url: buildServerUrl(settings.useHTTPS, 'action=getAuth&callback=?')
-        });
+          });
+        }
+        else {
+          $.ajax({
+            dataType: 'jsonp', 
+            success: getAuthCallback, 
+            url: buildServerUrl(settings.useHTTPS, 'action=getAuth&callback=?')
+          });
+        }
       }
     }
     else {
@@ -280,7 +318,9 @@
       /* add "CR", capitalize the first letter, and add "API" */
       settings.api = 'CR' + settings.api.charAt(0).toUpperCase() + settings.api.slice(1).toLowerCase() + 'API';
       /* special cases where a letter in the middle of the servlet name needs to be capitalized */
-      settings.api = settings.api.replace('Addressbook', 'AddressBook').replace('Datasync', 'DataSync');
+      settings.api = settings.api.replace('Addressbook', 'AddressBook')
+                                 .replace('Datasync', 'DataSync')
+                                 .replace('Orgevent', 'OrgEvent');
     }
     
     /* don't make the request unless we have all the required data */
@@ -292,7 +332,8 @@
         settings.contentType = 'application/x-www-form-urlencoded';
       }
       
-      settings.data = 'luminateExtend=true' + ((settings.data == '') ? '' : ('&' + settings.data));
+      settings.data = 'luminateExtend=' + luminateExtend.library.version + 
+                      ((settings.data == '') ? '' : ('&' + settings.data));
       
       if(settings.form != null && $(settings.form).length > 0) {
         settings.data += '&' + $(settings.form).eq(0).serialize();
@@ -355,8 +396,7 @@
         useAjax = true;
       }
       else {
-        var requestXHR = new XMLHttpRequest();
-        if('withCredentials' in requestXHR && !settings.useHashTransport) {
+        if(luminateExtend.global.supportsCORS && !settings.useHashTransport) {
           useAjax = true;
         }
         else if('postMessage' in window && !settings.useHashTransport) {

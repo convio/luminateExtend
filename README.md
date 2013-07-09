@@ -1,11 +1,11 @@
 luminateExtend.js
 =================
 
-Version: 1.3.1 (07-MAR-2013)  
+Version: 1.4 (09-JUL-2013)  
 Requires: jQuery v1.6.4+
 
 luminateExtend.js is a JavaScript library for use with 
-[Luminate Online](http://www.convio.com/our-products/luminate/fundraising.html), a product of Blackbaud. 
+[Luminate Online](https://www.blackbaud.com/online-marketing/luminate-online), a product of Blackbaud. 
 Built on top of jQuery, it provides a JavaScript wrapper around the 
 [Luminate Online REST API](http://open.convio.com/api), with some helper functions and other magic 
 sprinkled in. The library includes support for [all major browsers](#libBrowsers), and can be used both 
@@ -95,7 +95,7 @@ uploaded the file.
 If you aren't yet including jQuery on your website, use the Google CDN.
 
 ```  html
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <script src="../js/luminateExtend.js"></script>
 ```
 

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>American Health Society</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <style>
+      body {
+        padding-top: 60px;
+        padding-bottom: 40px;
+      }
+      
+      /* example site styles */
+      #welcome-back { color: #fff; }
+    </style>
+    <link href="css/bootstrap-responsive.min.css" rel="stylesheet">
+    
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="index.html">American Health Society</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li class="active"><a href="index.html">Home</a></li>
+              <li><a href="donate.html">Donate</a></li>
+              <li class="dropdown">
+                <a href="get-involved.html" class="dropdown-toggle" data-toggle="dropdown">Get Involved <b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                  <li><a href="sign-up.html">Get AHS News</a></li>
+                  <li><a href="action-center.html">Action Center</a></li>
+                  <li><a href="walk-for-health.html">Walk for Health</a></li>
+                </ul>
+              </li>
+            </ul>
+            <form class="luminateApi navbar-form pull-right" id="login-form" method="POST" action="http://shortname.convio.net/site/CRConsAPI" data-luminateApi='{"callback": "loginCallback"}'>
+              <input type="hidden" name="method" value="login">
+              <input class="span2" type="text" id="login-username" name="user_name" placeholder="Username">
+              <input class="span2" type="password" id="login-password" name="password" placeholder="Password">
+              <button type="submit" class="btn">Login</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="hero-unit">
+        <h1>Your Donation Today Can Save Countless Lives</h1>
+        <p>You can be a part of the solution &ndash; make a donation to help fund important research. We can't do it without you.</p>
+        <p><a class="btn btn-primary btn-large" href="donate.html">Donate Now &raquo;</a></p>
+      </div>
+      <div class="row">
+        <div class="span4">
+          <h2>Get AHS News</h2>
+          <p>Sign up today to receive the American Health Society's weekly e-newsletter.</p>
+          <p><a class="btn" href="sign-up.html">Sign Up &raquo;</a></p>
+        </div>
+        <div class="span4">
+          <h2>Action Center</h2>
+          <p>Become an advocate for health! View the list of our latest action alerts.</p>
+          <p><a class="btn" href="action-center.html">Take Action &raquo;</a></p>
+       </div>
+        <div class="span4">
+          <h2>Walk for Health</h2>
+          <p>Form a team in the Walk for Health and help raise money for our important mission.</p>
+          <p><a class="btn" href="walk-for-health.html">Find an Event &raquo;</a></p>
+        </div>
+      </div>
+      <hr>
+      <footer>
+        <p>&copy; American Health Society 2013</p>
+      </footer>
+    </div>
+    
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.js"></script>
+    
+    <script src="js/bootstrap.min.js"></script>
+    
+    <script src="js/luminateExtend.js"></script>
+    <script src="js/luminateExtend-examples.js"></script>
+  </body>
+</html>
