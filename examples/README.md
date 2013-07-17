@@ -322,7 +322,7 @@ $(function() {
 TeamRaiser ZIP Code radius search
 ---------------------------------
 
-[walk-for-health.html](https://raw.github.com/noahcooper/luminateExtend/master/examples/walk-for-health.html) lets users search for TeamRaiser events in their local area using the [getTeamraisersByDistance](http://open.convio.com/api/#teamraiser_api.getTeamraisersByDistance_method.html) API Method. Each event in the search results includes basic information such as the event name and date, as well as links for forming a team, joining a team, or registering as an individual.
+[walk-for-health.html](https://raw.github.com/noahcooper/luminateExtend/master/examples/walk-for-health.html) lets users search for TeamRaiser events in their local area using the [getTeamraisersByDistance](http://open.convio.com/api/#teamraiser_api.getTeamraisersByDistance_method.html) API method. Each event in the search results includes basic information such as the event name and date, as well as links for forming a team, joining a team, or registering as an individual.
 
 To use the event search form, you'll need to edit the form's action to use your organization's domain:
 

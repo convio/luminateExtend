@@ -1,6 +1,6 @@
 /*
  * luminateExtend.js
- * Version: 1.4 (09-JUL-2013)
+ * Version: 1.4.1 (17-JUL-2013)
  * Requires: jQuery v1.6.4+
  * Includes: SimpleDateFormatJS v1.2 (https://github.com/noahcooper/SimpleDateFormatJS)
  */
@@ -94,7 +94,7 @@
   
   /* library info */
   luminateExtend.library = {
-    version: '1.4'
+    version: '1.4.1'
   };
   
   /* global settings */
@@ -145,8 +145,13 @@
     settings.locale = setLocale(settings.locale);
     
     /* check if the browser supports CORS and the withCredentials property */
-    var testXHR = new XMLHttpRequest();
-    settings.supportsCORS = ('withCredentials' in testXHR) ? true : false;
+    settings.supportsCORS = false;
+    if(window.XMLHttpRequest) {
+      var testXHR = new XMLHttpRequest();
+      if('withCredentials' in testXHR) {
+        settings.supportsCORS = true;
+      }
+    }
     
     luminateExtend.global = $.extend(luminateExtend.global, settings);
     
