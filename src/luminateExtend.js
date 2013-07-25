@@ -1,6 +1,6 @@
 /*
  * luminateExtend.js
- * Version: 1.4.1 (17-JUL-2013)
+ * Version: 1.4.2 (25-JUL-2013)
  * Requires: jQuery v1.6.4+
  * Includes: SimpleDateFormatJS v1.2 (https://github.com/noahcooper/SimpleDateFormatJS)
  */
@@ -94,7 +94,7 @@
   
   /* library info */
   luminateExtend.library = {
-    version: '1.4.1'
+    version: '1.4.2'
   };
   
   /* global settings */
@@ -278,7 +278,7 @@
                                data.getLoginUrlResponse.url.split('?')[1]
               });
             }, 
-            url: settings.useHTTPS ? luminateExtend.global.path.secure : luminateExtend.global.path.nonsecure + 
+            url: (settings.useHTTPS ? luminateExtend.global.path.secure : luminateExtend.global.path.nonsecure) + 
                  'CRConsAPI', 
             xhrFields: {
               withCredentials: true
