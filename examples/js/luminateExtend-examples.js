@@ -72,7 +72,7 @@
     
     /* UI handlers for the donation form example */
     if($('.donation-form').length > 0) {
-      $('input[name="level_id"]').on('click', function() {
+      $('input[name="level_id"]').click(function() {
         if($(this).is('#level-other')) {
           $('#other-amount').removeAttr('disabled');
           $('#other-amount').attr('name', 'other_amount');
@@ -84,7 +84,7 @@
         }
       });
       
-      $('.donation-form').on('submit', function() {
+      $('.donation-form').submit(function() {
         window.scrollTo(0, 0);
         $(this).hide();
         $(this).before('<div class="well donation-loading">' + 
@@ -146,7 +146,7 @@
     
     /* UI handlers for the Survey example */
     if($('.survey-form').length > 0) {
-      $('.survey-form').on('submit', function() {
+      $('.survey-form').submit(function() {
         window.scrollTo(0, 0);
         $(this).hide();
         $(this).before('<div class="well survey-loading">' + 

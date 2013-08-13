@@ -1,8 +1,8 @@
 luminateExtend.js
 =================
 
-Version: 1.4.2 (25-JUL-2013)  
-Requires: jQuery v1.6.4+
+Version: 1.4.3 (13-AUG-2013)
+Requires: jQuery v1.4.4+
 
 luminateExtend.js is a JavaScript library for use with 
 [Luminate Online](https://www.blackbaud.com/online-marketing/luminate-online), a product of Blackbaud. 

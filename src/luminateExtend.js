@@ -1,13 +1,17 @@
 /*
  * luminateExtend.js
- * Version: 1.4.2 (25-JUL-2013)
- * Requires: jQuery v1.6.4+
+ * Version: 1.4.3 (13-AUG-2013)
+ * Requires: jQuery v1.4.4+
  * Includes: SimpleDateFormatJS v1.2 (https://github.com/noahcooper/SimpleDateFormatJS)
  */
 
 (function($) {
+  /* jQuery version info */
+  var jQueryVersionParts = jQuery.fn.jquery.split('.'), 
+  jQueryVersionMajorMinor = Number(jQueryVersionParts[0] + '.' + jQueryVersionParts[1]), 
+  
   /* private helper functions */
-  var stringToObj = function(str, obj) {
+  stringToObj = function(str, obj) {
     var objReturn = obj || window;
     
     if(str) {
@@ -94,7 +98,7 @@
   
   /* library info */
   luminateExtend.library = {
-    version: '1.4.2'
+    version: '1.4.3'
   };
   
   /* global settings */
@@ -417,6 +421,16 @@
           if(settings.requiresAuth && settings.data.indexOf('&' + luminateExtend.global.auth.type + '=') == -1) {
             settings.data += '&' + luminateExtend.global.auth.type + '=' + luminateExtend.global.auth.token;
           }
+          
+          if(jQueryVersionMajorMinor === 1.4 && luminateExtend.global.sessionCookie) {
+            if(luminateExtend.global.isJServ && luminateExtend.global.isJServ == 'true') {
+              requestUrl += '?' + luminateExtend.global.sessionCookie;
+            }
+            else {
+              requestUrl += ';' + luminateExtend.global.sessionCookie;
+            }
+          }
+          
           settings.data += '&ts=' + ajaxTimestamp;
           
           $.ajax({
