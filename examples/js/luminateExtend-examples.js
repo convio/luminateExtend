@@ -1,22 +1,22 @@
 (function($) {
+  /* define init variables for your organization */
+  luminateExtend({
+    apiKey: '123456789', 
+    path: {
+      nonsecure: 'http://shortname.convio.net/site/', 
+      secure: 'https://secure2.convio.net/shortname/site/'
+    }
+  });
+  
   $(function() {
-    /* define init variables for your organization */
-    luminateExtend({
-      apiKey: '123456789', 
-      path: {
-        nonsecure: 'http://shortname.convio.net/site/', 
-        secure: 'https://secure2.convio.net/shortname/site/'
-      }
-    });
-    
     /* example: get information on the currently logged in user, and display a "welcome back" message in the site's header */
     window.getUser = function() {
       var getUserCallback = function(data) {
         if(data.getConsResponse && data.getConsResponse.name) {
-          $('#login-form').replaceWith('<div class="pull-right" id="welcome-back">' + 
+          $('#login-form').replaceWith('<p class="navbar-text pull-right" id="welcome-back">' + 
                                          'Welcome back' + ((data.getConsResponse.name.first) ? (', ' + data.getConsResponse.name.first) : '') + '! ' + 
-                                         '<a href="' + luminateExtend.global.path.nonsecure + 'UserLogin?logout=&NEXTURL=' + escape(window.location.href) + '">Logout</a>' + 
-                                       '</div>');
+                                         '<a href="' + luminateExtend.global.path.nonsecure + 'UserLogin?logout=&NEXTURL=' + encodeURIComponent(window.location.href) + '">Logout</a>' + 
+                                       '</p>');
         }
       };
       luminateExtend.api({
@@ -30,9 +30,13 @@
     
     /* example: check if the user is logged in onload */
     /* if they are logged in, call the getUser function above to display the "welcome back" message */
-    var loginTestCallback = function(data) {
-      if(!data.errorResponse) {
+    /* if they are not logged in, show the login form */
+    var loginTestCallback = {
+      success: function() {
         getUser();
+      }, 
+      error: function() {
+        $('#login-form').removeClass('hide');
       }
     };
     luminateExtend.api({
@@ -47,16 +51,20 @@
     window.loginCallback = {
       error: function(data) {
         if($('#login-error-modal').length == 0) {
-          $('body').append('<div class="modal" id="login-error-modal" tabindex="-1" role="dialog">' + 
-                             '<div class="modal-header">' + 
-                               '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>' + 
-                               '<h3 id="myModalLabel">Error</h3>' + 
-                             '</div>' + 
-                             '<div class="modal-body">' + 
-                               '<p>' + data.errorResponse.message + '</p>' + 
-                             '</div>' + 
-                             '<div class="modal-footer">' + 
-                               '<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>' + 
+          $('body').append('<div class="modal fade" id="login-error-modal">' + 
+                             '<div class="modal-dialog">' + 
+                               '<div class="modal-content">' + 
+                                 '<div class="modal-header">' + 
+                                   '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>' + 
+                                   '<h4 class="modal-title">Error</h4>' + 
+                                 '</div>' + 
+                                 '<div class="modal-body">' + 
+                                   '<p>' + data.errorResponse.message + '</p>' + 
+                                 '</div>' + 
+                                 '<div class="modal-footer">' + 
+                                   '<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>' + 
+                                 '</div>' + 
+                               '</div>' + 
                              '</div>' + 
                            '</div>');
         }
@@ -101,7 +109,7 @@
         $('#donation-errors').remove();
         
         $('.donation-form').prepend('<div id="donation-errors">' + 
-                                      '<div class="alert alert-error">' + 
+                                      '<div class="alert alert-danger">' + 
                                         data.errorResponse.message + 
                                       '</div>' + 
                                     '</div>');
@@ -114,7 +122,7 @@
         
         if(data.donationResponse.errors) {
           $('.donation-form').prepend('<div id="donation-errors">' + 
-                                        ((data.donationResponse.errors.message) ? ('<div class="alert alert-error">' + 
+                                        ((data.donationResponse.errors.message) ? ('<div class="alert alert-danger">' + 
                                           data.donationResponse.errors.message + 
                                         '</div>') : '') + 
                                       '</div>');
@@ -122,7 +130,7 @@
           if(data.donationResponse.errors.fieldError) {
             var fieldErrors = luminateExtend.utils.ensureArray(data.donationResponse.errors.fieldError);
             $.each(fieldErrors, function() {
-              $('#donation-errors').append('<div class="alert alert-error">' + 
+              $('#donation-errors').append('<div class="alert alert-danger">' + 
                                              this + 
                                            '</div>');
             });
@@ -164,7 +172,7 @@
         $('.survey-form .control-rows .alert').remove();
         
         $('.survey-form').prepend('<div id="survey-errors">' + 
-                                      '<div class="alert alert-error">' + 
+                                      '<div class="alert alert-danger">' + 
                                         data.errorResponse.message + 
                                       '</div>' + 
                                     '</div>');
@@ -174,11 +182,11 @@
       }, 
       success: function(data) {
         $('#survey-errors').remove();
-        $('.survey-form .controls-row .alert').remove();
+        $('.survey-form .form-group .survey-alert-wrap').remove();
         
         if(data.submitSurveyResponse.success == 'false') {
           $('.survey-form').prepend('<div id="survey-errors">' + 
-                                      '<div class="alert alert-error">' + 
+                                      '<div class="alert alert-danger">' + 
                                         'There was an error with your submission. Please try again.' + 
                                       '</div>' + 
                                     '</div>');
@@ -186,8 +194,11 @@
           var surveyErrors = luminateExtend.utils.ensureArray(data.submitSurveyResponse.errors);
           $.each(surveyErrors, function() {
             if(this.errorField) {
-              $('input[name="' + this.errorField + '"]').closest('.controls-row').prepend('<div class="alert alert-error">' + 
-                                                                   this.errorMessage + 
+              $('input[name="' + this.errorField + '"]').closest('.form-group')
+                                                        .prepend('<div class="col-sm-12 survey-alert-wrap">' + 
+                                                                   '<div class="alert alert-danger">' + 
+                                                                     this.errorMessage + 
+                                                                   '</div>' + 
                                                                  '</div>');
             }
           });
@@ -240,7 +251,7 @@
         $('#teamraiser-event-search-results').html('');
         
         $('.teamraiser-event-search-form').prepend('<div id="teamraiser-event-search-errors">' + 
-                                                     '<div class="alert alert-error">' + 
+                                                     '<div class="alert alert-danger">' + 
                                                        data.errorResponse.message + 
                                                      '</div>' + 
                                                    '</div>');
@@ -251,7 +262,7 @@
         
         if(data.getTeamraisersResponse.totalNumberResults == 0) {
           $('.teamraiser-event-search-form').prepend('<div id="teamraiser-event-search-errors">' + 
-                                                       '<div class="alert alert-error">' + 
+                                                       '<div class="alert alert-danger">' + 
                                                          'No events found. Please try another search.' + 
                                                        '</div>' + 
                                                      '</div>');
@@ -265,7 +276,6 @@
                                                            luminateExtend.utils.simpleDateFormat(this.event_date, 'MMMM d, yyyy') + '</p>' + 
                                                            '<p><a class="btn btn-primary" href="' + this.reg_new_team_url + '">Form a Team</a> ' + 
                                                            '<a class="btn btn-primary" href="' + this.reg_join_team_url + '">Join a Team</a> ' + 
-                                                           '<a class="btn btn-primary" href="' + this.reg_indiv_url + '">Register as an Individual</a></p>' + 
                                                          '</div>');
           });
         }

@@ -2,7 +2,7 @@ luminateExtend.js - Examples
 ============================
 
 Together, the examples provided here represent a very basic sample website for the fictitious organization American Health Society. 
-The website is built using [Bootstrap](http://twitter.github.io/bootstrap/), and is responsive to boot.
+The website is built using [Bootstrap](http://getbootstrap.com), and is responsive to boot.
 
 Getting started with the example website
 ----------------------------------------
@@ -10,7 +10,7 @@ Getting started with the example website
 If you haven't already done so, you'll need to follow the [basic setup instructions](https://github.com/noahcooper/luminateExtend#libSetup) 
 for using luminateExtend.js.
 
-Once you've completed setup, download the HTML, CSS, JavaScript, and image files found here to your desktop. You'll need to make a few small tweaks to these files, and then you can upload them to a server of your choosing.
+Once you've completed setup, download the HTML, JavaScript, and font files found here to your desktop. You'll need to make a few small tweaks to these files, and then you can upload them to a server of your choosing.
 
 [luminateExtend-examples.js](https://raw.github.com/noahcooper/luminateExtend/master/examples/js/luminateExtend-examples.js) is where all the magic happens. At the very top of this file, you'll need to change the API Key and the non-secure and secure paths for your organization:
 
@@ -35,11 +35,15 @@ At the top right of each page on the example site, users are either presented wi
 You'll need to edit the login form within each HTML file to change the login form's action to use your organization's domain:
 
 ```html
-<form class="luminateApi navbar-form pull-right" id="login-form" method="POST" action="http://shortname.convio.net/site/CRConsAPI" data-luminateApi='{"callback": "loginCallback"}'>
+<form class="navbar-form navbar-right luminateApi hide" id="login-form" method="POST" action="http://shortname.convio.net/site/CRConsAPI" data-luminateApi='{"callback": "loginCallback"}'>
   <input type="hidden" name="method" value="login">
-  <input class="span2" type="text" id="login-username" name="user_name" placeholder="Username">
-  <input class="span2" type="password" id="login-password" name="password" placeholder="Password">
-  <button type="submit" class="btn">Login</button>
+  <div class="form-group">
+    <input type="text" class="form-control" id="login-username" name="user_name" placeholder="Username">
+  </div>
+  <div class="form-group">
+    <input type="password" class="form-control" id="login-password" name="password" placeholder="Password">
+  </div>
+  <button type="submit" class="btn btn-success">Login</button>
 </form>
 ```
 
@@ -48,9 +52,13 @@ On each page load, the [loginTest](http://open.convio.com/api/#single_sign_on_ap
 ```js
 /* example: check if the user is logged in onload */
 /* if they are logged in, call the getUser function above to display the "welcome back" message */
-var loginTestCallback = function(data) {
-  if(!data.errorResponse) {
+/* if they are not logged in, show the login form */
+var loginTestCallback = {
+  success: function() {
     getUser();
+  }, 
+  error: function() {
+    $('#login-form').removeClass('hide');
   }
 };
 luminateExtend.api({
@@ -67,10 +75,10 @@ If the user is logged in, the getUser function is called to display a message li
 window.getUser = function() {
   var getUserCallback = function(data) {
     if(data.getConsResponse && data.getConsResponse.name) {
-      $('#login-form').replaceWith('<div class="pull-right" id="welcome-back">' + 
-                                     'Welcome back' + ((data.getConsResponse.name.first) ? (', ' + data.getConsResponse.name.first) : '') + '! ' + 
-                                     '<a href="' + luminateExtend.global.path.nonsecure + 'UserLogin?logout=&NEXTURL=' + escape(window.location.href) + '">Logout</a>' + 
-                                   '</div>');
+      $('#login-form').replaceWith('<p class="navbar-text pull-right" id="welcome-back">' + 
+                                   'Welcome back' + ((data.getConsResponse.name.first) ? (', ' + data.getConsResponse.name.first) : '') + '! ' + 
+                                   '<a href="' + luminateExtend.global.path.nonsecure + 'UserLogin?logout=&NEXTURL=' + encodeURIComponent(window.location.href) + '">Logout</a>' + 
+                                   '</p>');
     }
   };
   luminateExtend.api({
@@ -92,16 +100,20 @@ If the user is not logged in, they will be presented with the login form. Readin
 window.loginCallback = {
   error: function(data) {
     if($('#login-error-modal').length == 0) {
-      $('body').append('<div class="modal" id="login-error-modal" tabindex="-1" role="dialog">' + 
-                         '<div class="modal-header">' + 
-                           '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>' + 
-                           '<h3 id="myModalLabel">Error</h3>' + 
-                         '</div>' + 
-                         '<div class="modal-body">' + 
-                           '<p>' + data.errorResponse.message + '</p>' + 
-                         '</div>' + 
-                         '<div class="modal-footer">' + 
-                           '<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>' + 
+      $('body').append('<div class="modal fade" id="login-error-modal">' + 
+                         '<div class="modal-dialog">' + 
+                           '<div class="modal-content">' + 
+                             '<div class="modal-header">' + 
+                               '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>' + 
+                               '<h4 class="modal-title">Error</h4>' + 
+                             '</div>' + 
+                             '<div class="modal-body">' + 
+                               '<p>' + data.errorResponse.message + '</p>' + 
+                             '</div>' + 
+                             '<div class="modal-footer">' + 
+                               '<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>' + 
+                             '</div>' + 
+                           '</div>' + 
                          '</div>' + 
                        '</div>');
     }
@@ -124,10 +136,10 @@ Donation form
 To use the donation form, you'll first need to edit the donation form's action to use your organization's domain:
 
 ```html
-<form class="luminateApi donation-form" method="POST" action="https://secure2.convio.net/shortname/site/CRDonationAPI" data-luminateApi='{"callback": "donateCallback"}'>
+<form class="form-horizontal luminateApi donation-form" method="POST" action="https://secure2.convio.net/shortname/site/CRDonationAPI" data-luminateApi='{"callback": "donateCallback"}'>
 ```
 
-You'll also need to edit the donation form ID to use the appropriate shadow form from your organization's site:
+You'll also need to edit the donation form ID to use the appropriate shadow form:
 
 ```html
 <input type="hidden" name="form_id" value="1234">
@@ -136,18 +148,26 @@ You'll also need to edit the donation form ID to use the appropriate shadow form
 Finally, you'll need to edit the HTML for the donation levels to use the correct IDs and dollar amounts. As noted above, when building out a real form, you'll likely want to use the API to dynamically generate this HTML instead.
 
 ```html
-<label class="radio">
-  <input type="radio" name="level_id" value="13162"> $100
-</label>
-<label class="radio">
-  <input type="radio" name="level_id" value="13164"> $50
-</label>
-<label class="radio">
-  <input type="radio" name="level_id" value="13161"> $20
-</label>
-<label class="radio">
-  <input type="radio" id="level-other" name="level_id" value="13163"> Other amount:
-</label>
+<div class="radio">
+  <label>
+    <input type="radio" name="level_id" value="13162"> $100
+  </label>
+</div>
+<div class="radio">
+  <label>
+    <input type="radio" name="level_id" value="13164"> $50
+  </label>
+</div>
+<div class="radio">
+  <label>
+    <input type="radio" name="level_id" value="13161"> $20
+  </label>
+</div>
+<div class="radio">
+  <label>
+    <input type="radio" id="level-other" name="level_id" value="13163"> Other amount:
+  </label>
+</div>
 ```
 
 Reading the HTML for the donation form above, you'll note that the form tag has a callback defined for handling the API response, donateCallback. If the donation is successfully processed, a thank you message is shown to the donor in place of the form. If one or more errors are returned, they are displayed above the form. For your form, you may wish to slightly modify this code to, for example, highlight all fields that are in error in red.
@@ -161,7 +181,7 @@ window.donateCallback = {
     $('#donation-errors').remove();
     
     $('.donation-form').prepend('<div id="donation-errors">' + 
-                                  '<div class="alert alert-error">' + 
+                                  '<div class="alert alert-danger">' + 
                                     data.errorResponse.message + 
                                   '</div>' + 
                                 '</div>');
@@ -174,7 +194,7 @@ window.donateCallback = {
     
     if(data.donationResponse.errors) {
       $('.donation-form').prepend('<div id="donation-errors">' + 
-                                    ((data.donationResponse.errors.message) ? ('<div class="alert alert-error">' + 
+                                    ((data.donationResponse.errors.message) ? ('<div class="alert alert-danger">' + 
                                       data.donationResponse.errors.message + 
                                     '</div>') : '') + 
                                   '</div>');
@@ -182,7 +202,7 @@ window.donateCallback = {
       if(data.donationResponse.errors.fieldError) {
         var fieldErrors = luminateExtend.utils.ensureArray(data.donationResponse.errors.fieldError);
         $.each(fieldErrors, function() {
-          $('#donation-errors').append('<div class="alert alert-error">' + 
+          $('#donation-errors').append('<div class="alert alert-danger">' + 
                                          this + 
                                        '</div>');
         });
@@ -213,7 +233,7 @@ Newsletter sign-up form
 To use the sign-up form, you'll first need to edit the form's action to use your organization's domain:
 
 ```html
-<form class="luminateApi survey-form" method="POST" action="http://shortname.convio.net/site/CRSurveyAPI" data-luminateApi='{"callback": "submitSurveyCallback", "requiresAuth": "true"}'>
+<form class="form-horizontal luminateApi survey-form" method="POST" action="http://shortname.convio.net/site/CRSurveyAPI" data-luminateApi='{"callback": "submitSurveyCallback", "requiresAuth": "true"}'>
 ```
 
 You'll also need to edit the Survey ID to use the appropriate Survey from your organization's site:
@@ -234,7 +254,7 @@ window.submitSurveyCallback = {
     $('.survey-form .control-rows .alert').remove();
     
     $('.survey-form').prepend('<div id="survey-errors">' + 
-                                '<div class="alert alert-error">' + 
+                                '<div class="alert alert-danger">' + 
                                   data.errorResponse.message + 
                                 '</div>' + 
                               '</div>');
@@ -248,7 +268,7 @@ window.submitSurveyCallback = {
     
     if(data.submitSurveyResponse.success == 'false') {
       $('.survey-form').prepend('<div id="survey-errors">' + 
-                                  '<div class="alert alert-error">' + 
+                                  '<div class="alert alert-danger">' + 
                                     'There was an error with your submission. Please try again.' + 
                                   '</div>' + 
                                 '</div>');
@@ -256,7 +276,7 @@ window.submitSurveyCallback = {
       var surveyErrors = luminateExtend.utils.ensureArray(data.submitSurveyResponse.errors);
       $.each(surveyErrors, function() {
         if(this.errorField) {
-          $('input[name="' + this.errorField + '"]').closest('.controls-row').prepend('<div class="alert alert-error">' + 
+          $('input[name="' + this.errorField + '"]').closest('.controls-row').prepend('<div class="alert alert-danger">' + 
                                                                                         this.errorMessage + 
                                                                                       '</div>');
         }
@@ -322,12 +342,12 @@ $(function() {
 TeamRaiser ZIP Code radius search
 ---------------------------------
 
-[walk-for-health.html](https://raw.github.com/noahcooper/luminateExtend/master/examples/walk-for-health.html) lets users search for TeamRaiser events in their local area using the [getTeamraisersByDistance](http://open.convio.com/api/#teamraiser_api.getTeamraisersByDistance_method.html) API method. Each event in the search results includes basic information such as the event name and date, as well as links for forming a team, joining a team, or registering as an individual.
+[walk-for-health.html](https://raw.github.com/noahcooper/luminateExtend/master/examples/walk-for-health.html) lets users search for TeamRaiser events in their local area using the [getTeamraisersByDistance](http://open.convio.com/api/#teamraiser_api.getTeamraisersByDistance_method.html) API method. Each event in the search results includes basic information such as the event name and date, as well as links to form or join a team.
 
 To use the event search form, you'll need to edit the form's action to use your organization's domain:
 
 ```html
-<form class="luminateApi teamraiser-event-search-form form-inline" method="POST" action="https://secure2.convio.net/shortname/site/CRTeamraiserAPI" data-luminateApi='{"callback": "getTeamraisersByDistanceCallback"}'>
+<form class="form-inline luminateApi teamraiser-event-search-form" method="POST" action="https://secure2.convio.net/shortname/site/CRTeamraiserAPI" data-luminateApi='{"callback": "getTeamraisersByDistanceCallback"}'>
 ```
 
 Reading the HTML for the search form above, you'll note that the form tag has a callback defined for handling the API response, getTeamraisersByDistanceCallback. If one or more events is returned for the ZIP Code provided, they are displayed below the form. If an error is returned, e.g. because no events match the search criteria, the error message is displayed above the form.
@@ -342,7 +362,7 @@ window.getTeamraisersByDistanceCallback = {
     $('#teamraiser-event-search-results').html('');
     
     $('.teamraiser-event-search-form').prepend('<div id="teamraiser-event-search-errors">' + 
-                                                 '<div class="alert alert-error">' + 
+                                                 '<div class="alert alert-danger">' + 
                                                    data.errorResponse.message + 
                                                  '</div>' + 
                                                '</div>');
@@ -353,7 +373,7 @@ window.getTeamraisersByDistanceCallback = {
     
     if(data.getTeamraisersResponse.totalNumberResults == 0) {
       $('.teamraiser-event-search-form').prepend('<div id="teamraiser-event-search-errors">' + 
-                                                   '<div class="alert alert-error">' + 
+                                                   '<div class="alert alert-danger">' + 
                                                      'No events found. Please try another search.' + 
                                                    '</div>' + 
                                                  '</div>');
@@ -367,7 +387,6 @@ window.getTeamraisersByDistanceCallback = {
                                                              luminateExtend.utils.simpleDateFormat(this.event_date, 'MMMM d, yyyy') + '</p>' + 
                                                              '<p><a class="btn btn-primary" href="' + this.reg_new_team_url + '">Form a Team</a> ' + 
                                                              '<a class="btn btn-primary" href="' + this.reg_join_team_url + '">Join a Team</a> ' + 
-                                                             '<a class="btn btn-primary" href="' + this.reg_indiv_url + '">Register as an Individual</a></p>' + 
                                                            '</div>');
       });
     }

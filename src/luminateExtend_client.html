@@ -3,19 +3,16 @@
 <head>
 <!--
 luminateExtend_client.html
-Version: 1.4 (09-JUL-2013)
+Version: 1.5 (17-OCT-2013)
 -->
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <script>
 $(function() {
   var hashData = function(name) {
     return decodeURIComponent(window.location.hash.split('&' + name + '=')[1].split('&')[0]);
-  }, 
-  hashTransportFrameId = hashData('hashTransportFrameId'), 
-  responseData = $.parseJSON(hashData('responseData')), 
-  topLib = parent.parent.luminateExtend;
+  };
   
-  topLib.api.request.hashTransportEventHandler.handler(hashTransportFrameId, responseData);
+  parent.parent.luminateExtend.api.request.hashTransportEventHandler.handler(hashData('hashTransportFrameId'), $.parseJSON(hashData('responseData')));
 });
 </script>
 </head>

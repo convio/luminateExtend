@@ -1,6 +1,6 @@
 [[?COMMENT::::::
-luminateExtend_server.html
-Version: 1.4 (09-JUL-2013)
+  luminateExtend_server.html
+  Version: 1.5 (17-OCT-2013)
 ]]
 [[?xgetAuthx::x[[S334:action]]x::
   [[U8:application/javascript]]
@@ -14,7 +14,6 @@ Version: 1.4 (09-JUL-2013)
         "token": "[[S86:true]]", 
         "type": "auth"
       }, 
-      "isJServ": "[[?[[S29:SESSION_TAG]]::JServ::true::false]]", 
       "sessionCookie": "[[S29:SESSION_TAG]]=[[S29:SESSION_ID]]"
     }[[?xx::x[[S334:callback]]x::::)]]
   ::
@@ -32,39 +31,43 @@ Version: 1.4 (09-JUL-2013)
     <!DOCTYPE html>
     <html>
     <head>
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-    <script>
-    $(function() {
-      var postMessageHandler = function(e) {
-        var postMessageSource = e.source, 
-        postMessageOrigin = e.origin, 
-        postMessageData = $.parseJSON(e.data), 
-        requestData = postMessageData.requestData, 
-        isJServ = '[[?[[S29:SESSION_TAG]]::JServ::true::false]]', 
-        sessionCookie = '[[S29:SESSION_TAG]]=[[S29:SESSION_ID]]';
-        
-        $.ajax({
-          contentType: postMessageData.requestContentType, 
-          data: requestData, 
-          success: function(data) {
-            postMessageSource.postMessage('{' + 
-              '"postMessageFrameId": "' + postMessageData.postMessageFrameId + '", ' + 
-              '"response": "' + encodeURIComponent(data) + '"' + 
-            '}', postMessageOrigin);
-          }, 
-          type: postMessageData.requestType, 
-          url: postMessageData.requestUrl + (isJServ == 'true' ? '?' : ';') + sessionCookie
-        });
-      };
+      <!--[if lt IE 9]>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+      <![endif]-->
+      <!--[if gte IE 9]><!-->
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+      <!--<![endif]-->
       
-      if(typeof window.addEventListener != 'undefined') {
-        window.addEventListener('message', postMessageHandler, false);
-      }
-      else if(typeof window.attachEvent != 'undefined') {
-        window.attachEvent('onmessage', postMessageHandler);
-      }
-    });
-    </script>
+      <script>
+        $(function() {
+          var postMessageHandler = function(e) {
+            var postMessageSource = e.source, 
+            postMessageOrigin = e.origin, 
+            postMessageData = $.parseJSON(e.data), 
+            requestData = postMessageData.requestData;
+            
+            $.ajax({
+              contentType: postMessageData.requestContentType, 
+              data: requestData, 
+              success: function(data) {
+                postMessageSource.postMessage('{' + 
+                  '"postMessageFrameId": "' + postMessageData.postMessageFrameId + '", ' + 
+                  '"response": "' + encodeURIComponent(data) + '"' + 
+                '}', postMessageOrigin);
+              }, 
+              type: postMessageData.requestType, 
+              url: postMessageData.requestUrl + ';[[S29:SESSION_TAG]]=[[S29:SESSION_ID]]'
+            });
+          };
+          
+          if(typeof window.addEventListener != 'undefined') {
+            window.addEventListener('message', postMessageHandler, false);
+          }
+          else if(typeof window.attachEvent != 'undefined') {
+            window.attachEvent('onmessage', postMessageHandler);
+          }
+        });
+      </script>
     </head>
     <body>
     </body>
@@ -88,41 +91,34 @@ Version: 1.4 (09-JUL-2013)
     <!DOCTYPE html>
     <html>
     <head>
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-    <script>
-    $(function() {
-      var hashData = function(name) {
-        return decodeURIComponent(window.location.hash.split('&' + name + '=')[1].split('&')[0]);
-      }, 
-      requestData = hashData('requestData'), 
-      authToken = '[[S86:true]]', 
-      isJServ = '[[?[[S29:SESSION_TAG]]::JServ::true::false]]', 
-      sessionCookie = '[[S29:SESSION_TAG]]=[[S29:SESSION_ID]]';
-      
-      if(requestData.indexOf('&auth=') == -1) {
-        requestData += '&auth=' + authToken;
-      }
-      
-      $.ajax({
-        contentType: hashData('requestContentType'), 
-        data: requestData, 
-        success: function(data) {
-          var hashTransportFrameId = hashData('hashTransportFrameId'), 
-          hashTransportUrl = hashData('hashTransportClientUrl');
+      <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+      <script>
+        $(function() {
+          var hashData = function(name) {
+            return decodeURIComponent(window.location.hash.split('&' + name + '=')[1].split('&')[0]);
+          }, 
+          requestData = hashData('requestData');
           
-          hashTransportUrl += '#&hashTransportFrameId=' + hashTransportFrameId + '&responseData=' + 
-                              encodeURIComponent(data);
+          if(requestData.indexOf('&auth=') == -1) {
+            requestData += '&auth=[[S86:true]]';
+          }
           
-          $('#luminateApiHashResponseFrame').attr('src', hashTransportUrl);
-        }, 
-        type: hashData('requestType'), 
-        url: hashData('requestUrl') + (isJServ == 'true' ? '?' : ';') + sessionCookie
-      });
-    });
-    </script>
+          $.ajax({
+            contentType: hashData('requestContentType'), 
+            data: requestData, 
+            success: function(data) {
+              $('#luminateApiHashResponseFrame').attr('src', hashData('hashTransportClientUrl') + 
+                                                             '#&hashTransportFrameId=' + hashData('hashTransportFrameId') + 
+                                                             '&responseData=' + encodeURIComponent(data));
+            }, 
+            type: hashData('requestType'), 
+            url: hashData('requestUrl') + ';[[S29:SESSION_TAG]]=[[S29:SESSION_ID]]'
+          });
+        });
+      </script>
     </head>
     <body>
-    <iframe id="luminateApiHashResponseFrame" name="luminateApiHashResponseFrame" />
+      <iframe id="luminateApiHashResponseFrame" name="luminateApiHashResponseFrame" />
     </body>
     </html>
   ::

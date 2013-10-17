@@ -1,7 +1,7 @@
 luminateExtend.js
 =================
 
-Version: 1.4.3 (13-AUG-2013)  
+Version: 1.5 (17-OCT-2013)
 Requires: jQuery v1.4.4+
 
 luminateExtend.js is a JavaScript library for use with 
@@ -113,7 +113,7 @@ luminateExtend.library
 `luminateExtend.library` contains information about the library.
 
 ```  js
-console.log(luminateExtend.library.version); // logs a value like "1.0"
+console.log(luminateExtend.library.version); // logs a value like "1.5"
 ```
 
 The library object contains the following:
@@ -291,6 +291,22 @@ string above.
 
 **requiresAuth:** A boolean indicating whether or not the API method being called requires 
 authentication. If true, an auth token is automatically appended to the request data string.
+
+**responseFilter:** Available as of v1.5. An object containing a filter to apply to the response object 
+before it is passed to the callback. The object contains the array in the response object to be filtered, 
+and the filter logic. Filters can be applied using either equal ("==") or not equal ("!=") statements.
+
+``` js
+luminateExtend.api.request({
+  api: 'teamraiser', 
+  data: 'method=getParticipants&fr_id=1234&first_name=John', 
+  responseFilter: {
+    array: 'getParticipantsResponse.participant', 
+    filter: 'personalPagePrivate == false' // or 'personalPagePrivate != true'
+  }, 
+  callback: getParticipantsCallback
+});
+```
 
 **useHTTPS:** A boolean indicating whether or not to use HTTPS when making the request. Some API servlets 
 (namely CRDonationAPI and CRTeamraiserAPI) must always be called over a secure channel, in which case 
@@ -550,7 +566,7 @@ provided. For example, if the locale is es_US, "d 'de' MMMM 'de' yyyy" will retu
 
 See [SimpleDateFormatJS](https://github.com/noahcooper/SimpleDateFormatJS) for additional documentation.
 
-<a name="libBrowsers">
+<a name="libBrowsers"></a>
 Browser support
 ---------------
 
@@ -563,7 +579,7 @@ luminateExtend.js includes support for the following browsers:
  * Opera 9+
  * Android
 
-<a name="libIssues">
+<a name="libIssues"></a>
 Reporting issues
 ----------------
 
