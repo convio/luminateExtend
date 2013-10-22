@@ -1,6 +1,6 @@
 /*
  * luminateExtend.js
- * Version: 1.5 (17-OCT-2013)
+ * Version: 1.5.1 (22-OCT-2013)
  * Requires: jQuery v1.4.4+
  * Includes: SimpleDateFormatJS v1.3 (https://github.com/noahcooper/SimpleDateFormatJS)
  */
@@ -18,7 +18,7 @@
       var strParts = str.split('.');
       for(var i = 0; i < strParts.length; i++) {
         if(i < (strParts.length - 1) && !objReturn[strParts[i]]) {
-          objReturn[strParts[i]] = {};
+          return {};
         }
         objReturn = objReturn[strParts[i]];
       }
@@ -159,7 +159,7 @@
   
   /* library info */
   luminateExtend.library = {
-    version: '1.5'
+    version: '1.5.1'
   };
   
   /* global settings */

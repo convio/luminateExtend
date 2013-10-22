@@ -1,7 +1,7 @@
 luminateExtend.js
 =================
 
-Version: 1.5 (17-OCT-2013)  
+Version: 1.5.1 (22-OCT-2013)  
 Requires: jQuery v1.4.4+
 
 luminateExtend.js is a JavaScript library for use with 
