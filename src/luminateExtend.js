@@ -197,8 +197,9 @@
     }
     
     /* check if the browser supports CORS and the withCredentials property */
+    /* if Zepto is used, always return false, as it does not allow one to set withCredentials */
     settings.supportsCORS = false;
-    if(window.XMLHttpRequest) {
+    if(window.XMLHttpRequest && $.fn.jquery) {
       var testXHR = new XMLHttpRequest();
       if('withCredentials' in testXHR) {
         settings.supportsCORS = true;
