@@ -1,17 +1,13 @@
 /*
  * luminateExtend.js
- * Version: 1.5.1 (22-OCT-2013)
+ * Version: 1.6 (19-NOV-2013)
  * Requires: jQuery v1.4.4+
  * Includes: SimpleDateFormatJS v1.3 (https://github.com/noahcooper/SimpleDateFormatJS)
  */
 
 (function($) {
-  /* jQuery version info */
-  var jQueryVersionParts = jQuery.fn.jquery.split('.'), 
-  jQueryVersionMajorMinor = Number(jQueryVersionParts[0] + '.' + jQueryVersionParts[1]), 
-  
   /* private helper functions */
-  stringToObj = function(str, obj) {
+  var stringToObj = function(str, obj) {
     var objReturn = obj || window;
     
     if(str) {
@@ -159,7 +155,7 @@
   
   /* library info */
   luminateExtend.library = {
-    version: '1.5.1'
+    version: '1.6'
   };
   
   /* global settings */
@@ -971,4 +967,4 @@
       return formattedDate;
     }
   };
-})(jQuery);
+})(typeof jQuery === 'undefined' && typeof Zepto === 'function' ? Zepto : jQuery);
