@@ -169,7 +169,7 @@
     window.submitSurveyCallback = {
       error: function(data) {
         $('#survey-errors').remove();
-        $('.survey-form .control-rows .alert').remove();
+        $('.survey-form .form-group .alert').remove();
         
         $('.survey-form').prepend('<div id="survey-errors">' + 
                                       '<div class="alert alert-danger">' + 
