@@ -146,7 +146,7 @@
       $('.survey-form').submit(function() {
         window.scrollTo(0, 0);
         $(this).hide();
-        $(this).before('<div class="well survey-loading">' + 
+        $(this).before('<div class="panel survey-loading">' + 
                          'Loading ...' + 
                        '</div>');
       });
@@ -158,10 +158,10 @@
     window.submitSurveyCallback = {
       error: function(data) {
         $('#survey-errors').remove();
-        $('.survey-form .control-rows .alert').remove();
+        $('.survey-form .row .alert').remove();
         
         $('.survey-form').prepend('<div id="survey-errors">' + 
-                                      '<div class="alert alert-danger">' + 
+                                      '<div class="alert-box alert">' + 
                                         data.errorResponse.message + 
                                       '</div>' + 
                                     '</div>');
@@ -171,11 +171,11 @@
       }, 
       success: function(data) {
         $('#survey-errors').remove();
-        $('.survey-form .form-group .survey-alert-wrap').remove();
+        $('.survey-form .row .survey-alert-wrap').remove();
         
         if(data.submitSurveyResponse.success == 'false') {
           $('.survey-form').prepend('<div id="survey-errors">' + 
-                                      '<div class="alert alert-danger">' + 
+                                      '<div class="alert-box alert">' + 
                                         'There was an error with your submission. Please try again.' + 
                                       '</div>' + 
                                     '</div>');
@@ -183,9 +183,9 @@
           var surveyErrors = luminateExtend.utils.ensureArray(data.submitSurveyResponse.errors);
           $.each(surveyErrors, function() {
             if(this.errorField) {
-              $('input[name="' + this.errorField + '"]').closest('.form-group')
-                                                        .prepend('<div class="col-sm-12 survey-alert-wrap">' + 
-                                                                   '<div class="alert alert-danger">' + 
+              $('input[name="' + this.errorField + '"]').closest('.row')
+                                                        .prepend('<div class="small-12 columns survey-alert-wrap">' + 
+                                                                   '<div class="alert-box alert">' + 
                                                                      this.errorMessage + 
                                                                    '</div>' + 
                                                                  '</div>');
@@ -197,12 +197,12 @@
         }
         else {
           $('.survey-loading').remove();
-          $('.survey-form').before('<div class="alert alert-success">' + 
-                                       'You\'ve been signed up!' + 
-                                     '</div>' + 
-                                     '<div class="well">' + 
-                                       '<p>Thanks for joining. You should receive your first issue of the e-newsletter shortly.</p>' + 
-                                     '</div>');
+          $('.survey-form').before('<div class="alert-box success">' + 
+                                     'You\'ve been signed up!' + 
+                                   '</div>' + 
+                                   '<div class="panel">' + 
+                                     '<p>Thanks for joining. You should receive your first issue of the e-newsletter shortly.</p>' + 
+                                   '</div>');
         }
       }
     };

@@ -4,17 +4,12 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>American Health Society</title>
+    <title>Sign Up for News from American Health Society</title>
     
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/foundation/4.3.2/css/normalize.min.css">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/foundation/4.3.2/css/foundation.min.css">
     <style>
       /* example site styles */
-      @media only screen and (min-width: 1020px) {
-        #home-feature {
-          margin-top: 1em;
-        }
-      }
       #login-form .columns {
         padding-left: 0.2em;
       }
@@ -77,34 +72,50 @@
     </div>
     <div class="row">
       <div class="large-12 columns">
-        <div class="row">
-          <div class="panel" id="home-feature">
-            <h1>Your Donation Today Can Save Countless Lives</h1>
-            <p>You can be a part of the solution &ndash; make a donation to help fund important research. We can't do it without you.</p>
-            <a class="large radius button" href="donate.html">Donate Now &raquo;</a>
+        <h1>Get AHS News</h1>
+        <hr>
+        <p>Sign up today to receive the American Health Society's weekly e-newsletter.</p>
+        <form class="luminateApi survey-form" method="POST" action="http://shortname.convio.net/site/CRSurveyAPI" data-luminateApi='{"callback": "submitSurveyCallback", "requiresAuth": "true"}'>
+          <input type="hidden" name="method" value="submitSurvey">
+          <input type="hidden" name="survey_id" value="18561">
+          <div class="row">
+            <div class="small-3 columns">
+              <label for="survey-cons-first-name" class="right inline">First Name:</label>
+            </div>
+            <div class="small-9 columns">
+              <input type="text" name="cons_first_name" id="survey-cons-first-name">
+            </div>
           </div>
-        </div>
-        <div class="row">
-          <div class="large-12 columns">
-            <div class="row">
-              <div class="large-4 small-12 columns">
-                <h2>Get AHS News</h2>
-                <p>Sign up today to receive the American Health Society's weekly e-newsletter.</p>
-                <p><a class="secondary radius button" href="sign-up.html">Sign Up &raquo;</a></p>
-              </div>
-              <div class="large-4 small-12 columns">
-                <h2>Action Center</h2>
-                <p>Become an advocate for health! View the list of our latest action alerts.</p>
-                <p><a class="secondary radius button" href="action-center.html">Take Action &raquo;</a></p>
-              </div>
-              <div class="large-4 small-12 columns">
-                <h2>Walk for Health</h2>
-                <p>Form a team in the Walk for Health and help raise money for our important mission.</p>
-                <p><a class="secondary radius button" href="walk-for-health.html">Find an Event &raquo;</a></p>
+          <div class="row">
+            <div class="small-3 columns">
+              <label for="survey-cons-last-name" class="right inline">Last Name:</label>
+            </div>
+            <div class="small-9 columns">
+              <input type="text" name="cons_last_name" id="survey-cons-last-name">
+            </div>
+          </div>
+          <div class="row">
+            <div class="small-3 columns">
+              <label for="survey-cons-email" class="right inline">Email Address:</label>
+            </div>
+            <div class="small-9 columns">
+              <input type="text" name="cons_email" id="survey-cons-email">
+            </div>
+          </div>
+          <input type="hidden" name="cons_email_opt_in" value="true">
+          <div class="row">
+            <div class="small-9 small-offset-3 columns">
+              <div class="alert-box secondary">
+                By filling out this form, you'll be signed up to receive periodic updates from American Health Society.
               </div>
             </div>
           </div>
-        </div>
+          <div class="row">
+            <div class="small-9 small-offset-3 columns">
+              <button type="submit" class="button small">Sign Me Up</button>
+            </div>
+          </div>
+        </form>
         <footer class="row">
           <div class="large-12 columns">
             <hr>

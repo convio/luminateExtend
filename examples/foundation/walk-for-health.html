@@ -10,11 +10,6 @@
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/foundation/4.3.2/css/foundation.min.css">
     <style>
       /* example site styles */
-      @media only screen and (min-width: 1020px) {
-        #home-feature {
-          margin-top: 1em;
-        }
-      }
       #login-form .columns {
         padding-left: 0.2em;
       }
@@ -80,7 +75,7 @@
         <h1>Walk for Health</h1>
         <hr>
         <p>Form a team in the Walk for Health and help raise money for our important mission. To get started, use the form below to search for an event in your area.</p>
-        <form class="custom luminateApi teamraiser-event-search-form" method="POST" action="https://secure2.convio.net/vateam/site/CRTeamraiserAPI" data-luminateApi='{"callback": "getTeamraisersByDistanceCallback"}'>
+        <form class="custom luminateApi teamraiser-event-search-form" method="POST" action="https://secure2.convio.net/shortname/site/CRTeamraiserAPI" data-luminateApi='{"callback": "getTeamraisersByDistanceCallback"}'>
           <input type="hidden" name="method" value="getTeamraisersByDistance">
           <div class="large-4 columns">
             <input type="text" name="starting_postal" placeholder="ZIP Code">
