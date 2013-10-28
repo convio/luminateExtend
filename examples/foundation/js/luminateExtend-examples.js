@@ -219,7 +219,7 @@
                                this.description + '<br>' + 
                                ((this.interactionCount == '0') ? 'No actions taken so far. Be the first to respond!' : ('<strong>' + this.interactionCount + '</strong> actions taken so far.')) + 
                                '</p>' + 
-                               '<p><a class="btn btn-primary" href="' + this.url + '">Take Action</a></p>' + 
+                               '<a class="small button" href="' + this.url + '">Take Action</a>' + 
                              '</div>');
         });
       };
