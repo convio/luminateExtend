@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<!--[if IE 8]>    <html class="no-js lt-ie9" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Walk for Health - American Health Society</title>
+    
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/foundation/4.3.2/css/normalize.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/foundation/4.3.2/css/foundation.min.css">
+    <style>
+      /* example site styles */
+      @media only screen and (min-width: 1020px) {
+        #home-feature {
+          margin-top: 1em;
+        }
+      }
+      #login-form .columns {
+        padding-left: 0.2em;
+      }
+      #welcome-back {
+        color: #ffffff;
+      }
+    </style>
+    
+    <script src="//cdnjs.cloudflare.com/ajax/libs/foundation/4.3.2/js/vendor/custom.modernizr.min.js"></script>
+  </head>
+  <body>
+    <div class="contain-to-grid sticky">
+      <nav class="top-bar">
+        <ul class="title-area">
+          <li class="name">
+            <h1>
+              <a href="index.html">American Health Society</a>
+            </h1>
+          </li>
+          <li class="toggle-topbar menu-icon"><a href="#"><span>menu</span></a></li>
+        </ul>
+        <section class="top-bar-section">
+          <ul class="left">
+            <li class="divider"></li>
+            <li class="active">
+              <a href="index.html">Home</a>
+            </li>
+            <li class="divider"></li>
+            <li><a href="donate.html">Donate</a></li>
+            <li class="divider"></li>
+            <li class="has-dropdown">
+              <a href="#">Get Involved</a>
+              <ul class="dropdown">
+                <li><a href="sign-up.html">Get AHS News</a></li>
+                <li><a href="action-center.html">Action Center</a></li>
+                <li><a href="walk-for-health.html">Walk for Health</a></li>
+              </ul>
+            </li>
+          </ul>
+          <ul class="right">
+            <li class="has-form">
+              <form class="luminateApi hide" id="login-form" method="POST" action="http://shortname.convio.net/site/CRConsAPI" data-luminateApi='{"callback": "loginCallback"}'>
+                <input type="hidden" name="method" value="login">
+                <div class="row collapse">
+                  <div class="small-5 columns">
+                    <input type="text" id="login-username" name="user_name" placeholder="Username">
+                  </div>
+                  <div class="small-5 columns">
+                    <input type="password" id="login-password" name="password" placeholder="Password">
+                  </div>
+                  <div class="small-2 columns">
+                    <button type="submit" class="success button">Login</button>
+                  </div>
+                </div>
+              </form>
+            </li>
+          </ul>
+        </section>
+      </nav>
+    </div>
+    <div class="row">
+      <div class="large-12 columns">
+        <h1>Walk for Health</h1>
+        <hr>
+        <p>Form a team in the Walk for Health and help raise money for our important mission. To get started, use the form below to search for an event in your area.</p>
+        <form class="custom luminateApi teamraiser-event-search-form" method="POST" action="https://secure2.convio.net/vateam/site/CRTeamraiserAPI" data-luminateApi='{"callback": "getTeamraisersByDistanceCallback"}'>
+          <input type="hidden" name="method" value="getTeamraisersByDistance">
+          <div class="large-4 columns">
+            <input type="text" name="starting_postal" placeholder="ZIP Code">
+          </div>
+          <div class="large-4 columns">
+            <select name="search_distance">
+              <option value="0">Radius</option>
+              <option value="25">25 miles</option>
+              <option value="50">50 miles</option>
+              <option value="100">100 miles</option>
+              <option value="200">200 miles</option>
+            </select>
+          </div>
+          <button type="submit" class="small button">Search</button>
+        </form>
+        
+        <div id="teamraiser-event-search-results"></div>
+        <footer class="row">
+          <div class="large-12 columns">
+            <hr>
+            <div class="row">
+              <div class="large-6 columns">
+                <p>&copy; American Health Society 2013</p>
+              </div>
+            </div>
+          </div>
+        </footer>
+      </div>
+    </div>
+    
+    <script>
+      document.write('<script src="//cdnjs.cloudflare.com/ajax/libs/foundation/4.3.2/js/vendor/' +
+      ('__proto__' in {} ? 'zepto' : 'jquery') +
+      '.min.js"><\/script>')
+    </script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/foundation/4.3.2/js/foundation.min.js"></script>
+    <script>
+      $(document).foundation();
+    </script>
+    
+    <script src="js/luminateExtend.js"></script>
+    <script src="js/luminateExtend-examples.js"></script>
+  </body>
+</html>

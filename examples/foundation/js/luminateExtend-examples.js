@@ -240,7 +240,7 @@
         $('#teamraiser-event-search-results').html('');
         
         $('.teamraiser-event-search-form').prepend('<div id="teamraiser-event-search-errors">' + 
-                                                     '<div class="alert alert-danger">' + 
+                                                     '<div class="alert-box alert">' + 
                                                        data.errorResponse.message + 
                                                      '</div>' + 
                                                    '</div>');
@@ -251,20 +251,20 @@
         
         if(data.getTeamraisersResponse.totalNumberResults == 0) {
           $('.teamraiser-event-search-form').prepend('<div id="teamraiser-event-search-errors">' + 
-                                                       '<div class="alert alert-danger">' + 
+                                                       '<div class="alert-box alert">' + 
                                                          'No events found. Please try another search.' + 
                                                        '</div>' + 
                                                      '</div>');
         }
         else {
-          $('#teamraiser-event-search-results').html('<div class="well"></div>');
+          $('#teamraiser-event-search-results').html('<div class="panel"></div>');
           var teamraiserList = luminateExtend.utils.ensureArray(data.getTeamraisersResponse.teamraiser);
           $.each(teamraiserList, function() {
-            $('#teamraiser-event-search-results .well').append('<div class="teamraiser-event-search-row">' + 
+            $('#teamraiser-event-search-results .panel').append('<div class="teamraiser-event-search-row">' + 
                                                            '<p><a href="' + this.greeting_url + '"><strong>' + this.name + '</strong></a><br>' + 
                                                            luminateExtend.utils.simpleDateFormat(this.event_date, 'MMMM d, yyyy') + '</p>' + 
-                                                           '<p><a class="btn btn-primary" href="' + this.reg_new_team_url + '">Form a Team</a> ' + 
-                                                           '<a class="btn btn-primary" href="' + this.reg_join_team_url + '">Join a Team</a> ' + 
+                                                           '<a class="small button" href="' + this.reg_new_team_url + '">Form a Team</a> ' + 
+                                                           '<a class="small button" href="' + this.reg_join_team_url + '">Join a Team</a> ' + 
                                                          '</div>');
           });
         }
