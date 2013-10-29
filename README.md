@@ -84,19 +84,20 @@ Including the library
 
 Once you've uploaded 
 [luminateExtend.js](https://github.com/noahcooper/luminateExtend/blob/master/luminateExtend.js) to your 
-website, including the library on a page is easy &mdash; simply add the following script tag to the head, 
-somewhere below where jQuery is included. Change out the file path as needed, depending on where you 
-uploaded the file.
-
-```  html
-<script src="../js/luminateExtend.js"></script>
-```
-
-If you aren't yet including jQuery on your website, use the Google CDN.
+website, including the library on a page is easy &mdash; simply pull in the library somewhere below where 
+jQuery is included. Change out the file path as needed, depending on where you uploaded the file.
 
 ```  html
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <script src="../js/luminateExtend.js"></script>
+```
+
+As of v1.5.1, luminateExtend.js is also available via [cdnjs](http://cdnjs.com/libraries/luminateExtend). 
+Thanks CloudFlare!
+
+```  html
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/luminateExtend/1.5.1/luminateExtend.min.js"></script>
 ```
 
 <a name="luminateExtendObj"></a>
@@ -113,7 +114,7 @@ luminateExtend.library
 `luminateExtend.library` contains information about the library.
 
 ```  js
-console.log(luminateExtend.library.version); // logs a value like "1.5"
+console.log(luminateExtend.library.version); // logs a value like "1.5.1"
 ```
 
 The library object contains the following:
