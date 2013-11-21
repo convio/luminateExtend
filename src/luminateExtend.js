@@ -726,6 +726,10 @@
       }
     }, 
     
+    stringToObj: function(str, obj) {
+      stringToObj(str, obj);
+    }, 
+    
     ping: function(options) {
       var settings = $.extend({
         data: null
