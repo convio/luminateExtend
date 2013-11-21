@@ -7,23 +7,7 @@
 
 (function($) {
   /* private helper functions */
-  var stringToObj = function(str, obj) {
-    var objReturn = obj || window;
-    
-    if(str) {
-      var strParts = str.split('.');
-      for(var i = 0; i < strParts.length; i++) {
-        if(i < (strParts.length - 1) && !objReturn[strParts[i]]) {
-          return {};
-        }
-        objReturn = objReturn[strParts[i]];
-      }
-    }
-    
-    return objReturn;
-  }, 
-  
-  validateLocale = function(locale) {
+  var validateLocale = function(locale) {
     /* if a locale is provided that is not supported, default to "en_US" */
     if(locale && $.inArray(locale, ['es_US', 'en_CA', 'fr_CA', 'en_GB', 'en_AU']) < 0) {
       locale = 'en_US';
@@ -53,7 +37,7 @@
     if(requestSettings.responseFilter && 
        requestSettings.responseFilter.array && 
        requestSettings.responseFilter.filter) {
-      if(stringToObj(requestSettings.responseFilter.array, responseData)) {
+      if(luminateExtend.utils.stringToObj(requestSettings.responseFilter.array, responseData)) {
         var filterKey = requestSettings.responseFilter.filter.split('==')[0].split('!=')[0].replace(/^\s+|\s+$/g, ''), 
         filterOperator, 
         filterValue;
@@ -71,7 +55,7 @@
           filterValue = filterValue.replace(/^\s+|\s+$/g, '');
           var filteredArray = [], 
           arrayIsFiltered = false;
-          $.each(luminateExtend.utils.ensureArray(stringToObj(requestSettings.responseFilter.array, responseData)), function() {
+          $.each(luminateExtend.utils.ensureArray(luminateExtend.utils.stringToObj(requestSettings.responseFilter.array, responseData)), function() {
             if((filterOperator == 'nequal' && this[filterKey] == filterValue) || 
                (filterOperator == 'equal' && this[filterKey] != filterValue)) {
               arrayIsFiltered = true;
@@ -251,7 +235,7 @@
             
             if(formApiData) {
               if(formApiData.callback) {
-                requestCallback = stringToObj(formApiData.callback);
+                requestCallback = luminateExtend.utils.stringToObj(formApiData.callback);
               }
               if(formApiData.requiresAuth && formApiData.requiresAuth == 'true') {
                 requestRequiresAuth = true;
@@ -672,44 +656,50 @@
   };
   
   /* luminate tags */
-  luminateExtend.tags = function(tagType, selector) {
+  luminateExtend.tags = function(tagTypes, selector) {
     /* make luminateExtend.tags an alias for the parse method if called directly */
-    luminateExtend.tags.parse(tagType, selector);
+    luminateExtend.tags.parse(tagTypes, selector);
   };
-  luminateExtend.tags.parse = function(tagType, selector) {
-    if(!tagType || tagType == 'all') {
-      tagType = ['cons'];
+  luminateExtend.tags.parse = function(tagTypes, selector) {
+    /* use the widgets plugin if available */
+    if(luminateExtend.widgets) {
+      luminateExtend.widgets(tagTypes, selector);
     }
     else {
-      tagType = luminateExtend.utils.ensureArray(tagType);
-    }
-    selector = selector || 'body';
-    
-    $.each(tagType, function() {
-      if(tagType == 'cons') {
-        var $consTags = $(selector).find(document.getElementsByTagName('luminate:cons'));
-        if($consTags.length > 0) {
-          var parseConsTags = function(data) {
-            $consTags.each(function() {
-              if(data.getConsResponse) {
-                $(this).replaceWith(stringToObj($(this).attr('field'), data.getConsResponse));
-              }
-              else {
-                $(this).remove();
-              }
-            });
-          };
-          
-          luminateExtend.api.request({
-            api: 'cons', 
-            callback: parseConsTags, 
-            data: 'method=getUser', 
-            requestType: 'POST', 
-            requiresAuth: true
-          });
-        }
+      if(!tagTypes || tagTypes == 'all') {
+        tagTypes = ['cons'];
       }
-    });
+      else {
+        tagTypes = luminateExtend.utils.ensureArray(tagTypes);
+      }
+      selector = selector || 'body';
+      
+      $.each(tagTypes, function(i, tagType) {
+        if(tagType == 'cons') {
+          var $consTags = $(selector).find(document.getElementsByTagName('luminate:cons'));
+          if($consTags.length > 0) {
+            var parseConsTags = function(data) {
+              $consTags.each(function() {
+                if(data.getConsResponse) {
+                  $(this).replaceWith(luminateExtend.utils.stringToObj($(this).attr('field'), data.getConsResponse));
+                }
+                else {
+                  $(this).remove();
+                }
+              });
+            };
+            
+            luminateExtend.api.request({
+              api: 'cons', 
+              callback: parseConsTags, 
+              data: 'method=getUser', 
+              requestType: 'POST', 
+              requiresAuth: true
+            });
+          }
+        }
+      });
+    }
   };
   
   /* public helper functions */
@@ -727,7 +717,19 @@
     }, 
     
     stringToObj: function(str, obj) {
-      stringToObj(str, obj);
+      var objReturn = obj || window;
+      
+      if(str) {
+        var strParts = str.split('.');
+        for(var i = 0; i < strParts.length; i++) {
+          if(i < (strParts.length - 1) && !objReturn[strParts[i]]) {
+            return {};
+          }
+          objReturn = objReturn[strParts[i]];
+        }
+      }
+      
+      return objReturn;
     }, 
     
     ping: function(options) {
