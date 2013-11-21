@@ -84,7 +84,7 @@
       $('.donation-form').submit(function() {
         window.scrollTo(0, 0);
         $(this).hide();
-        $(this).before('<div class="well donation-loading">' + 
+        $(this).before('<div class="panel donation-loading">' + 
                          'Loading ...' + 
                        '</div>');
       });
@@ -98,7 +98,7 @@
         $('#donation-errors').remove();
         
         $('.donation-form').prepend('<div id="donation-errors">' + 
-                                      '<div class="alert alert-danger">' + 
+                                      '<div class="alert-box alert">' + 
                                         data.errorResponse.message + 
                                       '</div>' + 
                                     '</div>');
@@ -111,7 +111,7 @@
         
         if(data.donationResponse.errors) {
           $('.donation-form').prepend('<div id="donation-errors">' + 
-                                        ((data.donationResponse.errors.message) ? ('<div class="alert alert-danger">' + 
+                                        ((data.donationResponse.errors.message) ? ('<div class="alert-box alert">' + 
                                           data.donationResponse.errors.message + 
                                         '</div>') : '') + 
                                       '</div>');
@@ -119,7 +119,7 @@
           if(data.donationResponse.errors.fieldError) {
             var fieldErrors = luminateExtend.utils.ensureArray(data.donationResponse.errors.fieldError);
             $.each(fieldErrors, function() {
-              $('#donation-errors').append('<div class="alert alert-danger">' + 
+              $('#donation-errors').append('<div class="alert-box alert">' + 
                                              this + 
                                            '</div>');
             });
@@ -130,10 +130,10 @@
         }
         else {
           $('.donation-loading').remove();
-          $('.donation-form').before('<div class="alert alert-success">' + 
+          $('.donation-form').before('<div class="alert-box success">' + 
                                        'Your donation has been processed!' + 
                                      '</div>' + 
-                                     '<div class="well">' + 
+                                     '<div class="panel">' + 
                                        '<p>Thank you for your donation of $' + data.donationResponse.donation.amount.decimal + '.</p>' + 
                                        '<p>Your confirmation code is ' + data.donationResponse.donation.confirmation_code + '.</p>' + 
                                      '</div>');
@@ -274,4 +274,4 @@
     /* bind any forms with the "luminateApi" class */
     luminateExtend.api.bind();
   });
-})(Zepto);
+})(typeof jQuery === 'undefined' && typeof Zepto === 'function' ? Zepto : jQuery);

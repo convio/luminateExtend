@@ -16,6 +16,15 @@
       #welcome-back {
         color: #ffffff;
       }
+      @media only screen and (max-width: 767px) {
+        .survey-form .small-12 label.right {
+          float: none !important;
+          text-align: left;
+        }
+        .survey-form .small-12 label.inline {
+          margin-bottom: 0;
+        }
+      }
     </style>
     
     <script src="//cdnjs.cloudflare.com/ajax/libs/foundation/4.3.2/js/vendor/custom.modernizr.min.js"></script>
@@ -79,39 +88,39 @@
           <input type="hidden" name="method" value="submitSurvey">
           <input type="hidden" name="survey_id" value="18561">
           <div class="row">
-            <div class="small-3 columns">
+            <div class="small-12 large-3 columns">
               <label for="survey-cons-first-name" class="right inline">First Name:</label>
             </div>
-            <div class="small-9 columns">
+            <div class="small-12 large-8 pull-1 columns">
               <input type="text" name="cons_first_name" id="survey-cons-first-name">
             </div>
           </div>
           <div class="row">
-            <div class="small-3 columns">
+            <div class="small-12 large-3 columns">
               <label for="survey-cons-last-name" class="right inline">Last Name:</label>
             </div>
-            <div class="small-9 columns">
+            <div class="small-12 large-8 pull-1 columns">
               <input type="text" name="cons_last_name" id="survey-cons-last-name">
             </div>
           </div>
           <div class="row">
-            <div class="small-3 columns">
+            <div class="small-12 large-3 columns">
               <label for="survey-cons-email" class="right inline">Email Address:</label>
             </div>
-            <div class="small-9 columns">
+            <div class="small-12 large-8 pull-1 columns">
               <input type="text" name="cons_email" id="survey-cons-email">
             </div>
           </div>
           <input type="hidden" name="cons_email_opt_in" value="true">
           <div class="row">
-            <div class="small-9 small-offset-3 columns">
+            <div class="small-12 large-9 large-offset-3 columns">
               <div class="alert-box secondary">
                 By filling out this form, you'll be signed up to receive periodic updates from American Health Society.
               </div>
             </div>
           </div>
           <div class="row">
-            <div class="small-9 small-offset-3 columns">
+            <div class="small-12 large-9 large-offset-3 columns">
               <button type="submit" class="button small">Sign Me Up</button>
             </div>
           </div>
