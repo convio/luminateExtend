@@ -1,8 +1,8 @@
 luminateExtend.js
 =================
 
-Version: 1.5.1 (22-OCT-2013)  
-Requires: jQuery v1.4.4+
+Version: 1.6 (26-NOV-2013)  
+Requires: jQuery v1.4.4+ or Zepto v1.0+
 
 luminateExtend.js is a JavaScript library for use with 
 [Luminate Online](https://www.blackbaud.com/online-marketing/luminate-online), a product of Blackbaud. 
@@ -84,19 +84,27 @@ Including the library
 
 Once you've uploaded 
 [luminateExtend.js](https://github.com/noahcooper/luminateExtend/blob/master/luminateExtend.js) to your 
-website, including the library on a page is easy &mdash; simply add the following script tag to the head, 
-somewhere below where jQuery is included. Change out the file path as needed, depending on where you 
-uploaded the file.
-
-```  html
-<script src="../js/luminateExtend.js"></script>
-```
-
-If you aren't yet including jQuery on your website, use the Google CDN.
+website, including the library on a page is easy &mdash; simply pull in the library somewhere below where 
+jQuery is included. Change out the file path as needed, depending on where you uploaded the file.
 
 ```  html
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <script src="../js/luminateExtend.js"></script>
+```
+
+If you prefer to use a CDN, luminateExtend.js is available via [cdnjs](http://cdnjs.com/libraries/luminateExtend). 
+Thanks cdnjs and CloudFlare!
+
+```  html
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/luminateExtend/1.5.1/luminateExtend.min.js"></script>
+```
+
+As of v1.6, luminateExtend.js can be used with [Zepto](http://zeptojs.com) in lieu of jQuery if you so choose.
+
+```  html
+<script src="//cdnjs.cloudflare.com/ajax/libs/zepto/1.0/zepto.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/luminateExtend/1.5.1/luminateExtend.min.js"></script>
 ```
 
 <a name="luminateExtendObj"></a>
@@ -113,7 +121,7 @@ luminateExtend.library
 `luminateExtend.library` contains information about the library.
 
 ```  js
-console.log(luminateExtend.library.version); // logs a value like "1.5"
+console.log(luminateExtend.library.version); // logs a value like "1.6"
 ```
 
 The library object contains the following:
