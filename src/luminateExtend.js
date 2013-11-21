@@ -1,7 +1,7 @@
 /*
  * luminateExtend.js
  * Version: 1.6 (26-NOV-2013)
- * Requires: jQuery v1.4.4+
+ * Requires: jQuery v1.4.4+ or Zepto v1.0+
  * Includes: SimpleDateFormatJS v1.3 (https://github.com/noahcooper/SimpleDateFormatJS)
  */
 
@@ -71,7 +71,7 @@
           filterValue = filterValue.replace(/^\s+|\s+$/g, '');
           var filteredArray = [], 
           arrayIsFiltered = false;
-          $.each(luminateExtend.utils.ensureArray(stringToObj(requestSettings.responseFilter.array, responseData)), function(i) {
+          $.each(luminateExtend.utils.ensureArray(stringToObj(requestSettings.responseFilter.array, responseData)), function() {
             if((filterOperator == 'nequal' && this[filterKey] == filterValue) || 
                (filterOperator == 'equal' && this[filterKey] != filterValue)) {
               arrayIsFiltered = true;
@@ -349,7 +349,7 @@
   
   luminateExtend.api.getAuthLoad = true;
   
-  luminateExtend.api.request = function(options) {
+  var sendRequest = function(options) {
     var settings = $.extend({
       contentType: 'application/x-www-form-urlencoded', 
       data: '', 
@@ -416,7 +416,7 @@
         settings.data += '&v=1.0';
       }
       
-      settings.requestType = (settings.requestType.toLowerCase() == 'post') ? 'POST' : 'GET';
+      settings.requestType = settings.requestType.toLowerCase() === 'post' ? 'POST' : 'GET';
       
       var requestUrl = 'http://', 
       requestPath = luminateExtend.global.path.nonsecure.split('http://')[1];
@@ -595,6 +595,57 @@
       }
       else {
         doRequest();
+      }
+    }
+  };
+  
+  luminateExtend.api.request = function(requests) {
+    /* check for single requests */
+    if(!$.isArray(requests)) {
+      sendRequest(requests);
+    }
+    
+    else {
+      var asyncRequests = [];
+      
+      /* check for synchronous requests */
+      for(var i = requests.length - 1; i >= 0; i--) {
+        var requestSettings = $.extend({
+          async: true
+        }, requests[i]);
+        
+        if(!requestSettings.async && i > 0) {
+          if(requests[i - 1].callback && typeof requests[i - 1].callback != 'function') {
+            var oCallbackSuccess = requests[i - 1].callback.success || $.noop;
+            requests[i - 1].callback.success = function(response) {
+              oCallbackSuccess(response);
+              
+              sendRequest(requests[i]);
+            };
+          }
+          else {
+            var oCallbackFn = requests[i - 1].callback || $.noop;
+            requests[i - 1].callback = {
+              success: function(response) {
+                oCallbackFn(response);
+                
+                sendRequest(requests[i]);
+              }, 
+              error: function(response) {
+                oCallbackFn(response);
+              }
+            };
+          }
+        }
+        
+        else {
+          asyncRequests.push(requests[i]);
+        }
+      }
+      
+      /* make each asynchronous request */
+      for(var i = 0; i < asyncRequests.length; i++) {
+        sendRequest(asyncRequests[i]);
       }
     }
   };
