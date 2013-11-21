@@ -1,6 +1,6 @@
 /*
  * luminateExtend.js
- * Version: 1.6 (19-NOV-2013)
+ * Version: 1.6 (26-NOV-2013)
  * Requires: jQuery v1.4.4+
  * Includes: SimpleDateFormatJS v1.3 (https://github.com/noahcooper/SimpleDateFormatJS)
  */
@@ -391,7 +391,7 @@
       if(luminateExtend.global.apiCommon.centerId && settings.data.indexOf('&center_id=') == -1) {
         settings.data += '&center_id=' + luminateExtend.global.apiCommon.centerId;
       }
-      if(luminateExtend.global.categoryId && settings.data.indexOf('&list_category_id=') == -1) {
+      if(luminateExtend.global.apiCommon.categoryId && settings.data.indexOf('&list_category_id=') == -1) {
         settings.data += '&list_category_id=' + luminateExtend.global.apiCommon.categoryId;
       }
       if(settings.data.indexOf('&response_format=xml') != -1) {
