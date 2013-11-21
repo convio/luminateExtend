@@ -606,30 +606,35 @@
     }
     
     else {
+      requests.reverse();
+
       var asyncRequests = [];
       
       /* check for synchronous requests */
-      for(var i = requests.length - 1; i >= 0; i--) {
+      $.each(requests, function(requestInverseIndex) {
         var requestSettings = $.extend({
           async: true
-        }, requests[i]);
+        }, this);
         
-        if(!requestSettings.async && i > 0) {
-          if(requests[i - 1].callback && typeof requests[i - 1].callback != 'function') {
-            var oCallbackSuccess = requests[i - 1].callback.success || $.noop;
-            requests[i - 1].callback.success = function(response) {
+        if(!requestSettings.async && requestInverseIndex != requests.length - 1) {
+          var prevRequest = requests[requestInverseIndex + 1];
+          if(prevRequest.callback && 
+             typeof prevRequest.callback != 'function') {
+            var oCallbackSuccess = prevRequest.callback.success || $.noop;
+            prevRequest.callback.success = function(response) {
               oCallbackSuccess(response);
-              
-              sendRequest(requests[i]);
+
+              sendRequest(requestSettings);
             };
           }
           else {
-            var oCallbackFn = requests[i - 1].callback || $.noop;
-            requests[i - 1].callback = {
+            var prevRequest = requests[requestInverseIndex + 1], 
+            oCallbackFn = prevRequest.callback || $.noop;
+            prevRequest.callback = {
               success: function(response) {
                 oCallbackFn(response);
                 
-                sendRequest(requests[i]);
+                sendRequest(requestSettings);
               }, 
               error: function(response) {
                 oCallbackFn(response);
@@ -639,14 +644,15 @@
         }
         
         else {
-          asyncRequests.push(requests[i]);
+          asyncRequests.push(requestSettings);
         }
-      }
+      });
       
       /* make each asynchronous request */
-      for(var i = 0; i < asyncRequests.length; i++) {
-        sendRequest(asyncRequests[i]);
-      }
+      asyncRequests.reverse();
+      $.each(asyncRequests, function() {
+        sendRequest(this);
+      });
     }
   };
   
