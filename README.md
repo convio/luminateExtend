@@ -1,8 +1,8 @@
 luminateExtend.js
 =================
 
-Version: 1.6 (26-NOV-2013)  
-Requires: jQuery v1.4.4+ or Zepto v1.0+
+Version: 1.6 (10-DEC-2013) 
+Requires: jQuery v1.4.4+ or Zepto v1.1+
 
 luminateExtend.js is a JavaScript library for use with 
 [Luminate Online](https://www.blackbaud.com/online-marketing/luminate-online), a product of Blackbaud. 
@@ -103,7 +103,7 @@ Thanks cdnjs and CloudFlare!
 As of v1.6, luminateExtend.js can be used with [Zepto](http://zeptojs.com) in lieu of jQuery if you so choose.
 
 ```  html
-<script src="//cdnjs.cloudflare.com/ajax/libs/zepto/1.0/zepto.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/zepto/1.1.1/zepto.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/luminateExtend/1.5.1/luminateExtend.min.js"></script>
 ```
 

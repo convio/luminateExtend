@@ -1,7 +1,7 @@
 /*
  * luminateExtend.js
- * Version: 1.6 (26-NOV-2013)
- * Requires: jQuery v1.4.4+ or Zepto v1.0+
+ * Version: 1.6 (10-DEC-2013)
+ * Requires: jQuery v1.4.4+ or Zepto v1.1+
  * Includes: SimpleDateFormatJS v1.3 (https://github.com/noahcooper/SimpleDateFormatJS)
  */
 
@@ -181,9 +181,8 @@
     }
     
     /* check if the browser supports CORS and the withCredentials property */
-    /* if Zepto is used, always return false, as it does not allow one to set withCredentials */
     settings.supportsCORS = false;
-    if(window.XMLHttpRequest && $.fn.jquery) {
+    if(window.XMLHttpRequest) {
       var testXHR = new XMLHttpRequest();
       if('withCredentials' in testXHR) {
         settings.supportsCORS = true;
