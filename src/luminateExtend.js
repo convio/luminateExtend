@@ -196,10 +196,6 @@
       path: {}
     }, options || {});
     
-    if(settings.locale) {
-      settings.locale = setLocale(settings.locale);
-    }
-    
     /* check if the browser supports CORS and the withCredentials property */
     settings.supportsCORS = false;
     if(window.XMLHttpRequest) {
@@ -210,6 +206,10 @@
     }
     
     luminateExtend.global = $.extend(luminateExtend.global, settings);
+
+    if(settings.locale) {
+      settings.locale = setLocale(settings.locale);
+    }
     
     return luminateExtend;
   };
