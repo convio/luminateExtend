@@ -477,12 +477,15 @@
             luminateExtend.api.request.postMessageEventHandler = {};
             
             luminateExtend.api.request.postMessageEventHandler.handler = function(e) {
-              var parsedData = $.parseJSON(e.data), 
-              messageFrameId = parsedData.postMessageFrameId, 
-              responseData = $.parseJSON(decodeURIComponent(parsedData.response));
-              
-              if(luminateExtend.api.request.postMessageEventHandler[messageFrameId]) {
-                luminateExtend.api.request.postMessageEventHandler[messageFrameId](messageFrameId, responseData);
+              if(luminateExtend.global.path.nonsecure.indexOf(e.origin) != -1 || 
+                 luminateExtend.global.path.secure.indexOf(e.origin) != -1) {
+                var parsedData = $.parseJSON(e.data), 
+                messageFrameId = parsedData.postMessageFrameId, 
+                responseData = $.parseJSON(decodeURIComponent(parsedData.response));
+                
+                if(luminateExtend.api.request.postMessageEventHandler[messageFrameId]) {
+                  luminateExtend.api.request.postMessageEventHandler[messageFrameId](messageFrameId, responseData);
+                }
               }
             };
             
