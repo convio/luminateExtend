@@ -1,6 +1,6 @@
 /*
  * luminateExtend.js
- * Version: 1.6 (10-DEC-2013)
+ * Version: 1.6 (28-JAN-2014)
  * Requires: jQuery v1.4.4+ or Zepto v1.1+
  * Includes: SimpleDateFormatJS v1.3 (https://github.com/noahcooper/SimpleDateFormatJS)
  */
@@ -177,7 +177,7 @@
     }, options || {});
     
     if(settings.locale) {
-      settings.locale = setLocale(settings.locale);
+      settings.locale = validateLocale(settings.locale);
     }
     
     /* check if the browser supports CORS and the withCredentials property */

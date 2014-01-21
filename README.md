@@ -1,7 +1,7 @@
 luminateExtend.js
 =================
 
-Version: 1.6 (10-DEC-2013) 
+Version: 1.6 (28-JAN-2014) 
 Requires: jQuery v1.4.4+ or Zepto v1.1+
 
 luminateExtend.js is a JavaScript library for use with 
