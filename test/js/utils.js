@@ -13,6 +13,13 @@ test('luminateExtend.utils.ensureArray() returns an array when an array is provi
      fooBarArray[1].foo === 'barTwo');
 });
 
+test('luminateExtend.utils.ensureArray() returns an empty array when undefined is provided', function() {
+  var fooBar, 
+  fooBarArray = luminateExtend.utils.ensureArray(fooBar);
+  ok($.isArray(fooBarArray) && 
+     fooBarArray.length === 0);
+});
+
 var unformattedDate = new Date('1970', '00', '28', '00', '00', '00');
 
 test('luminateExtend.utils.simpleDateFormat() defaults to "M/d/yy" when luminateExtend.global.locale is undefined', function() {
