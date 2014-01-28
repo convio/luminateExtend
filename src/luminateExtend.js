@@ -1,7 +1,7 @@
 /*
  * luminateExtend.js
  * Version: 1.6 (28-JAN-2014)
- * Requires: jQuery v1.4.4+ or Zepto v1.1+
+ * Requires: jQuery v1.5.1+ or Zepto v1.1+
  * Includes: SimpleDateFormatJS v1.3 (https://github.com/noahcooper/SimpleDateFormatJS)
  */
 
@@ -713,8 +713,11 @@
       if($.isArray(pArray)) {
         return pArray;
       }
-      else {
+      else if(pArray) {
         return [pArray];
+      }
+      else {
+        return [];
       }
     }, 
     
