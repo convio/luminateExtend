@@ -13,7 +13,7 @@ asyncTest('luminateExtend.api.getAuth() defines luminateExtend.global.auth.type 
 asyncTest('luminateExtend.api.request() allows "addressbook" shorthand', function() {
   luminateExtend.api.request({
     api: 'addressbook', 
-    data: 'method=getAddressBookContacts', 
+    data: 'method=getAddressBookContacts&list_page_size=1', 
     requiresAuth: true, 
     useHTTPS: true, 
     callback: function(response) {
@@ -27,7 +27,7 @@ asyncTest('luminateExtend.api.request() allows "addressbook" shorthand', functio
 asyncTest('luminateExtend.api.request() allows "advocacy" shorthand', function() {
   luminateExtend.api.request({
     api: 'advocacy', 
-    data: 'method=getAdvocacyAlerts', 
+    data: 'method=getAdvocacyAlerts&list_page_size=1', 
     callback: function(response) {
       ok(response.getAdvocacyAlertsResponse);
       start();
@@ -49,7 +49,7 @@ asyncTest('luminateExtend.api.request() allows "cons" shorthand', function() {
 asyncTest('luminateExtend.api.request() allows "content" shorthand', function() {
   luminateExtend.api.request({
     api: 'content', 
-    data: 'method=listLinks&provider_id=42', 
+    data: 'method=listLinks&provider_id=42&list_page_size=1', 
     callback: function(response) {
       ok(response.listLinksResponse);
       start();
@@ -95,7 +95,7 @@ asyncTest('luminateExtend.api.request() allows "recurring" shorthand', function(
 asyncTest('luminateExtend.api.request() allows "survey" shorthand', function() {
   luminateExtend.api.request({
     api: 'survey', 
-    data: 'method=listSurveys', 
+    data: 'method=listSurveys&list_page_size=1', 
     callback: function(response) {
       ok(response.listSurveysResponse);
       start();
@@ -106,7 +106,7 @@ asyncTest('luminateExtend.api.request() allows "survey" shorthand', function() {
 asyncTest('luminateExtend.api.request() allows "teamraiser" shorthand', function() {
   luminateExtend.api.request({
     api: 'teamraiser', 
-    data: 'method=getTeamraisersByInfo&name=%25', 
+    data: 'method=getTeamraisersByInfo&name=%25&list_page_size=1', 
     callback: function(response) {
       ok(response.getTeamraisersResponse);
       start();
