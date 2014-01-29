@@ -5,7 +5,7 @@
     <title>Donate to American Health Society</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
     <style>
       /* example site styles */
       body {
@@ -23,10 +23,10 @@
     
     <!--[if lt IE 9]>
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-      <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+      <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <![endif]-->
     <!--[if gte IE 9]><!-->
-      <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+      <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
     <!--<![endif]-->
   </head>
   <body>
@@ -74,7 +74,7 @@
       <p>You can be a part of the solution &ndash; make a donation to help fund important research. We can't do it without you.</p>
       <form class="form-horizontal luminateApi donation-form" method="POST" action="https://secure2.convio.net/shortname/site/CRDonationAPI" data-luminateApi='{"callback": "donateCallback"}'>
         <input type="hidden" name="method" value="donate">
-        <input type="hidden" name="form_id" value="11320">
+        <input type="hidden" name="form_id" value="1234">
         <input type="hidden" name="validate" value="true">
         <div class="panel panel-default">
           <div class="panel-heading">Donation Information</div>
@@ -249,7 +249,7 @@
               <div class="col-sm-offset-3 col-md-offset-2 col-sm-8 col-md-6">
                 <div class="checkbox">
                   <label>
-                    <input type="checkbox" checked> Yes, I'd like to receive email from American Health Society
+                    <input type="checkbox" name="donor.email_opt_in" value="true" checked> Yes, I'd like to receive email from American Health Society
                   </label>
                 </div>
               </div>
@@ -315,7 +315,7 @@
       </footer>
     </div>
     
-    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
     
     <script src="js/luminateExtend.js"></script>
     <script src="js/luminateExtend-examples.js"></script>

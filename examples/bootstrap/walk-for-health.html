@@ -5,7 +5,7 @@
     <title>Walk for Health - American Health Society</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
     <style>
       /* example site styles */
       body {
@@ -18,10 +18,10 @@
     
     <!--[if lt IE 9]>
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-      <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+      <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <![endif]-->
     <!--[if gte IE 9]><!-->
-      <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+      <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
     <!--<![endif]-->
   </head>
   <body>
@@ -49,7 +49,7 @@
               </ul>
             </li>
           </ul>
-          <form class="navbar-form navbar-right luminateApi hide" id="login-form" method="POST" action="z" data-luminateApi='{"callback": "loginCallback"}'>
+          <form class="navbar-form navbar-right luminateApi hide" id="login-form" method="POST" action="http://shortname.convio.net/site/CRConsAPI" data-luminateApi='{"callback": "loginCallback"}'>
             <input type="hidden" name="method" value="login">
             <div class="form-group">
               <input type="text" class="form-control" id="login-username" name="user_name" placeholder="Username">
@@ -91,7 +91,7 @@
       </footer>
     </div>
     
-    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
     
     <script src="js/luminateExtend.js"></script>
     <script src="js/luminateExtend-examples.js"></script>

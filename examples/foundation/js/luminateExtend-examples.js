@@ -13,7 +13,7 @@
     window.getUser = function() {
       var getUserCallback = function(data) {
         if(data.getConsResponse && data.getConsResponse.name) {
-          $('#login-form').replaceWith('<p class="navbar-text pull-right" id="welcome-back">' + 
+          $('#login-form').replaceWith('<p id="welcome-back">' + 
                                          'Welcome back' + ((data.getConsResponse.name.first) ? (', ' + data.getConsResponse.name.first) : '') + '! ' + 
                                          '<a href="' + luminateExtend.global.path.nonsecure + 'UserLogin?logout=&NEXTURL=' + encodeURIComponent(window.location.href) + '">Logout</a>' + 
                                        '</p>');
@@ -51,27 +51,16 @@
     window.loginCallback = {
       error: function(data) {
         if($('#login-error-modal').length == 0) {
-          $('body').append('<div class="modal fade" id="login-error-modal">' + 
-                             '<div class="modal-dialog">' + 
-                               '<div class="modal-content">' + 
-                                 '<div class="modal-header">' + 
-                                   '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>' + 
-                                   '<h4 class="modal-title">Error</h4>' + 
-                                 '</div>' + 
-                                 '<div class="modal-body">' + 
-                                   '<p>' + data.errorResponse.message + '</p>' + 
-                                 '</div>' + 
-                                 '<div class="modal-footer">' + 
-                                   '<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>' + 
-                                 '</div>' + 
-                               '</div>' + 
-                             '</div>' + 
+          $('body').append('<div class="reveal-modal" id="login-error-modal">' + 
+                             '<h2>Error</h2>' + 
+                             '<p>' + data.errorResponse.message + '</p>' + 
+                             '<a class="close-reveal-modal">&#215;</a>' + 
                            '</div>');
         }
         else {
-          $('#login-error-modal .modal-body p').html(data.errorResponse.message);
+          $('#login-error-modal p').html(data.errorResponse.message);
         }
-        $('#login-error-modal').modal('show');
+        $('#login-error-modal').foundation('reveal', 'open');
       }, 
       success: function(data) {
         getUser();
@@ -95,7 +84,7 @@
       $('.donation-form').submit(function() {
         window.scrollTo(0, 0);
         $(this).hide();
-        $(this).before('<div class="well donation-loading">' + 
+        $(this).before('<div class="panel donation-loading">' + 
                          'Loading ...' + 
                        '</div>');
       });
@@ -109,7 +98,7 @@
         $('#donation-errors').remove();
         
         $('.donation-form').prepend('<div id="donation-errors">' + 
-                                      '<div class="alert alert-danger">' + 
+                                      '<div class="alert-box alert">' + 
                                         data.errorResponse.message + 
                                       '</div>' + 
                                     '</div>');
@@ -122,7 +111,7 @@
         
         if(data.donationResponse.errors) {
           $('.donation-form').prepend('<div id="donation-errors">' + 
-                                        ((data.donationResponse.errors.message) ? ('<div class="alert alert-danger">' + 
+                                        ((data.donationResponse.errors.message) ? ('<div class="alert-box alert">' + 
                                           data.donationResponse.errors.message + 
                                         '</div>') : '') + 
                                       '</div>');
@@ -130,7 +119,7 @@
           if(data.donationResponse.errors.fieldError) {
             var fieldErrors = luminateExtend.utils.ensureArray(data.donationResponse.errors.fieldError);
             $.each(fieldErrors, function() {
-              $('#donation-errors').append('<div class="alert alert-danger">' + 
+              $('#donation-errors').append('<div class="alert-box alert">' + 
                                              this + 
                                            '</div>');
             });
@@ -141,10 +130,10 @@
         }
         else {
           $('.donation-loading').remove();
-          $('.donation-form').before('<div class="alert alert-success">' + 
+          $('.donation-form').before('<div class="alert-box success">' + 
                                        'Your donation has been processed!' + 
                                      '</div>' + 
-                                     '<div class="well">' + 
+                                     '<div class="panel">' + 
                                        '<p>Thank you for your donation of $' + data.donationResponse.donation.amount.decimal + '.</p>' + 
                                        '<p>Your confirmation code is ' + data.donationResponse.donation.confirmation_code + '.</p>' + 
                                      '</div>');
@@ -157,7 +146,7 @@
       $('.survey-form').submit(function() {
         window.scrollTo(0, 0);
         $(this).hide();
-        $(this).before('<div class="well survey-loading">' + 
+        $(this).before('<div class="panel survey-loading">' + 
                          'Loading ...' + 
                        '</div>');
       });
@@ -169,10 +158,10 @@
     window.submitSurveyCallback = {
       error: function(data) {
         $('#survey-errors').remove();
-        $('.survey-form .control-rows .alert').remove();
+        $('.survey-form .row .alert').remove();
         
         $('.survey-form').prepend('<div id="survey-errors">' + 
-                                      '<div class="alert alert-danger">' + 
+                                      '<div class="alert-box alert">' + 
                                         data.errorResponse.message + 
                                       '</div>' + 
                                     '</div>');
@@ -182,11 +171,11 @@
       }, 
       success: function(data) {
         $('#survey-errors').remove();
-        $('.survey-form .form-group .survey-alert-wrap').remove();
+        $('.survey-form .row .survey-alert-wrap').remove();
         
         if(data.submitSurveyResponse.success == 'false') {
           $('.survey-form').prepend('<div id="survey-errors">' + 
-                                      '<div class="alert alert-danger">' + 
+                                      '<div class="alert-box alert">' + 
                                         'There was an error with your submission. Please try again.' + 
                                       '</div>' + 
                                     '</div>');
@@ -194,9 +183,9 @@
           var surveyErrors = luminateExtend.utils.ensureArray(data.submitSurveyResponse.errors);
           $.each(surveyErrors, function() {
             if(this.errorField) {
-              $('input[name="' + this.errorField + '"]').closest('.form-group')
-                                                        .prepend('<div class="col-sm-12 survey-alert-wrap">' + 
-                                                                   '<div class="alert alert-danger">' + 
+              $('input[name="' + this.errorField + '"]').closest('.row')
+                                                        .prepend('<div class="small-12 columns survey-alert-wrap">' + 
+                                                                   '<div class="alert-box alert">' + 
                                                                      this.errorMessage + 
                                                                    '</div>' + 
                                                                  '</div>');
@@ -208,12 +197,12 @@
         }
         else {
           $('.survey-loading').remove();
-          $('.survey-form').before('<div class="alert alert-success">' + 
-                                       'You\'ve been signed up!' + 
-                                     '</div>' + 
-                                     '<div class="well">' + 
-                                       '<p>Thanks for joining. You should receive your first issue of the e-newsletter shortly.</p>' + 
-                                     '</div>');
+          $('.survey-form').before('<div class="alert-box success">' + 
+                                     'You\'ve been signed up!' + 
+                                   '</div>' + 
+                                   '<div class="panel">' + 
+                                     '<p>Thanks for joining. You should receive your first issue of the e-newsletter shortly.</p>' + 
+                                   '</div>');
         }
       }
     };
@@ -230,7 +219,7 @@
                                this.description + '<br>' + 
                                ((this.interactionCount == '0') ? 'No actions taken so far. Be the first to respond!' : ('<strong>' + this.interactionCount + '</strong> actions taken so far.')) + 
                                '</p>' + 
-                               '<p><a class="btn btn-primary" href="' + this.url + '">Take Action</a></p>' + 
+                               '<a class="small button" href="' + this.url + '">Take Action</a>' + 
                              '</div>');
         });
       };
@@ -251,7 +240,7 @@
         $('#teamraiser-event-search-results').html('');
         
         $('.teamraiser-event-search-form').prepend('<div id="teamraiser-event-search-errors">' + 
-                                                     '<div class="alert alert-danger">' + 
+                                                     '<div class="alert-box alert">' + 
                                                        data.errorResponse.message + 
                                                      '</div>' + 
                                                    '</div>');
@@ -262,20 +251,20 @@
         
         if(data.getTeamraisersResponse.totalNumberResults == 0) {
           $('.teamraiser-event-search-form').prepend('<div id="teamraiser-event-search-errors">' + 
-                                                       '<div class="alert alert-danger">' + 
+                                                       '<div class="alert-box alert">' + 
                                                          'No events found. Please try another search.' + 
                                                        '</div>' + 
                                                      '</div>');
         }
         else {
-          $('#teamraiser-event-search-results').html('<div class="well"></div>');
+          $('#teamraiser-event-search-results').html('<div class="panel"></div>');
           var teamraiserList = luminateExtend.utils.ensureArray(data.getTeamraisersResponse.teamraiser);
           $.each(teamraiserList, function() {
-            $('#teamraiser-event-search-results .well').append('<div class="teamraiser-event-search-row">' + 
+            $('#teamraiser-event-search-results .panel').append('<div class="teamraiser-event-search-row">' + 
                                                            '<p><a href="' + this.greeting_url + '"><strong>' + this.name + '</strong></a><br>' + 
                                                            luminateExtend.utils.simpleDateFormat(this.event_date, 'MMMM d, yyyy') + '</p>' + 
-                                                           '<p><a class="btn btn-primary" href="' + this.reg_new_team_url + '">Form a Team</a> ' + 
-                                                           '<a class="btn btn-primary" href="' + this.reg_join_team_url + '">Join a Team</a> ' + 
+                                                           '<a class="small button" href="' + this.reg_new_team_url + '">Form a Team</a> ' + 
+                                                           '<a class="small button" href="' + this.reg_join_team_url + '">Join a Team</a> ' + 
                                                          '</div>');
           });
         }
@@ -285,4 +274,4 @@
     /* bind any forms with the "luminateApi" class */
     luminateExtend.api.bind();
   });
-})(jQuery);
+})(typeof jQuery === 'undefined' && typeof Zepto === 'function' ? Zepto : jQuery);

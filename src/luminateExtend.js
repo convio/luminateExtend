@@ -1,33 +1,13 @@
 /*
  * luminateExtend.js
- * Version: 1.5.1 (22-OCT-2013)
- * Requires: jQuery v1.4.4+
+ * Version: 1.6 (28-JAN-2014)
+ * Requires: jQuery v1.5.1+ or Zepto v1.1+
  * Includes: SimpleDateFormatJS v1.3 (https://github.com/noahcooper/SimpleDateFormatJS)
  */
 
 (function($) {
-  /* jQuery version info */
-  var jQueryVersionParts = jQuery.fn.jquery.split('.'), 
-  jQueryVersionMajorMinor = Number(jQueryVersionParts[0] + '.' + jQueryVersionParts[1]), 
-  
   /* private helper functions */
-  stringToObj = function(str, obj) {
-    var objReturn = obj || window;
-    
-    if(str) {
-      var strParts = str.split('.');
-      for(var i = 0; i < strParts.length; i++) {
-        if(i < (strParts.length - 1) && !objReturn[strParts[i]]) {
-          return {};
-        }
-        objReturn = objReturn[strParts[i]];
-      }
-    }
-    
-    return objReturn;
-  }, 
-  
-  validateLocale = function(locale) {
+  var validateLocale = function(locale) {
     /* if a locale is provided that is not supported, default to "en_US" */
     if(locale && $.inArray(locale, ['es_US', 'en_CA', 'fr_CA', 'en_GB', 'en_AU']) < 0) {
       locale = 'en_US';
@@ -57,7 +37,7 @@
     if(requestSettings.responseFilter && 
        requestSettings.responseFilter.array && 
        requestSettings.responseFilter.filter) {
-      if(stringToObj(requestSettings.responseFilter.array, responseData)) {
+      if(luminateExtend.utils.stringToObj(requestSettings.responseFilter.array, responseData)) {
         var filterKey = requestSettings.responseFilter.filter.split('==')[0].split('!=')[0].replace(/^\s+|\s+$/g, ''), 
         filterOperator, 
         filterValue;
@@ -75,7 +55,7 @@
           filterValue = filterValue.replace(/^\s+|\s+$/g, '');
           var filteredArray = [], 
           arrayIsFiltered = false;
-          $.each(luminateExtend.utils.ensureArray(stringToObj(requestSettings.responseFilter.array, responseData)), function(i) {
+          $.each(luminateExtend.utils.ensureArray(luminateExtend.utils.stringToObj(requestSettings.responseFilter.array, responseData)), function() {
             if((filterOperator == 'nequal' && this[filterKey] == filterValue) || 
                (filterOperator == 'equal' && this[filterKey] != filterValue)) {
               arrayIsFiltered = true;
@@ -159,7 +139,7 @@
   
   /* library info */
   luminateExtend.library = {
-    version: '1.5.1'
+    version: '1.6'
   };
   
   /* global settings */
@@ -197,7 +177,7 @@
     }, options || {});
     
     if(settings.locale) {
-      settings.locale = setLocale(settings.locale);
+      settings.locale = validateLocale(settings.locale);
     }
     
     /* check if the browser supports CORS and the withCredentials property */
@@ -254,7 +234,7 @@
             
             if(formApiData) {
               if(formApiData.callback) {
-                requestCallback = stringToObj(formApiData.callback);
+                requestCallback = luminateExtend.utils.stringToObj(formApiData.callback);
               }
               if(formApiData.requiresAuth && formApiData.requiresAuth == 'true') {
                 requestRequiresAuth = true;
@@ -352,7 +332,7 @@
   
   luminateExtend.api.getAuthLoad = true;
   
-  luminateExtend.api.request = function(options) {
+  var sendRequest = function(options) {
     var settings = $.extend({
       contentType: 'application/x-www-form-urlencoded', 
       data: '', 
@@ -394,7 +374,7 @@
       if(luminateExtend.global.apiCommon.centerId && settings.data.indexOf('&center_id=') == -1) {
         settings.data += '&center_id=' + luminateExtend.global.apiCommon.centerId;
       }
-      if(luminateExtend.global.categoryId && settings.data.indexOf('&list_category_id=') == -1) {
+      if(luminateExtend.global.apiCommon.categoryId && settings.data.indexOf('&list_category_id=') == -1) {
         settings.data += '&list_category_id=' + luminateExtend.global.apiCommon.categoryId;
       }
       if(settings.data.indexOf('&response_format=xml') != -1) {
@@ -419,7 +399,7 @@
         settings.data += '&v=1.0';
       }
       
-      settings.requestType = (settings.requestType.toLowerCase() == 'post') ? 'POST' : 'GET';
+      settings.requestType = settings.requestType.toLowerCase() === 'post' ? 'POST' : 'GET';
       
       var requestUrl = 'http://', 
       requestPath = luminateExtend.global.path.nonsecure.split('http://')[1];
@@ -497,12 +477,15 @@
             luminateExtend.api.request.postMessageEventHandler = {};
             
             luminateExtend.api.request.postMessageEventHandler.handler = function(e) {
-              var parsedData = $.parseJSON(e.data), 
-              messageFrameId = parsedData.postMessageFrameId, 
-              responseData = $.parseJSON(decodeURIComponent(parsedData.response));
-              
-              if(luminateExtend.api.request.postMessageEventHandler[messageFrameId]) {
-                luminateExtend.api.request.postMessageEventHandler[messageFrameId](messageFrameId, responseData);
+              if(luminateExtend.global.path.nonsecure.indexOf(e.origin) != -1 || 
+                 luminateExtend.global.path.secure.indexOf(e.origin) != -1) {
+                var parsedData = $.parseJSON(e.data), 
+                messageFrameId = parsedData.postMessageFrameId, 
+                responseData = $.parseJSON(decodeURIComponent(parsedData.response));
+                
+                if(luminateExtend.api.request.postMessageEventHandler[messageFrameId]) {
+                  luminateExtend.api.request.postMessageEventHandler[messageFrameId](messageFrameId, responseData);
+                }
               }
             };
             
@@ -602,6 +585,63 @@
     }
   };
   
+  luminateExtend.api.request = function(requests) {
+    /* check for single requests */
+    if(!$.isArray(requests)) {
+      sendRequest(requests);
+    }
+    
+    else {
+      requests.reverse();
+
+      var asyncRequests = [];
+      
+      /* check for synchronous requests */
+      $.each(requests, function(requestInverseIndex) {
+        var requestSettings = $.extend({
+          async: true
+        }, this);
+        
+        if(!requestSettings.async && requestInverseIndex != requests.length - 1) {
+          var prevRequest = requests[requestInverseIndex + 1];
+          if(prevRequest.callback && 
+             typeof prevRequest.callback != 'function') {
+            var oCallbackSuccess = prevRequest.callback.success || $.noop;
+            prevRequest.callback.success = function(response) {
+              oCallbackSuccess(response);
+
+              sendRequest(requestSettings);
+            };
+          }
+          else {
+            var prevRequest = requests[requestInverseIndex + 1], 
+            oCallbackFn = prevRequest.callback || $.noop;
+            prevRequest.callback = {
+              success: function(response) {
+                oCallbackFn(response);
+                
+                sendRequest(requestSettings);
+              }, 
+              error: function(response) {
+                oCallbackFn(response);
+              }
+            };
+          }
+        }
+        
+        else {
+          asyncRequests.push(requestSettings);
+        }
+      });
+      
+      /* make each asynchronous request */
+      asyncRequests.reverse();
+      $.each(asyncRequests, function() {
+        sendRequest(this);
+      });
+    }
+  };
+  
   /* session variables */
   luminateExtend.sessionVars = {
     set: function(varName, varValue, callback) {
@@ -618,44 +658,50 @@
   };
   
   /* luminate tags */
-  luminateExtend.tags = function(tagType, selector) {
+  luminateExtend.tags = function(tagTypes, selector) {
     /* make luminateExtend.tags an alias for the parse method if called directly */
-    luminateExtend.tags.parse(tagType, selector);
+    luminateExtend.tags.parse(tagTypes, selector);
   };
-  luminateExtend.tags.parse = function(tagType, selector) {
-    if(!tagType || tagType == 'all') {
-      tagType = ['cons'];
+  luminateExtend.tags.parse = function(tagTypes, selector) {
+    /* use the widgets plugin if available */
+    if(luminateExtend.widgets) {
+      luminateExtend.widgets(tagTypes, selector);
     }
     else {
-      tagType = luminateExtend.utils.ensureArray(tagType);
-    }
-    selector = selector || 'body';
-    
-    $.each(tagType, function() {
-      if(tagType == 'cons') {
-        var $consTags = $(selector).find(document.getElementsByTagName('luminate:cons'));
-        if($consTags.length > 0) {
-          var parseConsTags = function(data) {
-            $consTags.each(function() {
-              if(data.getConsResponse) {
-                $(this).replaceWith(stringToObj($(this).attr('field'), data.getConsResponse));
-              }
-              else {
-                $(this).remove();
-              }
-            });
-          };
-          
-          luminateExtend.api.request({
-            api: 'cons', 
-            callback: parseConsTags, 
-            data: 'method=getUser', 
-            requestType: 'POST', 
-            requiresAuth: true
-          });
-        }
+      if(!tagTypes || tagTypes == 'all') {
+        tagTypes = ['cons'];
       }
-    });
+      else {
+        tagTypes = luminateExtend.utils.ensureArray(tagTypes);
+      }
+      selector = selector || 'body';
+      
+      $.each(tagTypes, function(i, tagType) {
+        if(tagType == 'cons') {
+          var $consTags = $(selector).find(document.getElementsByTagName('luminate:cons'));
+          if($consTags.length > 0) {
+            var parseConsTags = function(data) {
+              $consTags.each(function() {
+                if(data.getConsResponse) {
+                  $(this).replaceWith(luminateExtend.utils.stringToObj($(this).attr('field'), data.getConsResponse));
+                }
+                else {
+                  $(this).remove();
+                }
+              });
+            };
+            
+            luminateExtend.api.request({
+              api: 'cons', 
+              callback: parseConsTags, 
+              data: 'method=getUser', 
+              requestType: 'POST', 
+              requiresAuth: true
+            });
+          }
+        }
+      });
+    }
   };
   
   /* public helper functions */
@@ -667,9 +713,28 @@
       if($.isArray(pArray)) {
         return pArray;
       }
-      else {
+      else if(pArray) {
         return [pArray];
       }
+      else {
+        return [];
+      }
+    }, 
+    
+    stringToObj: function(str, obj) {
+      var objReturn = obj || window;
+      
+      if(str) {
+        var strParts = str.split('.');
+        for(var i = 0; i < strParts.length; i++) {
+          if(i < (strParts.length - 1) && !objReturn[strParts[i]]) {
+            return {};
+          }
+          objReturn = objReturn[strParts[i]];
+        }
+      }
+      
+      return objReturn;
     }, 
     
     ping: function(options) {
@@ -971,4 +1036,4 @@
       return formattedDate;
     }
   };
-})(jQuery);
+})(typeof jQuery === 'undefined' && typeof Zepto === 'function' ? Zepto : jQuery);

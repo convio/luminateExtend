@@ -2,10 +2,10 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>American Health Society</title>
+    <title>Sign Up for News from American Health Society</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
     <style>
       /* example site styles */
       body {
@@ -15,10 +15,10 @@
     
     <!--[if lt IE 9]>
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-      <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+      <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <![endif]-->
     <!--[if gte IE 9]><!-->
-      <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+      <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
     <!--<![endif]-->
   </head>
   <body>
@@ -35,7 +35,7 @@
         </div>
         <div class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
-            <li class="active"><a href="index.html">Home</a></li>
+            <li><a href="index.html">Home</a></li>
             <li><a href="donate.html">Donate</a></li>
             <li class="dropdown">
               <a href="get-involved.html" class="dropdown-toggle" data-toggle="dropdown">Get Involved <b class="caret"></b></a>
@@ -59,38 +59,53 @@
         </div>
       </div>
     </nav>
-    <div class="jumbotron">
-      <div class="container">
-        <h1>Your Donation Today Can Save Countless Lives</h1>
-        <p>You can be a part of the solution &ndash; make a donation to help fund important research. We can't do it without you.</p>
-        <p><a class="btn btn-primary btn-lg" href="donate.html">Donate Now &raquo;</a></p>
-      </div>
-    </div>
     <div class="container">
-      <div class="row">
-        <div class="col-md-4">
-          <h2>Get AHS News</h2>
-          <p>Sign up today to receive the American Health Society's weekly e-newsletter.</p>
-          <p><a class="btn btn-default" href="sign-up.html">Sign Up &raquo;</a></p>
-        </div>
-        <div class="col-md-4">
-          <h2>Action Center</h2>
-          <p>Become an advocate for health! View the list of our latest action alerts.</p>
-          <p><a class="btn btn-default" href="action-center.html">Take Action &raquo;</a></p>
-       </div>
-        <div class="col-md-4">
-          <h2>Walk for Health</h2>
-          <p>Form a team in the Walk for Health and help raise money for our important mission.</p>
-          <p><a class="btn btn-default" href="walk-for-health.html">Find an Event &raquo;</a></p>
-        </div>
+      <div class="page-header">
+        <h1>Get AHS News</h1>
       </div>
+      <p>Sign up today to receive the American Health Society's weekly e-newsletter.</p>
+      <form class="form-horizontal luminateApi survey-form" method="POST" action="http://shortname.convio.net/site/CRSurveyAPI" data-luminateApi='{"callback": "submitSurveyCallback", "requiresAuth": "true"}'>
+        <input type="hidden" name="method" value="submitSurvey">
+        <input type="hidden" name="survey_id" value="18561">
+        <div class="form-group">
+          <label for="survey-cons-first-name" class="col-sm-3 col-md-2 control-label">First Name:</label>
+          <div class="col-sm-6">
+            <input type="text" name="cons_first_name" class="form-control" id="survey-cons-first-name">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="survey-cons-last-name" class="col-sm-3 col-md-2 control-label">Last Name:</label>
+          <div class="col-sm-6">
+            <input type="text" name="cons_last_name" class="form-control" id="survey-cons-last-name">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="survey-cons-email" class="col-sm-3 col-md-2 control-label">Email Address:</label>
+          <div class="col-sm-6">
+            <input type="text" name="cons_email" class="form-control" id="survey-cons-email">
+          </div>
+        </div>
+        <input type="hidden" name="cons_email_opt_in" value="true">
+        <div class="form-group">
+          <div class="col-sm-offset-3 col-md-offset-2 col-sm-6">
+            <div class="alert alert-info">
+              By filling out this form, you'll be signed up to receive periodic updates from American Health Society.
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="col-sm-offset-3 col-md-offset-2 col-sm-6">
+            <button type="submit" class="btn btn-primary">Sign Me Up</button>
+          </div>
+        </div>
+      </form>
       <hr>
       <footer>
         <p>&copy; American Health Society 2013</p>
       </footer>
     </div>
     
-    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
     
     <script src="js/luminateExtend.js"></script>
     <script src="js/luminateExtend-examples.js"></script>

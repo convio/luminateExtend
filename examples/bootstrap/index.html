@@ -2,10 +2,10 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>American Health Society Action Center</title>
+    <title>American Health Society</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
     <style>
       /* example site styles */
       body {
@@ -15,10 +15,10 @@
     
     <!--[if lt IE 9]>
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-      <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+      <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <![endif]-->
     <!--[if gte IE 9]><!-->
-      <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+      <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
     <!--<![endif]-->
   </head>
   <body>
@@ -35,7 +35,7 @@
         </div>
         <div class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
-            <li><a href="index.html">Home</a></li>
+            <li class="active"><a href="index.html">Home</a></li>
             <li><a href="donate.html">Donate</a></li>
             <li class="dropdown">
               <a href="get-involved.html" class="dropdown-toggle" data-toggle="dropdown">Get Involved <b class="caret"></b></a>
@@ -59,13 +59,30 @@
         </div>
       </div>
     </nav>
-    <div class="container">
-      <div class="page-header">
-        <h1>Action Center</h1>
+    <div class="jumbotron">
+      <div class="container">
+        <h1>Your Donation Today Can Save Countless Lives</h1>
+        <p>You can be a part of the solution &ndash; make a donation to help fund important research. We can't do it without you.</p>
+        <p><a class="btn btn-primary btn-lg" href="donate.html">Donate Now &raquo;</a></p>
       </div>
-      <p>Become an advocate for health!</p>
-      <div id="action-alert-list" class="well well-lg">
-        Loading ...
+    </div>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4">
+          <h2>Get AHS News</h2>
+          <p>Sign up today to receive the American Health Society's weekly e-newsletter.</p>
+          <p><a class="btn btn-default" href="sign-up.html">Sign Up &raquo;</a></p>
+        </div>
+        <div class="col-md-4">
+          <h2>Action Center</h2>
+          <p>Become an advocate for health! View the list of our latest action alerts.</p>
+          <p><a class="btn btn-default" href="action-center.html">Take Action &raquo;</a></p>
+       </div>
+        <div class="col-md-4">
+          <h2>Walk for Health</h2>
+          <p>Form a team in the Walk for Health and help raise money for our important mission.</p>
+          <p><a class="btn btn-default" href="walk-for-health.html">Find an Event &raquo;</a></p>
+        </div>
       </div>
       <hr>
       <footer>
@@ -73,14 +90,9 @@
       </footer>
     </div>
     
-    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
     
     <script src="js/luminateExtend.js"></script>
     <script src="js/luminateExtend-examples.js"></script>
-    <script>
-      $(function() {
-        getAdvocacyAlerts('#action-alert-list');
-      });
-    </script>
   </body>
 </html>

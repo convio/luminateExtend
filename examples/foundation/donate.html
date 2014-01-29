@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<!--[if IE 8]>    <html class="no-js lt-ie9" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donate to American Health Society</title>
+    
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/foundation/4.3.2/css/normalize.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/foundation/4.3.2/css/foundation.min.css">
+    <style>
+      /* example site styles */
+      #login-form .columns {
+        padding-left: 0.2em;
+      }
+      #welcome-back {
+        color: #ffffff;
+      }
+      .donation-panel {
+        background: #ffffff;
+        padding: 0 15px 10px;
+      }
+      .donation-panel h2 {
+        background: #f2f2f2;
+        border-bottom: 1px solid #d9d9d9;
+        font-size: 14px;
+        font-weight: normal;
+        margin: 0 -15px 15px;
+        padding: 10px 15px;
+      }
+      .donation-panel .row {
+        margin: 0;
+      }
+      .radio-wrap {
+        margin-bottom: 5px;
+      }
+      @media only screen and (max-width: 767px) {
+        .donation-form .small-12 label {
+          padding: 0.625em 0;
+        }
+        .donation-form .small-12 label.right {
+          float: none !important;
+          text-align: left;
+        }
+        .donation-form .small-12 label.inline {
+          margin-bottom: 0;
+        }
+        .radio-wrap {
+          margin-bottom: 0;
+        }
+      }
+    </style>
+    
+    <script src="//cdnjs.cloudflare.com/ajax/libs/foundation/4.3.2/js/vendor/custom.modernizr.min.js"></script>
+  </head>
+  <body>
+    <div class="contain-to-grid sticky">
+      <nav class="top-bar">
+        <ul class="title-area">
+          <li class="name">
+            <h1>
+              <a href="index.html">American Health Society</a>
+            </h1>
+          </li>
+          <li class="toggle-topbar menu-icon"><a href="#"><span>menu</span></a></li>
+        </ul>
+        <section class="top-bar-section">
+          <ul class="left">
+            <li class="divider"></li>
+            <li class="active">
+              <a href="index.html">Home</a>
+            </li>
+            <li class="divider"></li>
+            <li><a href="donate.html">Donate</a></li>
+            <li class="divider"></li>
+            <li class="has-dropdown">
+              <a href="#">Get Involved</a>
+              <ul class="dropdown">
+                <li><a href="sign-up.html">Get AHS News</a></li>
+                <li><a href="action-center.html">Action Center</a></li>
+                <li><a href="walk-for-health.html">Walk for Health</a></li>
+              </ul>
+            </li>
+          </ul>
+          <ul class="right">
+            <li class="has-form">
+              <form class="luminateApi hide" id="login-form" method="POST" action="http://shortname.convio.net/site/CRConsAPI" data-luminateApi='{"callback": "loginCallback"}'>
+                <input type="hidden" name="method" value="login">
+                <div class="row collapse">
+                  <div class="small-5 columns">
+                    <input type="text" id="login-username" name="user_name" placeholder="Username">
+                  </div>
+                  <div class="small-5 columns">
+                    <input type="password" id="login-password" name="password" placeholder="Password">
+                  </div>
+                  <div class="small-2 columns">
+                    <button type="submit" class="success button">Login</button>
+                  </div>
+                </div>
+              </form>
+            </li>
+          </ul>
+        </section>
+      </nav>
+    </div>
+    <div class="row">
+      <div class="large-12 columns">
+        <h1>Donate</h1>
+        <hr>
+        <p>You can be a part of the solution &ndash; make a donation to help fund important research. We can't do it without you.</p>
+        <form class="custom luminateApi donation-form" method="POST" action="https://secure2.convio.net/shortname/site/CRDonationAPI" data-luminateApi='{"callback": "donateCallback"}'>
+          <input type="hidden" name="method" value="donate">
+          <input type="hidden" name="form_id" value="1234">
+          <input type="hidden" name="validate" value="true">
+          <div class="panel donation-panel radius">
+            <h2>Donation Information</h2>
+            <div class="row">
+              <div class="small-12 large-3 columns">
+                <label class="right">Donation amount:</label>
+              </div>
+              <div class="small-12 large-9 columns">
+                <div class="radio-wrap">
+                  <label>
+                    <input type="radio" name="level_id" value="13162"> $100
+                  </label>
+                </div>
+                <div class="radio-wrap">
+                  <label>
+                    <input type="radio" name="level_id" value="13164"> $50
+                  </label>
+                </div>
+                <div class="radio-wrap">
+                  <label>
+                    <input type="radio" name="level_id" value="13161"> $20
+                  </label>
+                </div>
+                <div class="radio-wrap">
+                  <label>
+                    <input type="radio" id="level-other" name="level_id" value="13163"> Other amount:
+                  </label>
+                </div>
+                <div class="small-10 large-6">
+                  <div class="row collapse">
+                    <div class="small-2 columns">
+                      <span class="prefix">$</span>
+                    </div>
+                    <div class="small-10 columns">
+                      <input type="text" id="other-amount" name="other_amount" disabled>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel donation-panel">
+            <h2>Billing Information</h2>
+            <div class="row">
+              <div class="small-12 large-3 columns">
+                <label class="right inline">First Name:</label>
+              </div>
+              <div class="small-12 large-8 pull-1 columns">
+                <input type="text" name="billing.name.first">
+              </div>
+            </div>
+            <div class="row">
+              <div class="small-12 large-3 columns">
+                <label class="right inline">Last Name:</label>
+              </div>
+              <div class="small-12 large-8 pull-1 columns">
+                <input type="text" name="billing.name.last">
+              </div>
+            </div>
+            <div class="row">
+              <div class="small-12 large-3 columns">
+                <label class="right inline">Street 1:</label>
+              </div>
+              <div class="small-12 large-8 pull-1 columns">
+                <input type="text" name="billing.address.street1">
+              </div>
+            </div>
+            <div class="row">
+              <div class="small-12 large-3 columns">
+                <label class="right inline">Street 2:</label>
+              </div>
+              <div class="small-12 large-8 pull-1 columns">
+                <input type="text" name="billing.address.street2">
+              </div>
+            </div>
+            <div class="row">
+              <div class="small-12 large-3 columns">
+                <label class="right inline">City:</label>
+              </div>
+              <div class="small-12 large-8 pull-1 columns">
+                <input type="text" name="billing.address.city">
+              </div>
+            </div>
+            <div class="row">
+              <div class="small-12 large-3 columns">
+                <label class="right inline">State:</label>
+              </div>
+              <div class="small-12 large-8 pull-1 columns">
+                <select name="billing.address.state">
+                  <option>State</option>
+                  <option value="AK">AK</option>
+                  <option value="AL">AL</option>
+                  <option value="AR">AR</option>
+                  <option value="AZ">AZ</option>
+                  <option value="CA">CA</option>
+                  <option value="CO">CO</option>
+                  <option value="CT">CT</option>
+                  <option value="DC">DC</option>
+                  <option value="DE">DE</option>
+                  <option value="FL">FL</option>
+                  <option value="GA">GA</option>
+                  <option value="HI">HI</option>
+                  <option value="IA">IA</option>
+                  <option value="ID">ID</option>
+                  <option value="IL">IL</option>
+                  <option value="IN">IN</option>
+                  <option value="KS">KS</option>
+                  <option value="KY">KY</option>
+                  <option value="LA">LA</option>
+                  <option value="MA">MA</option>
+                  <option value="MD">MD</option>
+                  <option value="ME">ME</option>
+                  <option value="MI">MI</option>
+                  <option value="MN">MN</option>
+                  <option value="MO">MO</option>
+                  <option value="MS">MS</option>
+                  <option value="MT">MT</option>
+                  <option value="NC">NC</option>
+                  <option value="ND">ND</option>
+                  <option value="NE">NE</option>
+                  <option value="NH">NH</option>
+                  <option value="NJ">NJ</option>
+                  <option value="NM">NM</option>
+                  <option value="NV">NV</option>
+                  <option value="NY">NY</option>
+                  <option value="OH">OH</option>
+                  <option value="OK">OK</option>
+                  <option value="OR">OR</option>
+                  <option value="PA">PA</option>
+                  <option value="RI">RI</option>
+                  <option value="SC">SC</option>
+                  <option value="SD">SD</option>
+                  <option value="TN">TN</option>
+                  <option value="TX">TX</option>
+                  <option value="UT">UT</option>
+                  <option value="VA">VA</option>
+                  <option value="VT">VT</option>
+                  <option value="WA">WA</option>
+                  <option value="WI">WI</option>
+                  <option value="WV">WV</option>
+                  <option value="WY">WY</option>
+                  <option value="AS">AS</option>
+                  <option value="FM">FM</option>
+                  <option value="GU">GU</option>
+                  <option value="MH">MH</option>
+                  <option value="MP">MP</option>
+                  <option value="PR">PR</option>
+                  <option value="PW">PW</option>
+                  <option value="VI">VI</option>
+                  <option value="AA">AA</option>
+                  <option value="AE">AE</option>
+                  <option value="AP">AP</option>
+                  <option value="AB">AB</option>
+                  <option value="BC">BC</option>
+                  <option value="MB">MB</option>
+                  <option value="NB">NB</option>
+                  <option value="NL">NL</option>
+                  <option value="NS">NS</option>
+                  <option value="NT">NT</option>
+                  <option value="NU">NU</option>
+                  <option value="ON">ON</option>
+                  <option value="PE">PE</option>
+                  <option value="QC">QC</option>
+                  <option value="SK">SK</option>
+                  <option value="YT">YT</option>
+                  <option value="None">None</option>
+                </select>
+              </div>
+            </div>
+            <div class="row">
+              <div class="small-12 large-3 columns">
+                <label class="right inline">ZIP Code:</label>
+              </div>
+              <div class="small-12 large-3 pull-6 columns">
+                <input type="text" name="billing.address.zip">
+              </div>
+            </div>
+          </div>
+          
+          <div class="panel donation-panel">
+            <h2>Email</h2>
+            <div class="row">
+              <div class="small-12 large-3 columns">
+                <label class="right inline">Email Address:</label>
+              </div>
+              <div class="small-12 large-8 pull-1 columns">
+                <input type="text" name="donor.email">
+              </div>
+            </div>
+            <div class="row">
+              <div class="small-12 large-8 large-offset-3 columns">
+                <div class="checkbox-wrap">
+                  <label>
+                    <input type="checkbox" name="donor.email_opt_in" value="true" checked> Yes, I'd like to receive email from American Health Society
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="panel donation-panel">
+            <h2>Payment Information</h2>
+            <div class="row">
+              <div class="small-12 large-3 columns">
+                <label class="right inline">Card Number:</label>
+              </div>
+              <div class="small-12 large-8 pull-1 columns">
+                <input type="text" name="card_number">
+              </div>
+            </div>
+            <div class="row">
+              <div class="small-12 large-3 columns">
+                <label class="right inline">CVV:</label>
+              </div>
+              <div class="small-12 large-2 pull-7 columns">
+                <input type="text" name="card_cvv">
+              </div>
+            </div>
+            <div class="row">
+              <div class="small-12 large-3 columns">
+                <label class="right inline">Expiration Date:</label>
+              </div>
+              <div class="small-12 large-3 columns">
+                <select name="card_exp_date_month">
+                  <option>Month</option>
+                  <option value="01">01</option>
+                  <option value="02">02</option>
+                  <option value="03">03</option>
+                  <option value="04">04</option>
+                  <option value="05">05</option>
+                  <option value="06">06</option>
+                  <option value="07">07</option>
+                  <option value="08">08</option>
+                  <option value="09">09</option>
+                  <option value="10">10</option>
+                  <option value="11">11</option>
+                  <option value="12">12</option>
+                </select>
+              </div>
+              <div class="small-12 large-3 pull-3 columns">
+                <select name="card_exp_date_year">
+                  <option>Year</option>
+                  <option value="2013">2013</option>
+                  <option value="2014">2014</option>
+                  <option value="2015">2015</option>
+                  <option value="2016">2016</option>
+                  <option value="2017">2017</option>
+                  <option value="2018">2018</option>
+                  <option value="2019">2019</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          
+          <div class="row">
+            <div class="small-12 columns">
+              <button type="submit" class="button small" id="donate-submit">Complete Donation</button>
+            </div>
+          </div>
+        </form>
+        <footer class="row">
+          <div class="large-12 columns">
+            <hr>
+            <div class="row">
+              <div class="large-6 columns">
+                <p>&copy; American Health Society 2013</p>
+              </div>
+            </div>
+          </div>
+        </footer>
+      </div>
+    </div>
+    
+    <script>
+      document.write('<script src="//cdnjs.cloudflare.com/ajax/libs/' +
+      ('__proto__' in {} ? 'zepto/1.1.2/zepto' : 'jquery/1.11.0/jquery') +
+      '.min.js"><\/script>')
+    </script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/foundation/4.3.2/js/foundation.min.js"></script>
+    <script>
+      $(document).foundation();
+    </script>
+    
+    <script src="js/luminateExtend.js"></script>
+    <script src="js/luminateExtend-examples.js"></script>
+  </body>
+</html>
