@@ -1,8 +1,8 @@
 luminateExtend.js
 =================
 
-Version: 1.6 (28-JAN-2014) 
-Requires: jQuery v1.4.4+ or Zepto v1.1+
+Version: 1.6 (28-JAN-2014)  
+Requires: jQuery v1.5.1+ or Zepto v1.1+
 
 luminateExtend.js is a JavaScript library for use with 
 [Luminate Online](https://www.blackbaud.com/online-marketing/luminate-online), a product of Blackbaud. 
@@ -85,10 +85,10 @@ Including the library
 Once you've uploaded 
 [luminateExtend.js](https://github.com/noahcooper/luminateExtend/blob/master/luminateExtend.js) to your 
 website, including the library on a page is easy &mdash; simply pull in the library somewhere below where 
-jQuery is included. Change out the file path as needed, depending on where you uploaded the file.
+jQuery is included. (Change out the file path as needed, depending on where you uploaded the file on your site.)
 
 ```  html
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 <script src="../js/luminateExtend.js"></script>
 ```
 
@@ -96,14 +96,15 @@ If you prefer to use a CDN, luminateExtend.js is available via [cdnjs](http://cd
 Thanks cdnjs and CloudFlare!
 
 ```  html
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/luminateExtend/1.5.1/luminateExtend.min.js"></script>
 ```
 
-As of v1.6, luminateExtend.js can be used with [Zepto](http://zeptojs.com) in lieu of jQuery if you so choose.
+As of v1.6, luminateExtend.js can be used with [Zepto](http://zeptojs.com) in lieu of jQuery if you so choose. 
+(Note: You must use Zepto 1.1 or higher -- Zepto 1.0 did not support cross-domain requests with cookies.)
 
 ```  html
-<script src="//cdnjs.cloudflare.com/ajax/libs/zepto/1.1.1/zepto.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/zepto/1.1.2/zepto.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/luminateExtend/1.5.1/luminateExtend.min.js"></script>
 ```
 
@@ -261,6 +262,20 @@ luminateExtend.api.request({
 });
 ```
 
+As of v1.1, luminateExtend.api is an alias for the request method when called directly.
+
+```  js
+var myLoginTestCallback = function(data) {
+  console.log(data);
+};
+
+luminateExtend.api({
+  api: 'cons', 
+  callback: myLoginTestCallback, 
+  data: 'method=loginTest'
+});
+```
+
 The API supports the [Cross-Origin Resource Sharing (CORS)](http://www.w3.org/TR/cors/) spec. With CORS, 
 modern browsers including Firefox 3.5+, Chrome 2+, Safari 4+, Opera 12+, and IE10+ allow for natively 
 making cross-domain XMLHttpRequests thanks to the Access-Control-Allow-Origin HTTP response header. The 
@@ -272,10 +287,36 @@ most importantly, the inability to set the Content-Type request header and the s
 even *older* browsers such as IE7 which do not support window.postMessage, this method falls back to using 
 a hash change transport.
 
-The request method accepts one argument, an options object containing the following:
+The request method accepts one argument, an options object, or, as of v1.6, an array of options objects 
+may be provided in order to make multiple requests.
+
+```  js
+luminateExtend.api.request([{
+  api: 'cons', 
+  data: 'method=listUserFields&include_choices=true', 
+  callback: {
+    success: listUserFieldsCallback
+  }
+}, {
+  async: false, 
+  api: 'cons', 
+  data: 'method=getUser', 
+  requestType: 'POST', 
+  requiresAuth: true, 
+  callback: {
+    success: getUserCallback
+  }
+}]);
+```
+
+Each options object contains the following:
 
 **api:** The specific API servlet to call. Can be provided as either the full, case-sensitive servlet 
 name, e.g. "CRConsAPI", or a case-insensitive shorthand with "CR" and "API" removed, e.g. "cons".
+
+**async:** Available as of v1.6. A boolean indicating whether or not the request should be made 
+synchronously (the default) or asynchronously. A value of false indicates that the request should not be 
+made until after the previous request has completed, and its callback has been fired.
 
 **callback:** The callback to be used after the request is complete. The JSON response object is passed 
 as the sole argument to the callback. Can be provided as either a function, or an object containing 
@@ -320,20 +361,6 @@ luminateExtend.api.request({
 (namely CRDonationAPI and CRTeamraiserAPI) must always be called over a secure channel, in which case 
 this setting is ignored. Otherwise, the default depends on the protocol of the requesting page, meaning 
 false for pages served over HTTP or true for pages served over HTTPS.
-
-Note that as of v1.1, luminateExtend.api is an alias for the request method when called directly.
-
-```  js
-var myLoginTestCallback = function(data) {
-  console.log(data);
-};
-
-luminateExtend.api({
-  api: 'cons', 
-  callback: myLoginTestCallback, 
-  data: 'method=loginTest'
-});
-```
 
 `getAuth`
 
