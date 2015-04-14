@@ -1,6 +1,6 @@
 /*
  * luminateExtend.js
- * Version: 1.6 (28-JAN-2014)
+ * Version: 1.7.0 (16-APR-2015)
  * Requires: jQuery v1.5.1+ or Zepto v1.1+
  * Includes: SimpleDateFormatJS v1.3 (https://github.com/noahcooper/SimpleDateFormatJS)
  */
@@ -28,7 +28,7 @@
   buildServerUrl = function(useHTTPS, data) {
     return (useHTTPS ? (luminateExtend.global.path.secure + 'S') : luminateExtend.global.path.nonsecure) + 
            'PageServer' + 
-           (luminateExtend.global.sessionCookie ? (';' + luminateExtend.global.sessionCookie) : '') + 
+           (luminateExtend.global.sessionCookie && luminateExtend.global.sessionCookie !== '' ? (';' + luminateExtend.global.sessionCookie) : '') + 
            '?pagename=luminateExtend_server&pgwrap=n' + 
            (data ? ('&' + data) : '');
   }, 
@@ -298,12 +298,15 @@
                   '&method=getLoginUrl&response_format=json&v=1.0', 
             dataType: 'json', 
             success: function(data) {
+              var getLoginUrlResponse = data.getLoginUrlResponse, 
+              loginUrl = getLoginUrlResponse.url;
+
               getAuthCallback({
                 auth: {
                   type: 'auth', 
-                  token: data.getLoginUrlResponse.token
+                  token: getLoginUrlResponse.token
                 }, 
-                sessionCookie: data.getLoginUrlResponse.url.split(';')[1]
+                sessionCookie: loginUrl.split('CRConsAPI;').length > 1 ? loginUrl.split('CRConsAPI;')[1] : ''
               });
             }, 
             url: (settings.useHTTPS ? luminateExtend.global.path.secure : luminateExtend.global.path.nonsecure) + 
@@ -440,7 +443,7 @@
           if(settings.requiresAuth && settings.data.indexOf('&' + luminateExtend.global.auth.type + '=') == -1) {
             settings.data += '&' + luminateExtend.global.auth.type + '=' + luminateExtend.global.auth.token;
           }
-          if(luminateExtend.global.sessionCookie) {
+          if(luminateExtend.global.sessionCookie && luminateExtend.global.sessionCookie !== '') {
             requestUrl += ';' + luminateExtend.global.sessionCookie;
           }
           settings.data += '&ts=' + new Date().getTime();
