@@ -5,3 +5,5 @@ luminateExtend({
     secure: 'https://secure2.convio.net/shortname/site/'
   }
 });
+
+var apiTestSurveyId = '1';

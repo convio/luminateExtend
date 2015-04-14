@@ -86,7 +86,8 @@ asyncTest('luminateExtend.api.request() allows "recurring" shorthand', function(
     data: 'method=getRecurringGifts', 
     requiresAuth: true, 
     callback: function(response) {
-      ok(response.getRecurringGiftsResponse);
+      ok(response.getRecurringGiftsResponse, 
+         'You must be logged in as a constituent for this test to succeed.');
       start();
     }
   });
@@ -113,6 +114,21 @@ asyncTest('luminateExtend.api.request() allows "teamraiser" shorthand', function
     }
   });
 });
+
+if(apiTestSurveyId) {
+  asyncTest('luminateExtend.api.request() can call API methods which requires authentication but not a logged in user', function() {
+    luminateExtend.api.request({
+      api: 'survey', 
+      data: 'method=getSurvey&survey_id=' + apiTestSurveyId, 
+      requiresAuth: true, 
+      requestType: 'GET', 
+      callback: function(response) {
+        ok(response.getSurveyResponse);
+        start();
+      }
+    });
+  });
+}
 
 asyncTest('luminateExtend.api.request() can get info on logged in user', function() {
   luminateExtend.api.request({

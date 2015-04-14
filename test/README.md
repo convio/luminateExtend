@@ -23,7 +23,13 @@ luminateExtend({
 });
 ```
 
-After you've made this change, you can upload the files to a server of your choosing and begun testing.
+You'll also need to change the test Survey ID to the ID of any published Survey on your organization's Luminate Online site. This Survey ID is used in the luminateExtend.api test suite.
+
+```js
+var apiTestSurveyId = '1';
+```
+
+After you've made these changes, you can upload the files to a server of your choosing and begin testing.
 
 API tests
 ---------
