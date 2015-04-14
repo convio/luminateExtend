@@ -42,11 +42,11 @@
         filterOperator, 
         filterValue;
         
-        if(requestSettings.responseFilter.filter.indexOf('!=') != -1) {
+        if(requestSettings.responseFilter.filter.indexOf('!=') !== -1) {
           filterOperator = 'nequal';
           filterValue = requestSettings.responseFilter.filter.split('!=')[1];
         }
-        else if(requestSettings.responseFilter.filter.indexOf('==') != -1) {
+        else if(requestSettings.responseFilter.filter.indexOf('==') !== -1) {
           filterOperator = 'equal';
           filterValue = requestSettings.responseFilter.filter.split('==')[1];
         }
@@ -56,8 +56,8 @@
           var filteredArray = [], 
           arrayIsFiltered = false;
           $.each(luminateExtend.utils.ensureArray(luminateExtend.utils.stringToObj(requestSettings.responseFilter.array, responseData)), function() {
-            if((filterOperator == 'nequal' && this[filterKey] == filterValue) || 
-               (filterOperator == 'equal' && this[filterKey] != filterValue)) {
+            if((filterOperator === 'nequal' && this[filterKey] === filterValue) || 
+               (filterOperator === 'equal' && this[filterKey] !== filterValue)) {
               arrayIsFiltered = true;
             }
             else {
@@ -68,21 +68,21 @@
           if(arrayIsFiltered) {
             var filterArrayParts = requestSettings.responseFilter.array.split('.');
             $.each(responseData, function(i, val0) {
-              if(i == filterArrayParts[0]) {
+              if(i === filterArrayParts[0]) {
                 $.each(val0, function(j, val1) {
-                  if(j == filterArrayParts[1]) {
-                    if(filterArrayParts.length == 2) {
+                  if(j === filterArrayParts[1]) {
+                    if(filterArrayParts.length === 2) {
                       responseData[i][j] = filteredArray;
                     }
                     else {
                       $.each(val1, function(k, val2) {
-                        if(k == filterArrayParts[2]) {
-                          if(filterArrayParts.length == 3) {
+                        if(k === filterArrayParts[2]) {
+                          if(filterArrayParts.length === 3) {
                             responseData[i][j][k] = filteredArray;
                           }
                           else {
                             $.each(val2, function(l, val3) {
-                              if(l == filterArrayParts[3] && filterArrayParts.length == 4) {
+                              if(l === filterArrayParts[3] && filterArrayParts.length === 4) {
                                 responseData[i][j][k][l] = filteredArray;
                               }
                             });
@@ -112,9 +112,10 @@
       }
     }
     
-    if(!((requestSettings.data.indexOf('&method=login') != -1 && 
-          requestSettings.data.indexOf('&method=loginTest') == -1) || 
-         requestSettings.data.indexOf('&method=logout') != -1)) {
+    var isLoginRequest = requestSettings.data.indexOf('&method=login') !== -1 && requestSettings.data.indexOf('&method=loginTest') === -1, 
+    isLogoutRequest = requestSettings.data.indexOf('&method=logout') !== -1;
+    
+    if(!isLoginRequest && !isLogoutRequest) {
       callbackFn(responseData);
     }
     
@@ -122,12 +123,18 @@
     else {
       var newAuthCallback = function() {
         callbackFn(responseData);
-      };
-      luminateExtend.api.getAuth({
+      }, 
+      getAuthOptions = {
         callback: newAuthCallback, 
         useCache: false, 
         useHTTPS: requestSettings.useHTTPS
-      });
+      };
+      
+      if(isLoginRequest && responseData.loginResponse && responseData.loginResponse.nonce) {
+        getAuthOptions.nonce = 'NONCE_TOKEN=' + responseData.loginResponse.nonce;
+      }
+      
+      luminateExtend.api.getAuth(getAuthOptions);
     }
   };
   
@@ -148,7 +155,7 @@
       if(settingName) {
         if(settingName.length) {
           if(settingValue) {
-            if(settingName == 'locale') {
+            if(settingName === 'locale') {
               settingValue = setLocale(settingValue);
             }
             
@@ -205,7 +212,7 @@
     
     if($(selector).length > 0) {
       $(selector).each(function() {
-        if(this.nodeName.toLowerCase() == 'form') {
+        if(this.nodeName.toLowerCase() === 'form') {
           $(this).bind('submit', function(e) {
             e.cancelBubble = true;
             e.returnValue  = false;
@@ -222,7 +229,7 @@
             formActionQuery = formAction.split('?'), 
             formApiData = $(this).data('luminateapi'), 
             
-            requestApi = (formActionQuery[0].indexOf('/site/') != -1) ? 
+            requestApi = (formActionQuery[0].indexOf('/site/') !== -1) ? 
                          formActionQuery[0].split('/site/')[1] : formActionQuery[0], 
             requestCallback, 
             requestContentType = $(this).attr('enctype'), 
@@ -236,11 +243,11 @@
               if(formApiData.callback) {
                 requestCallback = luminateExtend.utils.stringToObj(formApiData.callback);
               }
-              if(formApiData.requiresAuth && formApiData.requiresAuth == 'true') {
+              if(formApiData.requiresAuth && formApiData.requiresAuth === 'true') {
                 requestRequiresAuth = true;
               }
-              if(formAction.indexOf('https:') == 0 || 
-                 (window.location.protocol == 'https:' && formAction.indexOf('http') == -1)) {
+              if(formAction.indexOf('https:') === 0 || 
+                 (window.location.protocol === 'https:' && formAction.indexOf('http') === -1)) {
                 requestUseHTTPS = true;
               }
             }
@@ -294,13 +301,20 @@
         
         if(luminateExtend.global.supportsCORS) {
           $.ajax({
-            data: 'luminateExtend=' + luminateExtend.library.version + '&api_key=' + luminateExtend.global.apiKey + 
+            url: (settings.useHTTPS ? luminateExtend.global.path.secure : luminateExtend.global.path.nonsecure) + 
+                 'CRConsAPI', 
+            data: 'luminateExtend=' + luminateExtend.library.version + 
+                  (settings.nonce && settings.nonce !== '' ? ('&' + settings.nonce) : '') + 
+                  '&api_key=' + luminateExtend.global.apiKey + 
                   '&method=getLoginUrl&response_format=json&v=1.0', 
+            xhrFields: {
+              withCredentials: true
+            }, 
             dataType: 'json', 
             success: function(data) {
               var getLoginUrlResponse = data.getLoginUrlResponse, 
               loginUrl = getLoginUrlResponse.url;
-
+              
               getAuthCallback({
                 auth: {
                   type: 'auth', 
@@ -308,19 +322,14 @@
                 }, 
                 sessionCookie: loginUrl.split('CRConsAPI;').length > 1 ? loginUrl.split('CRConsAPI;')[1] : ''
               });
-            }, 
-            url: (settings.useHTTPS ? luminateExtend.global.path.secure : luminateExtend.global.path.nonsecure) + 
-                 'CRConsAPI', 
-            xhrFields: {
-              withCredentials: true
             }
           });
         }
         else {
           $.ajax({
+            url: buildServerUrl(settings.useHTTPS, 'action=getAuth&callback=?'), 
             dataType: 'jsonp', 
-            success: getAuthCallback, 
-            url: buildServerUrl(settings.useHTTPS, 'action=getAuth&callback=?')
+            success: getAuthCallback
           });
         }
       }
@@ -361,44 +370,44 @@
        luminateExtend.global.path.secure && 
        luminateExtend.global.apiKey && 
        settings.api) {
-      if(settings.contentType != 'multipart/form-data') {
+      if(settings.contentType !== 'multipart/form-data') {
         settings.contentType = 'application/x-www-form-urlencoded';
       }
       
       settings.data = 'luminateExtend=' + luminateExtend.library.version + 
-                      ((settings.data == '') ? '' : ('&' + settings.data));
+                      ((settings.data === '') ? '' : ('&' + settings.data));
       
       if(settings.form && $(settings.form).length > 0) {
         settings.data += '&' + $(settings.form).eq(0).serialize();
       }
-      if(settings.data.indexOf('&api_key=') == -1) {
+      if(settings.data.indexOf('&api_key=') === -1) {
         settings.data += '&api_key=' + luminateExtend.global.apiKey;
       }
-      if(luminateExtend.global.apiCommon.centerId && settings.data.indexOf('&center_id=') == -1) {
+      if(luminateExtend.global.apiCommon.centerId && settings.data.indexOf('&center_id=') === -1) {
         settings.data += '&center_id=' + luminateExtend.global.apiCommon.centerId;
       }
-      if(luminateExtend.global.apiCommon.categoryId && settings.data.indexOf('&list_category_id=') == -1) {
+      if(luminateExtend.global.apiCommon.categoryId && settings.data.indexOf('&list_category_id=') === -1) {
         settings.data += '&list_category_id=' + luminateExtend.global.apiCommon.categoryId;
       }
-      if(settings.data.indexOf('&response_format=xml') != -1) {
+      if(settings.data.indexOf('&response_format=xml') !== -1) {
         settings.data = settings.data.replace(/&response_format=xml/g, '&response_format=json');
       }
-      else if(settings.data.indexOf('&response_format=') == -1) {
+      else if(settings.data.indexOf('&response_format=') === -1) {
         settings.data += '&response_format=json';
       }
-      if(luminateExtend.global.apiCommon.source && settings.data.indexOf('&source=') == -1) {
+      if(luminateExtend.global.apiCommon.source && settings.data.indexOf('&source=') === -1) {
         settings.data += '&source=' + luminateExtend.global.apiCommon.source;
       }
-      if(luminateExtend.global.apiCommon.subSource && settings.data.indexOf('&sub_source=') == -1) {
+      if(luminateExtend.global.apiCommon.subSource && settings.data.indexOf('&sub_source=') === -1) {
         settings.data += '&sub_source=' + luminateExtend.global.apiCommon.subSource;
       }
-      if(settings.data.indexOf('&suppress_response_codes=') == -1) {
+      if(settings.data.indexOf('&suppress_response_codes=') === -1) {
         settings.data += '&suppress_response_codes=true';
       }
-      if(luminateExtend.global.locale && settings.data.indexOf('&s_locale=') == -1) {
+      if(luminateExtend.global.locale && settings.data.indexOf('&s_locale=') === -1) {
         settings.data += '&s_locale=' + luminateExtend.global.locale;
       }
-      if(settings.data.indexOf('&v=') == -1) {
+      if(settings.data.indexOf('&v=') === -1) {
         settings.data += '&v=1.0';
       }
       
@@ -406,8 +415,8 @@
       
       var requestUrl = 'http://', 
       requestPath = luminateExtend.global.path.nonsecure.split('http://')[1];
-      if(settings.api == 'CRDonationAPI' || settings.api == 'CRTeamraiserAPI' || 
-         (settings.api != 'CRConnectAPI' && ((window.location.protocol == 'https:' && 
+      if(settings.api === 'CRDonationAPI' || settings.api === 'CRTeamraiserAPI' || 
+         (settings.api !== 'CRConnectAPI' && ((window.location.protocol === 'https:' && 
           settings.useHTTPS == null) || settings.useHTTPS == true))) {
         settings.useHTTPS = true;
       }
@@ -423,7 +432,7 @@
       var isLuminateOnlineAndSameProtocol = false, 
       useAjax = false, 
       usePostMessage = false;
-      if(window.location.protocol == requestUrl.split('//')[0] && document.domain == requestPath.split('/')[0] && 
+      if(window.location.protocol === requestUrl.split('//')[0] && document.domain === requestPath.split('/')[0] && 
          !settings.useHashTransport) {
         isLuminateOnlineAndSameProtocol = true, 
         useAjax = true;
@@ -440,7 +449,7 @@
       var doRequest;
       if(useAjax) {
         doRequest = function() {
-          if(settings.requiresAuth && settings.data.indexOf('&' + luminateExtend.global.auth.type + '=') == -1) {
+          if(settings.requiresAuth && settings.data.indexOf('&' + luminateExtend.global.auth.type + '=') === -1) {
             settings.data += '&' + luminateExtend.global.auth.type + '=' + luminateExtend.global.auth.token;
           }
           if(luminateExtend.global.sessionCookie && luminateExtend.global.sessionCookie !== '') {
@@ -449,18 +458,17 @@
           settings.data += '&ts=' + new Date().getTime();
           
           $.ajax({
-            contentType: settings.contentType, 
-            data: settings.data, 
-            /* set dataType explicitly as API sends Content-Type: text/plain rather than 
-               application/json (E-62659) */
-            dataType: 'json', 
-            success: function(data) {
-              apiCallbackHandler(settings, data);
-            }, 
-            type: settings.requestType, 
             url: requestUrl, 
+            data: settings.data, 
             xhrFields: {
               withCredentials: true
+            }, 
+            contentType: settings.contentType, 
+            /* set dataType explicitly as API sends Content-Type: text/plain rather than application/json (E-62659) */
+            dataType: 'json', 
+            type: settings.requestType, 
+            success: function(data) {
+              apiCallbackHandler(settings, data);
             }
           });
         };
@@ -471,7 +479,7 @@
           postMessageFrameId = 'luminateApiPostMessage' + postMessageTimestamp, 
           postMessageUrl = buildServerUrl(settings.useHTTPS, 'action=postMessage');
           
-          if(settings.requiresAuth && settings.data.indexOf('&' + luminateExtend.global.auth.type + '=') == -1) {
+          if(settings.requiresAuth && settings.data.indexOf('&' + luminateExtend.global.auth.type + '=') === -1) {
             settings.data += '&' + luminateExtend.global.auth.type + '=' + luminateExtend.global.auth.token;
           }
           settings.data += '&ts=' + postMessageTimestamp;
@@ -480,8 +488,8 @@
             luminateExtend.api.request.postMessageEventHandler = {};
             
             luminateExtend.api.request.postMessageEventHandler.handler = function(e) {
-              if(luminateExtend.global.path.nonsecure.indexOf(e.origin) != -1 || 
-                 luminateExtend.global.path.secure.indexOf(e.origin) != -1) {
+              if(luminateExtend.global.path.nonsecure.indexOf(e.origin) !== -1 || 
+                 luminateExtend.global.path.secure.indexOf(e.origin) !== -1) {
                 var parsedData = $.parseJSON(e.data), 
                 messageFrameId = parsedData.postMessageFrameId, 
                 responseData = $.parseJSON(decodeURIComponent(parsedData.response));
@@ -537,7 +545,7 @@
           hashTransportClientUrl = window.location.protocol + '//' + document.domain + 
                                    '/luminateExtend_client.html';
           
-          if(settings.requiresAuth && settings.data.indexOf('&' + luminateExtend.global.auth.type + '=') == -1) {
+          if(settings.requiresAuth && settings.data.indexOf('&' + luminateExtend.global.auth.type + '=') === -1) {
             settings.data += '&' + luminateExtend.global.auth.type + '=' + luminateExtend.global.auth.token;
           }
           settings.data += '&ts=' + hashTransportTimestamp;
@@ -605,10 +613,10 @@
           async: true
         }, this);
         
-        if(!requestSettings.async && requestInverseIndex != requests.length - 1) {
+        if(!requestSettings.async && requestInverseIndex !== (requests.length - 1)) {
           var prevRequest = requests[requestInverseIndex + 1];
           if(prevRequest.callback && 
-             typeof prevRequest.callback != 'function') {
+             typeof prevRequest.callback !== 'function') {
             var oCallbackSuccess = prevRequest.callback.success || $.noop;
             prevRequest.callback.success = function(response) {
               oCallbackSuccess(response);
@@ -671,7 +679,7 @@
       luminateExtend.widgets(tagTypes, selector);
     }
     else {
-      if(!tagTypes || tagTypes == 'all') {
+      if(!tagTypes || tagTypes === 'all') {
         tagTypes = ['cons'];
       }
       else {
@@ -680,7 +688,7 @@
       selector = selector || 'body';
       
       $.each(tagTypes, function(i, tagType) {
-        if(tagType == 'cons') {
+        if(tagType === 'cons') {
           var $consTags = $(selector).find(document.getElementsByTagName('luminate:cons'));
           if($consTags.length > 0) {
             var parseConsTags = function(data) {
@@ -758,13 +766,13 @@
         }
       });
       
-      $('#' + pingImgId).attr('src', ((window.location.protocol == 'https:') ? 
+      $('#' + pingImgId).attr('src', ((window.location.protocol === 'https:') ? 
                                       luminateExtend.global.path.secure : 
                                       luminateExtend.global.path.nonsecure) + 
                                      'EstablishSession?' + 
                                      ((settings.data == null) ? '' : (settings.data + '&')) + 
                                      'NEXTURL=' + 
-                                     encodeURIComponent(((window.location.protocol == 'https:') ? 
+                                     encodeURIComponent(((window.location.protocol === 'https:') ? 
                                                          luminateExtend.global.path.secure : 
                                                          luminateExtend.global.path.nonsecure) + 
                                                         'PixelServer'));
@@ -790,7 +798,7 @@
       
       var oneDigitNumber = function(num) {
         num = '' + num;
-        return (num.indexOf('0') == 0 && num != '0') ? num.substring(1) : num;
+        return (num.indexOf('0') === 0 && num !== '0') ? num.substring(1) : num;
       }, 
       
       twoDigitNumber = function(num) {
@@ -812,7 +820,7 @@
         dateParts.ampm = 'PM';
       }
       dateParts.hour24 = twoDigitNumber(dateParts.hour24);
-      if(dateParts.hour12 == 0) {
+      if(dateParts.hour12 === 0) {
         dateParts.hour12 = 12;
       }
       if(dateParts.hour12 > 12) {
@@ -852,8 +860,8 @@
                 timePartOperand = 23;
               }
               
-              var timePartResult = (operator == '+') ? timePartOperand : (0 - timePartOperand);
-              if(timePatternPart == 'kk' || timePatternPart == 'k') {
+              var timePartResult = (operator === '+') ? timePartOperand : (0 - timePartOperand);
+              if(timePatternPart === 'kk' || timePatternPart === 'k') {
                 timePartResult = (Number(dateParts.hour24) + timePartResult);
                 if(timePartResult > 24) {
                   timePartResult = timePartResult - 24;
@@ -875,11 +883,11 @@
                 }
               }
               timePartResult = '' + timePartResult;
-              if(timePatternPart == 'kk' || timePatternPart == 'hh') {
+              if(timePatternPart === 'kk' || timePatternPart === 'hh') {
                 timePartResult = twoDigitNumber(timePartResult);
               }
-              if((timePatternPart == 'h' && timePartResult == 0) || (timePatternPart == 'hh' && 
-                 timePartResult == '00')) {
+              if((timePatternPart === 'h' && timePartResult === 0) || (timePatternPart === 'hh' && 
+                 timePartResult === '00')) {
                 timePartResult = '12';
               }
               timeParts[i] = timePartResult + timeParts[i];
@@ -889,11 +897,11 @@
           return timeParts.join('');
         };
         
-        if(formattedPart.indexOf('k+') != -1) {
+        if(formattedPart.indexOf('k+') !== -1) {
           formattedPart = adjustTimePattern(formattedPart.split('kk+'), 'kk', '+');
           formattedPart = adjustTimePattern(formattedPart.split('k+'), 'k', '+');
         }
-        if(formattedPart.indexOf('k-') != -1) {
+        if(formattedPart.indexOf('k-') !== -1) {
           formattedPart = adjustTimePattern(formattedPart.split('kk-'), 'kk', '-');
           formattedPart = adjustTimePattern(formattedPart.split('k-'), 'k', '-');
         }
@@ -901,17 +909,17 @@
         formattedPart = formattedPart.replace(/kk/g, dateParts.hour24)
                                      .replace(/k/g, oneDigitNumber(dateParts.hour24));
         
-        if(formattedPart.indexOf('h+') != -1) {
+        if(formattedPart.indexOf('h+') !== -1) {
           formattedPart = adjustTimePattern(formattedPart.split('hh+'), 'hh', '+');
           formattedPart = adjustTimePattern(formattedPart.split('h+'), 'h', '+');
         }
-        if(formattedPart.indexOf('h-') != -1) {
+        if(formattedPart.indexOf('h-') !== -1) {
           formattedPart = adjustTimePattern(formattedPart.split('hh-'), 'hh', '-');
           formattedPart = adjustTimePattern(formattedPart.split('h-'), 'h', '-');
         }
         
         formattedPart = formattedPart.replace(/hh/g, ((dateParts.hour12 < 12 && dateParts.hour12.indexOf && 
-                                                       dateParts.hour12.indexOf('0') != 0) ? ('0' + 
+                                                       dateParts.hour12.indexOf('0') !== 0) ? ('0' + 
                                                        dateParts.hour12) : 
                                                       dateParts.hour12))
                                      .replace(/h/g, oneDigitNumber(dateParts.hour12));
@@ -933,7 +941,7 @@
                                    'October', 
                                    'November', 
                                    'December'];
-        if(locale == 'es_US') {
+        if(locale === 'es_US') {
           formattedMonthNames = ['enero', 
                                  'febrero', 
                                  'marzo', 
@@ -947,7 +955,7 @@
                                  'noviembre', 
                                  'diciembre'];
         }
-        if(locale == 'fr_CA') {
+        if(locale === 'fr_CA') {
           formattedMonthNames = ['janvier', 
                                  'f&' + '#233;vrier', 
                                  'mars', 
@@ -977,7 +985,7 @@
                                  'Thursday', 
                                  'Friday', 
                                  'Saturday'];
-        if(locale == 'es_US') {
+        if(locale === 'es_US') {
           formattedDayNames = ['domingo', 
                                'lunes', 
                                'martes', 
@@ -986,7 +994,7 @@
                                'viernes', 
                                's&' + 'aacute;bado'];
         }
-        if(locale == 'fr_CA') {
+        if(locale === 'fr_CA') {
           formattedDayNames = ['dimanche', 
                                'lundi', 
                                'mardi', 
@@ -1007,16 +1015,16 @@
         return formattedPart;
       };
       
-      if(pattern.indexOf('\'') == -1) {
+      if(pattern.indexOf('\'') === -1) {
         formattedDate = patternReplace(pattern);
       }
       
       else {
         var formatPatternParts = pattern.replace(/\'+(?=\')/g, '\'\'').split('\'\'');
-        if(formatPatternParts.length == 1) {
+        if(formatPatternParts.length === 1) {
           formatPatternParts = pattern.split('\'');
           for(var i = 0; i < formatPatternParts.length; i++) {
-            if(i % 2 == 0) {
+            if(i % 2 === 0) {
               formatPatternParts[i] = patternReplace(formatPatternParts[i]);
             }
           }
@@ -1026,7 +1034,7 @@
           for(var i = 0; i < formatPatternParts.length; i++) {
             var formatPatternParts2 = formatPatternParts[i].split('\'');
             for(var j = 0; j < formatPatternParts2.length; j++) {
-              if(j % 2 == 0) {
+              if(j % 2 === 0) {
                 formatPatternParts2[j] = patternReplace(formatPatternParts2[j]);
               }
             }

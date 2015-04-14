@@ -47,16 +47,16 @@
             requestData = postMessageData.requestData;
             
             $.ajax({
-              contentType: postMessageData.requestContentType, 
+              url: postMessageData.requestUrl + ';[[S29:SESSION_TAG]]=[[S29:SESSION_ID]]', 
               data: requestData, 
+              contentType: postMessageData.requestContentType, 
+              type: postMessageData.requestType, 
               success: function(data) {
                 postMessageSource.postMessage('{' + 
                   '"postMessageFrameId": "' + postMessageData.postMessageFrameId + '", ' + 
                   '"response": "' + encodeURIComponent(data) + '"' + 
                 '}', postMessageOrigin);
-              }, 
-              type: postMessageData.requestType, 
-              url: postMessageData.requestUrl + ';[[S29:SESSION_TAG]]=[[S29:SESSION_ID]]'
+              }
             });
           };
           
@@ -104,15 +104,15 @@
           }
           
           $.ajax({
-            contentType: hashData('requestContentType'), 
+            url: hashData('requestUrl') + ';[[S29:SESSION_TAG]]=[[S29:SESSION_ID]]', 
             data: requestData, 
+            contentType: hashData('requestContentType'), 
+            type: hashData('requestType'), 
             success: function(data) {
               $('#luminateApiHashResponseFrame').attr('src', hashData('hashTransportClientUrl') + 
                                                              '#&hashTransportFrameId=' + hashData('hashTransportFrameId') + 
                                                              '&responseData=' + encodeURIComponent(data));
-            }, 
-            type: hashData('requestType'), 
-            url: hashData('requestUrl') + ';[[S29:SESSION_TAG]]=[[S29:SESSION_ID]]'
+            }
           });
         });
       </script>
