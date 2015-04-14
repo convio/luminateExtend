@@ -1,7 +1,7 @@
 luminateExtend.js
 =================
 
-Version: 1.6 (28-JAN-2014)  
+Version: 1.7.0 (16-APR-2015)  
 Requires: jQuery v1.5.1+ or Zepto v1.1+
 
 luminateExtend.js is a JavaScript library for use with 
@@ -97,7 +97,7 @@ Thanks cdnjs and CloudFlare!
 
 ```  html
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/luminateExtend/1.6.0/luminateExtend.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/luminateExtend/1.7.0/luminateExtend.min.js"></script>
 ```
 
 As of v1.6, luminateExtend.js can be used with [Zepto](http://zeptojs.com) in lieu of jQuery if you so choose. 
@@ -105,7 +105,7 @@ As of v1.6, luminateExtend.js can be used with [Zepto](http://zeptojs.com) in li
 
 ```  html
 <script src="//cdnjs.cloudflare.com/ajax/libs/zepto/1.1.2/zepto.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/luminateExtend/1.6.0/luminateExtend.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/luminateExtend/1.7.0/luminateExtend.min.js"></script>
 ```
 
 <a name="luminateExtendObj"></a>
@@ -122,7 +122,7 @@ luminateExtend.library
 `luminateExtend.library` contains information about the library.
 
 ```  js
-console.log(luminateExtend.library.version); // logs a value like "1.6"
+console.log(luminateExtend.library.version); // logs a value like "1.7.0"
 ```
 
 The library object contains the following:
