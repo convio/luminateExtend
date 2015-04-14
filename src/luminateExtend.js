@@ -139,7 +139,7 @@
   
   /* library info */
   luminateExtend.library = {
-    version: '1.6'
+    version: '1.7.0'
   };
   
   /* global settings */
