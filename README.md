@@ -83,13 +83,13 @@ Including the library
 ---------------------
 
 Once you've uploaded 
-[luminateExtend.js](https://github.com/noahcooper/luminateExtend/blob/master/luminateExtend.js) to your 
+[luminateExtend.min.js](https://github.com/noahcooper/luminateExtend/blob/master/luminateExtend.min.js) to your 
 website, including the library on a page is easy &mdash; simply pull in the library somewhere below where 
 jQuery is included. (Change out the file path as needed, depending on where you uploaded the file on your site.)
 
 ```  html
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-<script src="../js/luminateExtend.js"></script>
+<script src="../js/luminateExtend.min.js"></script>
 ```
 
 If you prefer to use a CDN, luminateExtend.js is available via [cdnjs](http://cdnjs.com/libraries/luminateExtend). 
