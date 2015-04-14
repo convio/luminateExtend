@@ -1,2 +1,1042 @@
-/* luminateExtend.js | Version: 1.6 (28-JAN-2014) */
-(function(e){var t=function(t){if(t&&e.inArray(t,["es_US","en_CA","fr_CA","en_GB","en_AU"])<0){t="en_US"}return t},n=function(e){if(e){e=t(e);luminateExtend.sessionVars.set("locale",e)}return e},r=function(e,t){return(e?luminateExtend.global.path.secure+"S":luminateExtend.global.path.nonsecure)+"PageServer"+(luminateExtend.global.sessionCookie?";"+luminateExtend.global.sessionCookie:"")+"?pagename=luminateExtend_server&pgwrap=n"+(t?"&"+t:"")},i=function(t,n){if(t.responseFilter&&t.responseFilter.array&&t.responseFilter.filter){if(luminateExtend.utils.stringToObj(t.responseFilter.array,n)){var r=t.responseFilter.filter.split("==")[0].split("!=")[0].replace(/^\s+|\s+$/g,""),i,s;if(t.responseFilter.filter.indexOf("!=")!=-1){i="nequal";s=t.responseFilter.filter.split("!=")[1]}else if(t.responseFilter.filter.indexOf("==")!=-1){i="equal";s=t.responseFilter.filter.split("==")[1]}if(i&&s){s=s.replace(/^\s+|\s+$/g,"");var o=[],u=false;e.each(luminateExtend.utils.ensureArray(luminateExtend.utils.stringToObj(t.responseFilter.array,n)),function(){if(i=="nequal"&&this[r]==s||i=="equal"&&this[r]!=s){u=true}else{o.push(this)}});if(u){var a=t.responseFilter.array.split(".");e.each(n,function(t,r){if(t==a[0]){e.each(r,function(r,i){if(r==a[1]){if(a.length==2){n[t][r]=o}else{e.each(i,function(i,s){if(i==a[2]){if(a.length==3){n[t][r][i]=o}else{e.each(s,function(e,s){if(e==a[3]&&a.length==4){n[t][r][i][e]=o}})}}})}}})}})}}}}var f=e.noop;if(t.callback){if(typeof t.callback==="function"){f=t.callback}else if(t.callback.error&&n.errorResponse){f=t.callback.error}else if(t.callback.success&&!n.errorResponse){f=t.callback.success}}if(!(t.data.indexOf("&method=login")!=-1&&t.data.indexOf("&method=loginTest")==-1||t.data.indexOf("&method=logout")!=-1)){f(n)}else{var l=function(){f(n)};luminateExtend.api.getAuth({callback:l,useCache:false,useHTTPS:t.useHTTPS})}};window.luminateExtend=function(e){luminateExtend.init(e||{})};luminateExtend.library={version:"1.6"};luminateExtend.global={update:function(t,r){if(t){if(t.length){if(r){if(t=="locale"){r=n(r)}luminateExtend.global[t]=r}}else{if(t.locale){t.locale=n(t.locale)}luminateExtend.global=e.extend(luminateExtend.global,t)}}}};luminateExtend.init=function(n){var r=e.extend({apiCommon:{},auth:{type:"auth"},path:{}},n||{});if(r.locale){r.locale=t(r.locale)}r.supportsCORS=false;if(window.XMLHttpRequest){var i=new XMLHttpRequest;if("withCredentials"in i){r.supportsCORS=true}}luminateExtend.global=e.extend(luminateExtend.global,r);return luminateExtend};luminateExtend.api=function(e){luminateExtend.api.request(e||{})};luminateExtend.api.bind=function(t){t=t||"form.luminateApi";if(e(t).length>0){e(t).each(function(){if(this.nodeName.toLowerCase()=="form"){e(this).bind("submit",function(t){t.cancelBubble=true;t.returnValue=false;if(t.stopPropagation){t.stopPropagation();t.preventDefault()}if(!e(this).attr("id")){e(this).attr("id","luminateApi-"+(new Date).getTime())}var n=e(this).attr("action"),r=n.split("?"),i=e(this).data("luminateapi"),s=r[0].indexOf("/site/")!=-1?r[0].split("/site/")[1]:r[0],o,u=e(this).attr("enctype"),a=r.length>1?r[1]:"",f="#"+e(this).attr("id"),l=false,c=e(this).attr("method"),h=false;if(i){if(i.callback){o=luminateExtend.utils.stringToObj(i.callback)}if(i.requiresAuth&&i.requiresAuth=="true"){l=true}if(n.indexOf("https:")==0||window.location.protocol=="https:"&&n.indexOf("http")==-1){h=true}}luminateExtend.api.request({api:s,callback:o,contentType:u,data:a,form:f,requestType:c,requiresAuth:l,useHTTPS:h})})}})}return luminateExtend};luminateExtend.api.getAuth=function(t){var n=e.extend({useCache:true,useHTTPS:false},t||{});if(luminateExtend.api.getAuthLoad){luminateExtend.api.getAuthLoad=false;if(n.useCache&&luminateExtend.global.auth.type&&luminateExtend.global.auth.token){luminateExtend.api.getAuthLoad=true;if(n.callback){n.callback()}}else{var i=function(e){luminateExtend.global.update(e);luminateExtend.api.getAuthLoad=true;if(n.callback){n.callback()}};if(luminateExtend.global.supportsCORS){e.ajax({data:"luminateExtend="+luminateExtend.library.version+"&api_key="+luminateExtend.global.apiKey+"&method=getLoginUrl&response_format=json&v=1.0",dataType:"json",success:function(e){i({auth:{type:"auth",token:e.getLoginUrlResponse.token},sessionCookie:e.getLoginUrlResponse.url.split(";")[1]})},url:(n.useHTTPS?luminateExtend.global.path.secure:luminateExtend.global.path.nonsecure)+"CRConsAPI",xhrFields:{withCredentials:true}})}else{e.ajax({dataType:"jsonp",success:i,url:r(n.useHTTPS,"action=getAuth&callback=?")})}}}else{var s=function(){luminateExtend.api.getAuth(n)},o=setTimeout(s,1e3)}};luminateExtend.api.getAuthLoad=true;var s=function(t){var n=e.extend({contentType:"application/x-www-form-urlencoded",data:"",requestType:"GET",requiresAuth:false,useHashTransport:false,useHTTPS:null},t||{});var s=["addressbook","advocacy","connect","cons","content","datasync","donation","email","group","orgevent","recurring","survey","teamraiser"];if(e.inArray(n.api.toLowerCase(),s)>=0){n.api="CR"+n.api.charAt(0).toUpperCase()+n.api.slice(1).toLowerCase()+"API";n.api=n.api.replace("Addressbook","AddressBook").replace("Datasync","DataSync").replace("Orgevent","OrgEvent")}if(luminateExtend.global.path.nonsecure&&luminateExtend.global.path.secure&&luminateExtend.global.apiKey&&n.api){if(n.contentType!="multipart/form-data"){n.contentType="application/x-www-form-urlencoded"}n.data="luminateExtend="+luminateExtend.library.version+(n.data==""?"":"&"+n.data);if(n.form&&e(n.form).length>0){n.data+="&"+e(n.form).eq(0).serialize()}if(n.data.indexOf("&api_key=")==-1){n.data+="&api_key="+luminateExtend.global.apiKey}if(luminateExtend.global.apiCommon.centerId&&n.data.indexOf("&center_id=")==-1){n.data+="&center_id="+luminateExtend.global.apiCommon.centerId}if(luminateExtend.global.apiCommon.categoryId&&n.data.indexOf("&list_category_id=")==-1){n.data+="&list_category_id="+luminateExtend.global.apiCommon.categoryId}if(n.data.indexOf("&response_format=xml")!=-1){n.data=n.data.replace(/&response_format=xml/g,"&response_format=json")}else if(n.data.indexOf("&response_format=")==-1){n.data+="&response_format=json"}if(luminateExtend.global.apiCommon.source&&n.data.indexOf("&source=")==-1){n.data+="&source="+luminateExtend.global.apiCommon.source}if(luminateExtend.global.apiCommon.subSource&&n.data.indexOf("&sub_source=")==-1){n.data+="&sub_source="+luminateExtend.global.apiCommon.subSource}if(n.data.indexOf("&suppress_response_codes=")==-1){n.data+="&suppress_response_codes=true"}if(luminateExtend.global.locale&&n.data.indexOf("&s_locale=")==-1){n.data+="&s_locale="+luminateExtend.global.locale}if(n.data.indexOf("&v=")==-1){n.data+="&v=1.0"}n.requestType=n.requestType.toLowerCase()==="post"?"POST":"GET";var o="http://",u=luminateExtend.global.path.nonsecure.split("http://")[1];if(n.api=="CRDonationAPI"||n.api=="CRTeamraiserAPI"||n.api!="CRConnectAPI"&&(window.location.protocol=="https:"&&n.useHTTPS==null||n.useHTTPS==true)){n.useHTTPS=true}else{n.useHTTPS=false}if(n.useHTTPS){o="https://",u=luminateExtend.global.path.secure.split("https://")[1]}o+=u+n.api;var a=false,f=false,l=false;if(window.location.protocol==o.split("//")[0]&&document.domain==u.split("/")[0]&&!n.useHashTransport){a=true,f=true}else{if(luminateExtend.global.supportsCORS&&!n.useHashTransport){f=true}else if("postMessage"in window&&!n.useHashTransport){l=true}}var c;if(f){c=function(){if(n.requiresAuth&&n.data.indexOf("&"+luminateExtend.global.auth.type+"=")==-1){n.data+="&"+luminateExtend.global.auth.type+"="+luminateExtend.global.auth.token}if(luminateExtend.global.sessionCookie){o+=";"+luminateExtend.global.sessionCookie}n.data+="&ts="+(new Date).getTime();e.ajax({contentType:n.contentType,data:n.data,dataType:"json",success:function(e){i(n,e)},type:n.requestType,url:o,xhrFields:{withCredentials:true}})}}else if(l){c=function(){var t=(new Date).getTime(),s="luminateApiPostMessage"+t,u=r(n.useHTTPS,"action=postMessage");if(n.requiresAuth&&n.data.indexOf("&"+luminateExtend.global.auth.type+"=")==-1){n.data+="&"+luminateExtend.global.auth.type+"="+luminateExtend.global.auth.token}n.data+="&ts="+t;if(!luminateExtend.api.request.postMessageEventHandler){luminateExtend.api.request.postMessageEventHandler={};luminateExtend.api.request.postMessageEventHandler.handler=function(t){if(luminateExtend.global.path.nonsecure.indexOf(t.origin)!=-1||luminateExtend.global.path.secure.indexOf(t.origin)!=-1){var n=e.parseJSON(t.data),r=n.postMessageFrameId,i=e.parseJSON(decodeURIComponent(n.response));if(luminateExtend.api.request.postMessageEventHandler[r]){luminateExtend.api.request.postMessageEventHandler[r](r,i)}}};if(typeof window.addEventListener!="undefined"){window.addEventListener("message",luminateExtend.api.request.postMessageEventHandler.handler,false)}else if(typeof window.attachEvent!="undefined"){window.attachEvent("onmessage",luminateExtend.api.request.postMessageEventHandler.handler)}}luminateExtend.api.request.postMessageEventHandler[s]=function(t,r){i(n,r);e("#"+t).remove();delete luminateExtend.api.request.postMessageEventHandler[t]};e("body").append('<iframe style="position: absolute; top: 0; left: -999em;" '+'name="'+s+'" id="'+s+'">'+"</iframe>");e("#"+s).bind("load",function(){var t="{"+'"postMessageFrameId": "'+e(this).attr("id")+'", '+'"requestUrl": "'+o+'", '+'"requestContentType": "'+n.contentType+'", '+'"requestData": "'+n.data+'", '+'"requestType": "'+n.requestType+'"'+"}",r=o.split("/site/")[0].split("/admin/")[0];document.getElementById(e(this).attr("id")).contentWindow.postMessage(t,r)});e("#"+s).attr("src",u)}}else{c=function(){var t=(new Date).getTime(),s="luminateApiHashTransport"+t,u=r(n.useHTTPS,"action=hashTransport"),a=window.location.protocol+"//"+document.domain+"/luminateExtend_client.html";if(n.requiresAuth&&n.data.indexOf("&"+luminateExtend.global.auth.type+"=")==-1){n.data+="&"+luminateExtend.global.auth.type+"="+luminateExtend.global.auth.token}n.data+="&ts="+t;u+="#&hashTransportClientUrl="+encodeURIComponent(a)+"&hashTransportFrameId="+s+"&requestUrl="+encodeURIComponent(o)+"&requestContentType="+encodeURIComponent(n.contentType)+"&requestData="+encodeURIComponent(n.data)+"&requestType="+n.requestType;if(!luminateExtend.api.request.hashTransportEventHandler){luminateExtend.api.request.hashTransportEventHandler={};luminateExtend.api.request.hashTransportEventHandler.handler=function(e,t){if(luminateExtend.api.request.hashTransportEventHandler[e]){luminateExtend.api.request.hashTransportEventHandler[e](e,t)}}}luminateExtend.api.request.hashTransportEventHandler[s]=function(t,r){i(n,r);e("#"+t).remove();delete luminateExtend.api.request.hashTransportEventHandler[t]};e("body").append('<iframe style="position: absolute; top: 0; left: -999em;" '+'name="'+s+'" id="'+s+'" '+'src="'+u+'"></iframe>')}}if(n.requiresAuth||!f&&!a&&!luminateExtend.global.sessionCookie){luminateExtend.api.getAuth({callback:c,useHTTPS:n.useHTTPS})}else{c()}}};luminateExtend.api.request=function(t){if(!e.isArray(t)){s(t)}else{t.reverse();var n=[];e.each(t,function(r){var i=e.extend({async:true},this);if(!i.async&&r!=t.length-1){var o=t[r+1];if(o.callback&&typeof o.callback!="function"){var u=o.callback.success||e.noop;o.callback.success=function(e){u(e);s(i)}}else{var o=t[r+1],a=o.callback||e.noop;o.callback={success:function(e){a(e);s(i)},error:function(e){a(e)}}}}else{n.push(i)}});n.reverse();e.each(n,function(){s(this)})}};luminateExtend.sessionVars={set:function(e,t,n){var r={};if(n){r.callback=n}if(e){r.data="s_"+e+"="+(t||"");luminateExtend.utils.ping(r)}}};luminateExtend.tags=function(e,t){luminateExtend.tags.parse(e,t)};luminateExtend.tags.parse=function(t,n){if(luminateExtend.widgets){luminateExtend.widgets(t,n)}else{if(!t||t=="all"){t=["cons"]}else{t=luminateExtend.utils.ensureArray(t)}n=n||"body";e.each(t,function(t,r){if(r=="cons"){var i=e(n).find(document.getElementsByTagName("luminate:cons"));if(i.length>0){var s=function(t){i.each(function(){if(t.getConsResponse){e(this).replaceWith(luminateExtend.utils.stringToObj(e(this).attr("field"),t.getConsResponse))}else{e(this).remove()}})};luminateExtend.api.request({api:"cons",callback:s,data:"method=getUser",requestType:"POST",requiresAuth:true})}}})}};luminateExtend.utils={ensureArray:function(t){if(e.isArray(t)){return t}else if(t){return[t]}else{return[]}},stringToObj:function(e,t){var n=t||window;if(e){var r=e.split(".");for(var i=0;i<r.length;i++){if(i<r.length-1&&!n[r[i]]){return{}}n=n[r[i]]}}return n},ping:function(t){var n=e.extend({data:null},t||{});var r="luminatePing"+(new Date).getTime();e("body").append('<img style="position: absolute; left: -999em; top: 0;" '+'id="'+r+'" />');e("#"+r).bind("load",function(){e(this).remove();if(n.callback){n.callback()}});e("#"+r).attr("src",(window.location.protocol=="https:"?luminateExtend.global.path.secure:luminateExtend.global.path.nonsecure)+"EstablishSession?"+(n.data==null?"":n.data+"&")+"NEXTURL="+encodeURIComponent((window.location.protocol=="https:"?luminateExtend.global.path.secure:luminateExtend.global.path.nonsecure)+"PixelServer"))},simpleDateFormat:function(n,r,i){i=i||luminateExtend.global.locale;i=t(i);r=r||(e.inArray(i,["en_CA","fr_CA","en_GB","en_AU"])>=0?"d/M/yy":"M/d/yy");n=n||new Date;if(!(n instanceof Date)){var s=n.split("T")[0].split("-"),o=n.split("T").length>1?n.split("T")[1].split(".")[0].split("Z")[0].split("-")[0].split(":"):["00","00","00"];n=new Date(s[0],s[1]-1,s[2],o[0],o[1],o[2])}var u=function(e){e=""+e;return e.indexOf("0")==0&&e!="0"?e.substring(1):e},a=function(e){e=Number(e);return isNaN(e)?"00":(e<10?"0":"")+e},f={month:a(n.getMonth()+1),date:a(n.getDate()),year:a(n.getFullYear()),day:n.getDay(),hour24:n.getHours(),hour12:n.getHours(),minutes:a(n.getMinutes()),ampm:"AM"};if(f.hour24>11){f.ampm="PM"}f.hour24=a(f.hour24);if(f.hour12==0){f.hour12=12}if(f.hour12>12){f.hour12=f.hour12-12}f.hour12=a(f.hour12);var l,c=function(e){var t=e.replace(/yy+(?=y)/g,"yy").replace(/MMM+(?=M)/g,"MMM").replace(/d+(?=d)/g,"d").replace(/EEE+(?=E)/g,"EEE").replace(/a+(?=a)/g,"").replace(/k+(?=k)/g,"k").replace(/h+(?=h)/g,"h").replace(/m+(?=m)/g,"m"),n=t.replace(/yyy/g,f.year).replace(/yy/g,f.year.substring(2)).replace(/y/g,f.year).replace(/dd/g,f.date).replace(/d/g,u(f.date)),r=function(e,t,n){for(var r=1;r<e.length;r++){if(!isNaN(e[r].substring(0,1))){var i=e[r].substring(0,2);e[r]=e[r].substring(2);if(isNaN(i.substring(1))){e[r]=i.substring(1)+e[r];i=i.substring(0,1)}i=Number(i);if(i>23){i=23}var s=n=="+"?i:0-i;if(t=="kk"||t=="k"){s=Number(f.hour24)+s;if(s>24){s=s-24}else if(s<0){s=s+24}}else{s=Number(f.hour12)+s;if(s>24){s=s-24}else if(s<0){s=s+24}if(s>12){s=s-12}}s=""+s;if(t=="kk"||t=="hh"){s=a(s)}if(t=="h"&&s==0||t=="hh"&&s=="00"){s="12"}e[r]=s+e[r]}}return e.join("")};if(n.indexOf("k+")!=-1){n=r(n.split("kk+"),"kk","+");n=r(n.split("k+"),"k","+")}if(n.indexOf("k-")!=-1){n=r(n.split("kk-"),"kk","-");n=r(n.split("k-"),"k","-")}n=n.replace(/kk/g,f.hour24).replace(/k/g,u(f.hour24));if(n.indexOf("h+")!=-1){n=r(n.split("hh+"),"hh","+");n=r(n.split("h+"),"h","+")}if(n.indexOf("h-")!=-1){n=r(n.split("hh-"),"hh","-");n=r(n.split("h-"),"h","-")}n=n.replace(/hh/g,f.hour12<12&&f.hour12.indexOf&&f.hour12.indexOf("0")!=0?"0"+f.hour12:f.hour12).replace(/h/g,u(f.hour12));n=n.replace(/mm/g,f.minutes).replace(/m/g,u(f.minutes));n=n.replace(/a/g,"A");var s=["January","February","march","april","may","June","July","august","September","October","November","December"];if(i=="es_US"){s=["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"]}if(i=="fr_CA"){s=["janvier","f&"+"#233;vrier","mars","avril","mai","juin","juillet","ao&"+"#251;t","septembre","octobre","novembre","d&"+"#233;cembre"]}n=n.replace(/MMMM/g,s[Number(f.month)-1]).replace(/MMM/g,s[Number(f.month)-1].substring(0,3)).replace(/MM/g,f.month).replace(/M/g,u(f.month)).replace(/march/g,"March").replace(/may/g,"May").replace(/Mayo/g,"mayo");var o=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];if(i=="es_US"){o=["domingo","lunes","martes","mi&"+"eacute;rcoles","jueves","viernes","s&"+"aacute;bado"]}if(i=="fr_CA"){o=["dimanche","lundi","mardi","mercredi","jeudi","vendredi","samedi"]}n=n.replace(/EEEE/g,o[f.day]).replace(/EEE/g,o[f.day].substring(0,3)).replace(/EE/g,o[f.day].substring(0,3)).replace(/E/g,o[f.day].substring(0,3));n=n.replace(/A/g,f.ampm).replace(/april/g,"April").replace(/august/g,"August");return n};if(r.indexOf("'")==-1){l=c(r)}else{var h=r.replace(/\'+(?=\')/g,"''").split("''");if(h.length==1){h=r.split("'");for(var p=0;p<h.length;p++){if(p%2==0){h[p]=c(h[p])}}return h.join("")}else{for(var p=0;p<h.length;p++){var d=h[p].split("'");for(var v=0;v<d.length;v++){if(v%2==0){d[v]=c(d[v])}}h[p]=d.join("")}return h.join("'")}}return l}}})(typeof jQuery==="undefined"&&typeof Zepto==="function"?Zepto:jQuery)
+/*
+ * luminateExtend.js
+ * Version: 1.7.0 (16-APR-2015)
+ * Requires: jQuery v1.5.1+ or Zepto v1.1+
+ * Includes: SimpleDateFormatJS v1.3 (https://github.com/noahcooper/SimpleDateFormatJS)
+ */
+
+(function($) {
+  /* private helper functions */
+  var validateLocale = function(locale) {
+    /* if a locale is provided that is not supported, default to "en_US" */
+    if(locale && $.inArray(locale, ['es_US', 'en_CA', 'fr_CA', 'en_GB', 'en_AU']) < 0) {
+      locale = 'en_US';
+    }
+    
+    return locale;
+  }, 
+  
+  setLocale = function(locale) {
+    if(locale) {
+      locale = validateLocale(locale);
+      luminateExtend.sessionVars.set('locale', locale);
+    }
+    
+    return locale;
+  }, 
+  
+  buildServerUrl = function(useHTTPS, data) {
+    return (useHTTPS ? (luminateExtend.global.path.secure + 'S') : luminateExtend.global.path.nonsecure) + 
+           'PageServer' + 
+           (luminateExtend.global.sessionCookie && luminateExtend.global.sessionCookie !== '' ? (';' + luminateExtend.global.sessionCookie) : '') + 
+           '?pagename=luminateExtend_server&pgwrap=n' + 
+           (data ? ('&' + data) : '');
+  }, 
+  
+  apiCallbackHandler = function(requestSettings, responseData) {
+    if(requestSettings.responseFilter && 
+       requestSettings.responseFilter.array && 
+       requestSettings.responseFilter.filter) {
+      if(luminateExtend.utils.stringToObj(requestSettings.responseFilter.array, responseData)) {
+        var filterKey = requestSettings.responseFilter.filter.split('==')[0].split('!=')[0].replace(/^\s+|\s+$/g, ''), 
+        filterOperator, 
+        filterValue;
+        
+        if(requestSettings.responseFilter.filter.indexOf('!=') != -1) {
+          filterOperator = 'nequal';
+          filterValue = requestSettings.responseFilter.filter.split('!=')[1];
+        }
+        else if(requestSettings.responseFilter.filter.indexOf('==') != -1) {
+          filterOperator = 'equal';
+          filterValue = requestSettings.responseFilter.filter.split('==')[1];
+        }
+        
+        if(filterOperator && filterValue) {
+          filterValue = filterValue.replace(/^\s+|\s+$/g, '');
+          var filteredArray = [], 
+          arrayIsFiltered = false;
+          $.each(luminateExtend.utils.ensureArray(luminateExtend.utils.stringToObj(requestSettings.responseFilter.array, responseData)), function() {
+            if((filterOperator == 'nequal' && this[filterKey] == filterValue) || 
+               (filterOperator == 'equal' && this[filterKey] != filterValue)) {
+              arrayIsFiltered = true;
+            }
+            else {
+              filteredArray.push(this);
+            }
+          });
+          
+          if(arrayIsFiltered) {
+            var filterArrayParts = requestSettings.responseFilter.array.split('.');
+            $.each(responseData, function(i, val0) {
+              if(i == filterArrayParts[0]) {
+                $.each(val0, function(j, val1) {
+                  if(j == filterArrayParts[1]) {
+                    if(filterArrayParts.length == 2) {
+                      responseData[i][j] = filteredArray;
+                    }
+                    else {
+                      $.each(val1, function(k, val2) {
+                        if(k == filterArrayParts[2]) {
+                          if(filterArrayParts.length == 3) {
+                            responseData[i][j][k] = filteredArray;
+                          }
+                          else {
+                            $.each(val2, function(l, val3) {
+                              if(l == filterArrayParts[3] && filterArrayParts.length == 4) {
+                                responseData[i][j][k][l] = filteredArray;
+                              }
+                            });
+                          }
+                        }
+                      });
+                    }
+                  }
+                });
+              }
+            });
+          }
+        }
+      }
+    }
+    
+    var callbackFn = $.noop;
+    if(requestSettings.callback) {
+      if(typeof requestSettings.callback === 'function') {
+        callbackFn = requestSettings.callback;
+      }
+      else if(requestSettings.callback.error && responseData.errorResponse) {
+        callbackFn = requestSettings.callback.error;
+      }
+      else if(requestSettings.callback.success && !responseData.errorResponse) {
+        callbackFn = requestSettings.callback.success;
+      }
+    }
+    
+    if(!((requestSettings.data.indexOf('&method=login') != -1 && 
+          requestSettings.data.indexOf('&method=loginTest') == -1) || 
+         requestSettings.data.indexOf('&method=logout') != -1)) {
+      callbackFn(responseData);
+    }
+    
+    /* get a new auth token after login or logout */
+    else {
+      var newAuthCallback = function() {
+        callbackFn(responseData);
+      };
+      luminateExtend.api.getAuth({
+        callback: newAuthCallback, 
+        useCache: false, 
+        useHTTPS: requestSettings.useHTTPS
+      });
+    }
+  };
+  
+  /* library core */
+  window.luminateExtend = function(initOptions) {
+    /* make luminateExtend an alias for the init method if called directly */
+    luminateExtend.init(initOptions || {});
+  };
+  
+  /* library info */
+  luminateExtend.library = {
+    version: '1.7.0'
+  };
+  
+  /* global settings */
+  luminateExtend.global = {
+    update: function(settingName, settingValue) {
+      if(settingName) {
+        if(settingName.length) {
+          if(settingValue) {
+            if(settingName == 'locale') {
+              settingValue = setLocale(settingValue);
+            }
+            
+            luminateExtend.global[settingName] = settingValue;
+          }
+        }
+        else {
+          if(settingName.locale) {
+            settingName.locale = setLocale(settingName.locale);
+          }
+          
+          luminateExtend.global = $.extend(luminateExtend.global, settingName);
+        }
+      }
+    }
+  };
+  
+  /* init library */
+  luminateExtend.init = function(options) {
+    var settings = $.extend({
+      apiCommon: {}, 
+      auth: {
+        type: 'auth'
+      }, 
+      path: {}
+    }, options || {});
+    
+    if(settings.locale) {
+      settings.locale = validateLocale(settings.locale);
+    }
+    
+    /* check if the browser supports CORS and the withCredentials property */
+    settings.supportsCORS = false;
+    if(window.XMLHttpRequest) {
+      var testXHR = new XMLHttpRequest();
+      if('withCredentials' in testXHR) {
+        settings.supportsCORS = true;
+      }
+    }
+    
+    luminateExtend.global = $.extend(luminateExtend.global, settings);
+    
+    return luminateExtend;
+  };
+  
+  /* api */
+  luminateExtend.api = function(requestOptions) {
+    /* make luminateExtend.api an alias for the request method if called directly */
+    luminateExtend.api.request(requestOptions || {});
+  };
+  
+  luminateExtend.api.bind = function(selector) {
+    selector = selector || 'form.luminateApi';
+    
+    if($(selector).length > 0) {
+      $(selector).each(function() {
+        if(this.nodeName.toLowerCase() == 'form') {
+          $(this).bind('submit', function(e) {
+            e.cancelBubble = true;
+            e.returnValue  = false;
+            if(e.stopPropagation) {
+              e.stopPropagation();
+              e.preventDefault();
+            }
+            
+            if(!$(this).attr('id')) {
+              $(this).attr('id', 'luminateApi-' + new Date().getTime());
+            }
+            
+            var formAction = $(this).attr('action'), 
+            formActionQuery = formAction.split('?'), 
+            formApiData = $(this).data('luminateapi'), 
+            
+            requestApi = (formActionQuery[0].indexOf('/site/') != -1) ? 
+                         formActionQuery[0].split('/site/')[1] : formActionQuery[0], 
+            requestCallback, 
+            requestContentType = $(this).attr('enctype'), 
+            requestData = (formActionQuery.length > 1) ? formActionQuery[1] : '', 
+            requestForm = '#' + $(this).attr('id'), 
+            requestRequiresAuth = false, 
+            requestType = $(this).attr('method'), 
+            requestUseHTTPS = false;
+            
+            if(formApiData) {
+              if(formApiData.callback) {
+                requestCallback = luminateExtend.utils.stringToObj(formApiData.callback);
+              }
+              if(formApiData.requiresAuth && formApiData.requiresAuth == 'true') {
+                requestRequiresAuth = true;
+              }
+              if(formAction.indexOf('https:') == 0 || 
+                 (window.location.protocol == 'https:' && formAction.indexOf('http') == -1)) {
+                requestUseHTTPS = true;
+              }
+            }
+            
+            luminateExtend.api.request({
+              api: requestApi, 
+              callback: requestCallback, 
+              contentType: requestContentType, 
+              data: requestData, 
+              form: requestForm,  
+              requestType: requestType, 
+              requiresAuth: requestRequiresAuth, 
+              useHTTPS: requestUseHTTPS
+            });
+          });
+        }
+      });
+    }
+    
+    return luminateExtend;
+  };
+  
+  luminateExtend.api.getAuth = function(options) {
+    var settings = $.extend({
+      useCache: true, 
+      useHTTPS: false
+    }, options || {});
+    
+    /* don't try to get an auth token if there's already a request outstanding */
+    if(luminateExtend.api.getAuthLoad) {
+      luminateExtend.api.getAuthLoad = false;
+      
+      if(settings.useCache && 
+         luminateExtend.global.auth.type && 
+         luminateExtend.global.auth.token) {
+        luminateExtend.api.getAuthLoad = true;
+        
+        if(settings.callback) {
+          settings.callback();
+        }
+      }
+      else {
+        var getAuthCallback = function(globalData) {
+          luminateExtend.global.update(globalData);
+          luminateExtend.api.getAuthLoad = true;
+          
+          if(settings.callback) {
+            settings.callback();
+          }
+        };
+        
+        if(luminateExtend.global.supportsCORS) {
+          $.ajax({
+            data: 'luminateExtend=' + luminateExtend.library.version + '&api_key=' + luminateExtend.global.apiKey + 
+                  '&method=getLoginUrl&response_format=json&v=1.0', 
+            dataType: 'json', 
+            success: function(data) {
+              var getLoginUrlResponse = data.getLoginUrlResponse, 
+              loginUrl = getLoginUrlResponse.url;
+
+              getAuthCallback({
+                auth: {
+                  type: 'auth', 
+                  token: getLoginUrlResponse.token
+                }, 
+                sessionCookie: loginUrl.split('CRConsAPI;').length > 1 ? loginUrl.split('CRConsAPI;')[1] : ''
+              });
+            }, 
+            url: (settings.useHTTPS ? luminateExtend.global.path.secure : luminateExtend.global.path.nonsecure) + 
+                 'CRConsAPI', 
+            xhrFields: {
+              withCredentials: true
+            }
+          });
+        }
+        else {
+          $.ajax({
+            dataType: 'jsonp', 
+            success: getAuthCallback, 
+            url: buildServerUrl(settings.useHTTPS, 'action=getAuth&callback=?')
+          });
+        }
+      }
+    }
+    else {
+      var retryGetAuth = function() {
+        luminateExtend.api.getAuth(settings);
+      }, 
+      t = setTimeout(retryGetAuth, 1000);
+    }
+  };
+  
+  luminateExtend.api.getAuthLoad = true;
+  
+  var sendRequest = function(options) {
+    var settings = $.extend({
+      contentType: 'application/x-www-form-urlencoded', 
+      data: '', 
+      requestType: 'GET', 
+      requiresAuth: false, 
+      useHashTransport: false, 
+      useHTTPS: null
+    }, options || {});
+    
+    var servletShorthand = ['addressbook', 'advocacy', 'connect', 'cons', 'content', 'datasync', 'donation', 
+                            'email', 'group', 'orgevent', 'recurring', 'survey', 'teamraiser'];
+    if($.inArray(settings.api.toLowerCase(), servletShorthand) >= 0) {
+      /* add "CR", capitalize the first letter, and add "API" */
+      settings.api = 'CR' + settings.api.charAt(0).toUpperCase() + settings.api.slice(1).toLowerCase() + 'API';
+      /* special cases where a letter in the middle of the servlet name needs to be capitalized */
+      settings.api = settings.api.replace('Addressbook', 'AddressBook')
+                                 .replace('Datasync', 'DataSync')
+                                 .replace('Orgevent', 'OrgEvent');
+    }
+    
+    /* don't make the request unless we have all the required data */
+    if(luminateExtend.global.path.nonsecure && 
+       luminateExtend.global.path.secure && 
+       luminateExtend.global.apiKey && 
+       settings.api) {
+      if(settings.contentType != 'multipart/form-data') {
+        settings.contentType = 'application/x-www-form-urlencoded';
+      }
+      
+      settings.data = 'luminateExtend=' + luminateExtend.library.version + 
+                      ((settings.data == '') ? '' : ('&' + settings.data));
+      
+      if(settings.form && $(settings.form).length > 0) {
+        settings.data += '&' + $(settings.form).eq(0).serialize();
+      }
+      if(settings.data.indexOf('&api_key=') == -1) {
+        settings.data += '&api_key=' + luminateExtend.global.apiKey;
+      }
+      if(luminateExtend.global.apiCommon.centerId && settings.data.indexOf('&center_id=') == -1) {
+        settings.data += '&center_id=' + luminateExtend.global.apiCommon.centerId;
+      }
+      if(luminateExtend.global.apiCommon.categoryId && settings.data.indexOf('&list_category_id=') == -1) {
+        settings.data += '&list_category_id=' + luminateExtend.global.apiCommon.categoryId;
+      }
+      if(settings.data.indexOf('&response_format=xml') != -1) {
+        settings.data = settings.data.replace(/&response_format=xml/g, '&response_format=json');
+      }
+      else if(settings.data.indexOf('&response_format=') == -1) {
+        settings.data += '&response_format=json';
+      }
+      if(luminateExtend.global.apiCommon.source && settings.data.indexOf('&source=') == -1) {
+        settings.data += '&source=' + luminateExtend.global.apiCommon.source;
+      }
+      if(luminateExtend.global.apiCommon.subSource && settings.data.indexOf('&sub_source=') == -1) {
+        settings.data += '&sub_source=' + luminateExtend.global.apiCommon.subSource;
+      }
+      if(settings.data.indexOf('&suppress_response_codes=') == -1) {
+        settings.data += '&suppress_response_codes=true';
+      }
+      if(luminateExtend.global.locale && settings.data.indexOf('&s_locale=') == -1) {
+        settings.data += '&s_locale=' + luminateExtend.global.locale;
+      }
+      if(settings.data.indexOf('&v=') == -1) {
+        settings.data += '&v=1.0';
+      }
+      
+      settings.requestType = settings.requestType.toLowerCase() === 'post' ? 'POST' : 'GET';
+      
+      var requestUrl = 'http://', 
+      requestPath = luminateExtend.global.path.nonsecure.split('http://')[1];
+      if(settings.api == 'CRDonationAPI' || settings.api == 'CRTeamraiserAPI' || 
+         (settings.api != 'CRConnectAPI' && ((window.location.protocol == 'https:' && 
+          settings.useHTTPS == null) || settings.useHTTPS == true))) {
+        settings.useHTTPS = true;
+      }
+      else {
+        settings.useHTTPS = false;
+      }
+      if(settings.useHTTPS) {
+        requestUrl = 'https://', 
+        requestPath = luminateExtend.global.path.secure.split('https://')[1];
+      }
+      requestUrl += requestPath + settings.api;
+      
+      var isLuminateOnlineAndSameProtocol = false, 
+      useAjax = false, 
+      usePostMessage = false;
+      if(window.location.protocol == requestUrl.split('//')[0] && document.domain == requestPath.split('/')[0] && 
+         !settings.useHashTransport) {
+        isLuminateOnlineAndSameProtocol = true, 
+        useAjax = true;
+      }
+      else {
+        if(luminateExtend.global.supportsCORS && !settings.useHashTransport) {
+          useAjax = true;
+        }
+        else if('postMessage' in window && !settings.useHashTransport) {
+          usePostMessage = true;
+        }
+      }
+      
+      var doRequest;
+      if(useAjax) {
+        doRequest = function() {
+          if(settings.requiresAuth && settings.data.indexOf('&' + luminateExtend.global.auth.type + '=') == -1) {
+            settings.data += '&' + luminateExtend.global.auth.type + '=' + luminateExtend.global.auth.token;
+          }
+          if(luminateExtend.global.sessionCookie && luminateExtend.global.sessionCookie !== '') {
+            requestUrl += ';' + luminateExtend.global.sessionCookie;
+          }
+          settings.data += '&ts=' + new Date().getTime();
+          
+          $.ajax({
+            contentType: settings.contentType, 
+            data: settings.data, 
+            /* set dataType explicitly as API sends Content-Type: text/plain rather than 
+               application/json (E-62659) */
+            dataType: 'json', 
+            success: function(data) {
+              apiCallbackHandler(settings, data);
+            }, 
+            type: settings.requestType, 
+            url: requestUrl, 
+            xhrFields: {
+              withCredentials: true
+            }
+          });
+        };
+      }
+      else if(usePostMessage) {
+        doRequest = function() {
+          var postMessageTimestamp = new Date().getTime(), 
+          postMessageFrameId = 'luminateApiPostMessage' + postMessageTimestamp, 
+          postMessageUrl = buildServerUrl(settings.useHTTPS, 'action=postMessage');
+          
+          if(settings.requiresAuth && settings.data.indexOf('&' + luminateExtend.global.auth.type + '=') == -1) {
+            settings.data += '&' + luminateExtend.global.auth.type + '=' + luminateExtend.global.auth.token;
+          }
+          settings.data += '&ts=' + postMessageTimestamp;
+          
+          if(!luminateExtend.api.request.postMessageEventHandler) {
+            luminateExtend.api.request.postMessageEventHandler = {};
+            
+            luminateExtend.api.request.postMessageEventHandler.handler = function(e) {
+              if(luminateExtend.global.path.nonsecure.indexOf(e.origin) != -1 || 
+                 luminateExtend.global.path.secure.indexOf(e.origin) != -1) {
+                var parsedData = $.parseJSON(e.data), 
+                messageFrameId = parsedData.postMessageFrameId, 
+                responseData = $.parseJSON(decodeURIComponent(parsedData.response));
+                
+                if(luminateExtend.api.request.postMessageEventHandler[messageFrameId]) {
+                  luminateExtend.api.request.postMessageEventHandler[messageFrameId](messageFrameId, responseData);
+                }
+              }
+            };
+            
+            if(typeof window.addEventListener != 'undefined') {
+              window.addEventListener('message', luminateExtend.api.request.postMessageEventHandler.handler, false);
+            }
+            else if(typeof window.attachEvent != 'undefined') {
+              window.attachEvent('onmessage', luminateExtend.api.request.postMessageEventHandler.handler);
+            }
+          }
+          
+          luminateExtend.api.request.postMessageEventHandler[postMessageFrameId] = function(frameId, data) {
+            apiCallbackHandler(settings, data);
+            
+            $('#' + frameId).remove();
+            
+            delete luminateExtend.api.request.postMessageEventHandler[frameId];
+          };
+          
+          $('body').append('<iframe style="position: absolute; top: 0; left: -999em;" ' + 
+                           'name="' + postMessageFrameId + '" id="' + postMessageFrameId + '">' +  
+                           '</iframe>');
+          
+          $('#' + postMessageFrameId).bind('load', function() {
+            var postMessageString = '{' + 
+                                      '"postMessageFrameId": "' + $(this).attr('id') + '", ' + 
+                                      '"requestUrl": "' + requestUrl + '", ' + 
+                                      '"requestContentType": "' + settings.contentType + '", ' + 
+                                      '"requestData": "' + settings.data + '", ' + 
+                                      '"requestType": "' + settings.requestType + '"' + 
+                                    '}', 
+            postMessageOrigin = requestUrl.split('/site/')[0].split('/admin/')[0];
+            
+            document.getElementById($(this).attr('id')).contentWindow
+            .postMessage(postMessageString, postMessageOrigin);
+          });
+          
+          $('#' + postMessageFrameId).attr('src', postMessageUrl);
+        };
+      }
+      else {
+        doRequest = function() {
+          var hashTransportTimestamp = new Date().getTime(), 
+          hashTransportFrameId = 'luminateApiHashTransport' + hashTransportTimestamp, 
+          hashTransportUrl = buildServerUrl(settings.useHTTPS, 'action=hashTransport'), 
+          hashTransportClientUrl = window.location.protocol + '//' + document.domain + 
+                                   '/luminateExtend_client.html';
+          
+          if(settings.requiresAuth && settings.data.indexOf('&' + luminateExtend.global.auth.type + '=') == -1) {
+            settings.data += '&' + luminateExtend.global.auth.type + '=' + luminateExtend.global.auth.token;
+          }
+          settings.data += '&ts=' + hashTransportTimestamp;
+          
+          hashTransportUrl += '#&hashTransportClientUrl=' + encodeURIComponent(hashTransportClientUrl) + 
+                              '&hashTransportFrameId=' + hashTransportFrameId + '&requestUrl=' + 
+                              encodeURIComponent(requestUrl) + '&requestContentType=' + 
+                              encodeURIComponent(settings.contentType) + '&requestData=' + 
+                              encodeURIComponent(settings.data) + '&requestType=' + 
+                              settings.requestType;
+          
+          if(!luminateExtend.api.request.hashTransportEventHandler) {
+            luminateExtend.api.request.hashTransportEventHandler = {};
+            
+            luminateExtend.api.request.hashTransportEventHandler.handler = function(frameId, data) {
+              if(luminateExtend.api.request.hashTransportEventHandler[frameId]) {
+                luminateExtend.api.request.hashTransportEventHandler[frameId](frameId, data);
+              }
+            };
+          }
+          
+          luminateExtend.api.request.hashTransportEventHandler[hashTransportFrameId] = function(frameId, data) {
+            apiCallbackHandler(settings, data);
+            
+            $('#' + frameId).remove();
+            
+            delete luminateExtend.api.request.hashTransportEventHandler[frameId];
+          };
+          
+          $('body').append('<iframe style="position: absolute; top: 0; left: -999em;" ' + 
+                           'name="' + hashTransportFrameId + '" id="' + hashTransportFrameId + '" ' + 
+                           'src="' + hashTransportUrl + '"></iframe>');
+        };
+      }
+      
+      if(settings.requiresAuth || 
+         (!useAjax && 
+          !isLuminateOnlineAndSameProtocol && 
+          !luminateExtend.global.sessionCookie)) {
+        luminateExtend.api.getAuth({
+          callback: doRequest, 
+          useHTTPS: settings.useHTTPS
+        });
+      }
+      else {
+        doRequest();
+      }
+    }
+  };
+  
+  luminateExtend.api.request = function(requests) {
+    /* check for single requests */
+    if(!$.isArray(requests)) {
+      sendRequest(requests);
+    }
+    
+    else {
+      requests.reverse();
+
+      var asyncRequests = [];
+      
+      /* check for synchronous requests */
+      $.each(requests, function(requestInverseIndex) {
+        var requestSettings = $.extend({
+          async: true
+        }, this);
+        
+        if(!requestSettings.async && requestInverseIndex != requests.length - 1) {
+          var prevRequest = requests[requestInverseIndex + 1];
+          if(prevRequest.callback && 
+             typeof prevRequest.callback != 'function') {
+            var oCallbackSuccess = prevRequest.callback.success || $.noop;
+            prevRequest.callback.success = function(response) {
+              oCallbackSuccess(response);
+
+              sendRequest(requestSettings);
+            };
+          }
+          else {
+            var prevRequest = requests[requestInverseIndex + 1], 
+            oCallbackFn = prevRequest.callback || $.noop;
+            prevRequest.callback = {
+              success: function(response) {
+                oCallbackFn(response);
+                
+                sendRequest(requestSettings);
+              }, 
+              error: function(response) {
+                oCallbackFn(response);
+              }
+            };
+          }
+        }
+        
+        else {
+          asyncRequests.push(requestSettings);
+        }
+      });
+      
+      /* make each asynchronous request */
+      asyncRequests.reverse();
+      $.each(asyncRequests, function() {
+        sendRequest(this);
+      });
+    }
+  };
+  
+  /* session variables */
+  luminateExtend.sessionVars = {
+    set: function(varName, varValue, callback) {
+      var pingOptions = {};
+      if(callback) {
+        pingOptions.callback = callback;
+      }
+      if(varName) {
+        pingOptions.data = 's_' + varName + '=' + (varValue || '');
+        
+        luminateExtend.utils.ping(pingOptions);
+      }
+    }
+  };
+  
+  /* luminate tags */
+  luminateExtend.tags = function(tagTypes, selector) {
+    /* make luminateExtend.tags an alias for the parse method if called directly */
+    luminateExtend.tags.parse(tagTypes, selector);
+  };
+  luminateExtend.tags.parse = function(tagTypes, selector) {
+    /* use the widgets plugin if available */
+    if(luminateExtend.widgets) {
+      luminateExtend.widgets(tagTypes, selector);
+    }
+    else {
+      if(!tagTypes || tagTypes == 'all') {
+        tagTypes = ['cons'];
+      }
+      else {
+        tagTypes = luminateExtend.utils.ensureArray(tagTypes);
+      }
+      selector = selector || 'body';
+      
+      $.each(tagTypes, function(i, tagType) {
+        if(tagType == 'cons') {
+          var $consTags = $(selector).find(document.getElementsByTagName('luminate:cons'));
+          if($consTags.length > 0) {
+            var parseConsTags = function(data) {
+              $consTags.each(function() {
+                if(data.getConsResponse) {
+                  $(this).replaceWith(luminateExtend.utils.stringToObj($(this).attr('field'), data.getConsResponse));
+                }
+                else {
+                  $(this).remove();
+                }
+              });
+            };
+            
+            luminateExtend.api.request({
+              api: 'cons', 
+              callback: parseConsTags, 
+              data: 'method=getUser', 
+              requestType: 'POST', 
+              requiresAuth: true
+            });
+          }
+        }
+      });
+    }
+  };
+  
+  /* public helper functions */
+  luminateExtend.utils = {
+    /* ensure an object is an array so it may be iterated over, i.e. using $.each(), as the API uses an 
+       array if there are 2 or more instances of an object, but does not use an array if there is 
+       exactly 1 (E-47741) */
+    ensureArray: function(pArray) {
+      if($.isArray(pArray)) {
+        return pArray;
+      }
+      else if(pArray) {
+        return [pArray];
+      }
+      else {
+        return [];
+      }
+    }, 
+    
+    stringToObj: function(str, obj) {
+      var objReturn = obj || window;
+      
+      if(str) {
+        var strParts = str.split('.');
+        for(var i = 0; i < strParts.length; i++) {
+          if(i < (strParts.length - 1) && !objReturn[strParts[i]]) {
+            return {};
+          }
+          objReturn = objReturn[strParts[i]];
+        }
+      }
+      
+      return objReturn;
+    }, 
+    
+    ping: function(options) {
+      var settings = $.extend({
+        data: null
+      }, options || {});
+      
+      var pingImgId = 'luminatePing' + new Date().getTime();
+      
+      $('body').append('<img style="position: absolute; left: -999em; top: 0;" ' + 
+                       'id="' + pingImgId + '" />');
+      
+      $('#' + pingImgId).bind('load', function() {
+        $(this).remove();
+        
+        if(settings.callback) {
+          settings.callback();
+        }
+      });
+      
+      $('#' + pingImgId).attr('src', ((window.location.protocol == 'https:') ? 
+                                      luminateExtend.global.path.secure : 
+                                      luminateExtend.global.path.nonsecure) + 
+                                     'EstablishSession?' + 
+                                     ((settings.data == null) ? '' : (settings.data + '&')) + 
+                                     'NEXTURL=' + 
+                                     encodeURIComponent(((window.location.protocol == 'https:') ? 
+                                                         luminateExtend.global.path.secure : 
+                                                         luminateExtend.global.path.nonsecure) + 
+                                                        'PixelServer'));
+    }, 
+    
+    simpleDateFormat: function(unformattedDate, pattern, locale) {
+      locale = locale || luminateExtend.global.locale;
+      locale = validateLocale(locale);
+      pattern = pattern || (($.inArray(locale, ['en_CA', 'fr_CA', 'en_GB', 'en_AU']) >= 0) ? 'd/M/yy' : 'M/d/yy');
+      unformattedDate = unformattedDate || new Date();
+      if(!(unformattedDate instanceof Date)) {
+        var unformattedDateParts = unformattedDate.split('T')[0].split('-'), 
+        unformattedDateTimeParts = (unformattedDate.split('T').length > 1) ? unformattedDate.split('T')[1]
+                                                                                            .split('.')[0]
+                                                                                            .split('Z')[0]
+                                                                                            .split('-')[0]
+                                                                                            .split(':') 
+                                                                           : ['00', '00', '00'];
+        unformattedDate = new Date(unformattedDateParts[0], (unformattedDateParts[1] - 1), 
+                                   unformattedDateParts[2], unformattedDateTimeParts[0], 
+                                   unformattedDateTimeParts[1], unformattedDateTimeParts[2]);
+      }
+      
+      var oneDigitNumber = function(num) {
+        num = '' + num;
+        return (num.indexOf('0') == 0 && num != '0') ? num.substring(1) : num;
+      }, 
+      
+      twoDigitNumber = function(num) {
+        num = Number(num);
+        return (isNaN(num)) ? '00' : (((num < 10) ? '0' : '') + num);
+      }, 
+      
+      dateParts = {
+        month: twoDigitNumber(unformattedDate.getMonth() + 1), 
+        date: twoDigitNumber(unformattedDate.getDate()), 
+        year: twoDigitNumber(unformattedDate.getFullYear()), 
+        day: unformattedDate.getDay(), 
+        hour24: unformattedDate.getHours(), 
+        hour12: unformattedDate.getHours(), 
+        minutes: twoDigitNumber(unformattedDate.getMinutes()), 
+        ampm: 'AM'
+      };
+      if(dateParts.hour24 > 11) {
+        dateParts.ampm = 'PM';
+      }
+      dateParts.hour24 = twoDigitNumber(dateParts.hour24);
+      if(dateParts.hour12 == 0) {
+        dateParts.hour12 = 12;
+      }
+      if(dateParts.hour12 > 12) {
+        dateParts.hour12 = dateParts.hour12 - 12;
+      }
+      dateParts.hour12 = twoDigitNumber(dateParts.hour12);
+      
+      var formattedDate, 
+      
+      patternReplace = function(patternPart) {
+        var patternPartFormatted = patternPart.replace(/yy+(?=y)/g, 'yy')
+                                              .replace(/MMM+(?=M)/g, 'MMM')
+                                              .replace(/d+(?=d)/g, 'd')
+                                              .replace(/EEE+(?=E)/g, 'EEE')
+                                              .replace(/a+(?=a)/g, '')
+                                              .replace(/k+(?=k)/g, 'k')
+                                              .replace(/h+(?=h)/g, 'h')
+                                              .replace(/m+(?=m)/g, 'm'), 
+        
+        formattedPart = patternPartFormatted.replace(/yyy/g, dateParts.year)
+                                                .replace(/yy/g, dateParts.year.substring(2))
+                                                .replace(/y/g, dateParts.year)
+                                                .replace(/dd/g, dateParts.date)
+                                                .replace(/d/g, oneDigitNumber(dateParts.date)), 
+        
+        adjustTimePattern = function(timeParts, timePatternPart, operator) {
+          for(var i = 1; i < timeParts.length; i++) {
+            if(!isNaN(timeParts[i].substring(0, 1))) {
+              var timePartOperand = timeParts[i].substring(0, 2);
+              timeParts[i] = timeParts[i].substring(2);
+              if(isNaN(timePartOperand.substring(1))) {
+                timeParts[i] = timePartOperand.substring(1) + timeParts[i];
+                timePartOperand = timePartOperand.substring(0, 1);
+              }
+              timePartOperand = Number(timePartOperand);
+              if(timePartOperand > 23) {
+                timePartOperand = 23;
+              }
+              
+              var timePartResult = (operator == '+') ? timePartOperand : (0 - timePartOperand);
+              if(timePatternPart == 'kk' || timePatternPart == 'k') {
+                timePartResult = (Number(dateParts.hour24) + timePartResult);
+                if(timePartResult > 24) {
+                  timePartResult = timePartResult - 24;
+                }
+                else if(timePartResult < 0) {
+                  timePartResult = timePartResult + 24;
+                }
+              }
+              else {
+                timePartResult = (Number(dateParts.hour12) + timePartResult);
+                if(timePartResult > 24) {
+                  timePartResult = timePartResult - 24;
+                }
+                else if(timePartResult < 0) {
+                  timePartResult = timePartResult + 24;
+                }
+                if(timePartResult > 12) {
+                  timePartResult = timePartResult - 12;
+                }
+              }
+              timePartResult = '' + timePartResult;
+              if(timePatternPart == 'kk' || timePatternPart == 'hh') {
+                timePartResult = twoDigitNumber(timePartResult);
+              }
+              if((timePatternPart == 'h' && timePartResult == 0) || (timePatternPart == 'hh' && 
+                 timePartResult == '00')) {
+                timePartResult = '12';
+              }
+              timeParts[i] = timePartResult + timeParts[i];
+            }
+          }
+          
+          return timeParts.join('');
+        };
+        
+        if(formattedPart.indexOf('k+') != -1) {
+          formattedPart = adjustTimePattern(formattedPart.split('kk+'), 'kk', '+');
+          formattedPart = adjustTimePattern(formattedPart.split('k+'), 'k', '+');
+        }
+        if(formattedPart.indexOf('k-') != -1) {
+          formattedPart = adjustTimePattern(formattedPart.split('kk-'), 'kk', '-');
+          formattedPart = adjustTimePattern(formattedPart.split('k-'), 'k', '-');
+        }
+        
+        formattedPart = formattedPart.replace(/kk/g, dateParts.hour24)
+                                     .replace(/k/g, oneDigitNumber(dateParts.hour24));
+        
+        if(formattedPart.indexOf('h+') != -1) {
+          formattedPart = adjustTimePattern(formattedPart.split('hh+'), 'hh', '+');
+          formattedPart = adjustTimePattern(formattedPart.split('h+'), 'h', '+');
+        }
+        if(formattedPart.indexOf('h-') != -1) {
+          formattedPart = adjustTimePattern(formattedPart.split('hh-'), 'hh', '-');
+          formattedPart = adjustTimePattern(formattedPart.split('h-'), 'h', '-');
+        }
+        
+        formattedPart = formattedPart.replace(/hh/g, ((dateParts.hour12 < 12 && dateParts.hour12.indexOf && 
+                                                       dateParts.hour12.indexOf('0') != 0) ? ('0' + 
+                                                       dateParts.hour12) : 
+                                                      dateParts.hour12))
+                                     .replace(/h/g, oneDigitNumber(dateParts.hour12));
+        
+        formattedPart = formattedPart.replace(/mm/g, dateParts.minutes)
+                                     .replace(/m/g, oneDigitNumber(dateParts.minutes));
+        
+        formattedPart = formattedPart.replace(/a/g, 'A');
+        
+        var formattedMonthNames = ['January', 
+                                   'February', 
+                                   'march', 
+                                   'april', 
+                                   'may', 
+                                   'June', 
+                                   'July', 
+                                   'august', 
+                                   'September', 
+                                   'October', 
+                                   'November', 
+                                   'December'];
+        if(locale == 'es_US') {
+          formattedMonthNames = ['enero', 
+                                 'febrero', 
+                                 'marzo', 
+                                 'abril', 
+                                 'mayo', 
+                                 'junio', 
+                                 'julio', 
+                                 'agosto', 
+                                 'septiembre', 
+                                 'octubre', 
+                                 'noviembre', 
+                                 'diciembre'];
+        }
+        if(locale == 'fr_CA') {
+          formattedMonthNames = ['janvier', 
+                                 'f&' + '#233;vrier', 
+                                 'mars', 
+                                 'avril', 
+                                 'mai', 
+                                 'juin', 
+                                 'juillet', 
+                                 'ao&' + '#251;t', 
+                                 'septembre', 
+                                 'octobre', 
+                                 'novembre', 
+                                 'd&' + '#233;cembre'];
+        }
+        formattedPart = formattedPart.replace(/MMMM/g, formattedMonthNames[Number(dateParts.month) - 1])
+                                     .replace(/MMM/g, formattedMonthNames[Number(dateParts.month) - 1]
+                                                      .substring(0, 3))
+                                     .replace(/MM/g, dateParts.month)
+                                     .replace(/M/g, oneDigitNumber(dateParts.month))
+                                     .replace(/march/g, 'March')
+                                     .replace(/may/g, 'May')
+                                     .replace(/Mayo/g, 'mayo');
+        
+        var formattedDayNames = ['Sunday', 
+                                 'Monday', 
+                                 'Tuesday', 
+                                 'Wednesday', 
+                                 'Thursday', 
+                                 'Friday', 
+                                 'Saturday'];
+        if(locale == 'es_US') {
+          formattedDayNames = ['domingo', 
+                               'lunes', 
+                               'martes', 
+                               'mi&' + 'eacute;rcoles', 
+                               'jueves', 
+                               'viernes', 
+                               's&' + 'aacute;bado'];
+        }
+        if(locale == 'fr_CA') {
+          formattedDayNames = ['dimanche', 
+                               'lundi', 
+                               'mardi', 
+                               'mercredi', 
+                               'jeudi', 
+                               'vendredi', 
+                               'samedi'];
+        }
+        formattedPart = formattedPart.replace(/EEEE/g, formattedDayNames[dateParts.day])
+                                     .replace(/EEE/g, formattedDayNames[dateParts.day].substring(0, 3))
+                                     .replace(/EE/g, formattedDayNames[dateParts.day].substring(0, 3))
+                                     .replace(/E/g, formattedDayNames[dateParts.day].substring(0, 3));
+        
+        formattedPart = formattedPart.replace(/A/g, dateParts.ampm)
+                                     .replace(/april/g, 'April')
+                                     .replace(/august/g, 'August');
+        
+        return formattedPart;
+      };
+      
+      if(pattern.indexOf('\'') == -1) {
+        formattedDate = patternReplace(pattern);
+      }
+      
+      else {
+        var formatPatternParts = pattern.replace(/\'+(?=\')/g, '\'\'').split('\'\'');
+        if(formatPatternParts.length == 1) {
+          formatPatternParts = pattern.split('\'');
+          for(var i = 0; i < formatPatternParts.length; i++) {
+            if(i % 2 == 0) {
+              formatPatternParts[i] = patternReplace(formatPatternParts[i]);
+            }
+          }
+          return formatPatternParts.join('');
+        }
+        else {
+          for(var i = 0; i < formatPatternParts.length; i++) {
+            var formatPatternParts2 = formatPatternParts[i].split('\'');
+            for(var j = 0; j < formatPatternParts2.length; j++) {
+              if(j % 2 == 0) {
+                formatPatternParts2[j] = patternReplace(formatPatternParts2[j]);
+              }
+            }
+            formatPatternParts[i] = formatPatternParts2.join('');
+          }
+          return formatPatternParts.join('\'');
+        }
+      }
+      
+      return formattedDate;
+    }
+  };
+})(typeof jQuery === 'undefined' && typeof Zepto === 'function' ? Zepto : jQuery);
