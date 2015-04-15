@@ -88,7 +88,6 @@ window.getUser = function() {
     api: 'cons', 
     callback: getUserCallback, 
     data: 'method=getUser', 
-    requestType: 'POST', 
     requiresAuth: true
   });
 };

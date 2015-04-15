@@ -1,6 +1,6 @@
 [[?COMMENT::::::
   luminateExtend_server.html
-  Version: 1.7.0 (16-APR-2015)
+  Version: 1.7.0 (28-APR-2015)
 ]]
 [[?xgetAuthx::x[[S334:action]]x::
   [[U8:application/javascript]]
@@ -50,7 +50,7 @@
               url: postMessageData.requestUrl + ';[[S29:SESSION_TAG]]=[[S29:SESSION_ID]]', 
               data: requestData, 
               contentType: postMessageData.requestContentType, 
-              type: postMessageData.requestType, 
+              type: 'POST', 
               success: function(data) {
                 postMessageSource.postMessage('{' + 
                   '"postMessageFrameId": "' + postMessageData.postMessageFrameId + '", ' + 
@@ -107,7 +107,7 @@
             url: hashData('requestUrl') + ';[[S29:SESSION_TAG]]=[[S29:SESSION_ID]]', 
             data: requestData, 
             contentType: hashData('requestContentType'), 
-            type: hashData('requestType'), 
+            type: 'POST', 
             success: function(data) {
               $('#luminateApiHashResponseFrame').attr('src', hashData('hashTransportClientUrl') + 
                                                              '#&hashTransportFrameId=' + hashData('hashTransportFrameId') + 

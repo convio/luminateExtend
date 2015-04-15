@@ -1,6 +1,6 @@
 /*
  * luminateExtend.js
- * Version: 1.7.0 (16-APR-2015)
+ * Version: 1.7.0 (28-APR-2015)
  * Requires: jQuery v1.5.1+ or Zepto v1.1+
  * Includes: SimpleDateFormatJS v1.3 (https://github.com/noahcooper/SimpleDateFormatJS)
  */
@@ -236,7 +236,6 @@
             requestData = (formActionQuery.length > 1) ? formActionQuery[1] : '', 
             requestForm = '#' + $(this).attr('id'), 
             requestRequiresAuth = false, 
-            requestType = $(this).attr('method'), 
             requestUseHTTPS = false;
             
             if(formApiData) {
@@ -258,7 +257,6 @@
               contentType: requestContentType, 
               data: requestData, 
               form: requestForm,  
-              requestType: requestType, 
               requiresAuth: requestRequiresAuth, 
               useHTTPS: requestUseHTTPS
             });
@@ -348,7 +346,6 @@
     var settings = $.extend({
       contentType: 'application/x-www-form-urlencoded', 
       data: '', 
-      requestType: 'GET', 
       requiresAuth: false, 
       useHashTransport: false, 
       useHTTPS: null
@@ -411,8 +408,6 @@
         settings.data += '&v=1.0';
       }
       
-      settings.requestType = settings.requestType.toLowerCase() === 'post' ? 'POST' : 'GET';
-      
       var requestUrl = 'http://', 
       requestPath = luminateExtend.global.path.nonsecure.split('http://')[1];
       if(settings.api === 'CRDonationAPI' || settings.api === 'CRTeamraiserAPI' || 
@@ -466,7 +461,7 @@
             contentType: settings.contentType, 
             /* set dataType explicitly as API sends Content-Type: text/plain rather than application/json (E-62659) */
             dataType: 'json', 
-            type: settings.requestType, 
+            type: 'POST', 
             success: function(data) {
               apiCallbackHandler(settings, data);
             }
@@ -525,8 +520,7 @@
                                       '"postMessageFrameId": "' + $(this).attr('id') + '", ' + 
                                       '"requestUrl": "' + requestUrl + '", ' + 
                                       '"requestContentType": "' + settings.contentType + '", ' + 
-                                      '"requestData": "' + settings.data + '", ' + 
-                                      '"requestType": "' + settings.requestType + '"' + 
+                                      '"requestData": "' + settings.data + '"' + 
                                     '}', 
             postMessageOrigin = requestUrl.split('/site/')[0].split('/admin/')[0];
             
@@ -551,11 +545,10 @@
           settings.data += '&ts=' + hashTransportTimestamp;
           
           hashTransportUrl += '#&hashTransportClientUrl=' + encodeURIComponent(hashTransportClientUrl) + 
-                              '&hashTransportFrameId=' + hashTransportFrameId + '&requestUrl=' + 
-                              encodeURIComponent(requestUrl) + '&requestContentType=' + 
-                              encodeURIComponent(settings.contentType) + '&requestData=' + 
-                              encodeURIComponent(settings.data) + '&requestType=' + 
-                              settings.requestType;
+                              '&hashTransportFrameId=' + hashTransportFrameId + 
+                              '&requestUrl=' + encodeURIComponent(requestUrl) + 
+                              '&requestContentType=' + encodeURIComponent(settings.contentType) + 
+                              '&requestData=' + encodeURIComponent(settings.data);
           
           if(!luminateExtend.api.request.hashTransportEventHandler) {
             luminateExtend.api.request.hashTransportEventHandler = {};
@@ -706,7 +699,6 @@
               api: 'cons', 
               callback: parseConsTags, 
               data: 'method=getUser', 
-              requestType: 'POST', 
               requiresAuth: true
             });
           }

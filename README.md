@@ -1,7 +1,7 @@
 luminateExtend.js
 =================
 
-Version: 1.7.0 (16-APR-2015)  
+Version: 1.7.0 (28-APR-2015)  
 Requires: jQuery v1.5.1+ or Zepto v1.1+
 
 luminateExtend.js is a JavaScript library for use with 
@@ -301,7 +301,6 @@ luminateExtend.api.request([{
   async: false, 
   api: 'cons', 
   data: 'method=getUser', 
-  requestType: 'POST', 
   requiresAuth: true, 
   callback: {
     success: getUserCallback
@@ -335,8 +334,6 @@ common parameters defined in luminateExtend.global.apiCommon.
 
 **form:** A selector for a form to be serialized with the request. The result is appended to the data 
 string above.
-
-**requestType:** The type of HTTP request, either "GET", the default, or "POST".
 
 **requiresAuth:** A boolean indicating whether or not the API method being called requires 
 authentication. If true, an auth token is automatically appended to the request data string.
@@ -400,7 +397,6 @@ When the request method is called ...
  * The value for `contentType` is set to the value of the enctype attribute if defined.
  * Any query strings included in the form action are passed as `data`.
  * The form's ID is passed as the value for `form`, and if the form has no ID, one is added.
- * The value for `requestType` is determined by the form method.
  * The value for `useHTTP` is determined by the protocol of the form action, or if the form action is 
  relative, by the protocol of the requesting page.
  * The values for `callback` and `requiresAuth` are set using an HTML5 data- attribute, data-luminateApi. 

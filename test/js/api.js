@@ -121,7 +121,6 @@ if(apiTestSurveyId) {
       api: 'survey', 
       data: 'method=getSurvey&survey_id=' + apiTestSurveyId, 
       requiresAuth: true, 
-      requestType: 'GET', 
       callback: function(response) {
         ok(response.getSurveyResponse);
         start();
@@ -135,7 +134,6 @@ asyncTest('luminateExtend.api.request() can get info on logged in user', functio
     api: 'cons', 
     data: 'method=getUser', 
     requiresAuth: true, 
-    requestType: 'POST', 
     callback: function(response) {
       ok(response.getConsResponse, 
          'You must be logged in as a constituent for this test to succeed.');
