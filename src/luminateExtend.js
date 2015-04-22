@@ -28,7 +28,7 @@
   buildServerUrl = function(useHTTPS, data) {
     return (useHTTPS ? (luminateExtend.global.path.secure + 'S') : luminateExtend.global.path.nonsecure) + 
            'PageServer' + 
-           (luminateExtend.global.sessionCookie && luminateExtend.global.sessionCookie !== '' ? (';' + luminateExtend.global.sessionCookie) : '') + 
+           (luminateExtend.global.routingId && luminateExtend.global.routingId !== '' ? (';' + routingId) : '') + 
            '?pagename=luminateExtend_server&pgwrap=n' + 
            (data ? ('&' + data) : '');
   }, 
@@ -311,14 +311,16 @@
             dataType: 'json', 
             success: function(data) {
               var getLoginUrlResponse = data.getLoginUrlResponse, 
-              loginUrl = getLoginUrlResponse.url;
+              routingId = getLoginUrlResponse.routing_id, 
+              jsessionId = getLoginUrlResponse.JSESSIONID;
               
               getAuthCallback({
                 auth: {
                   type: 'auth', 
                   token: getLoginUrlResponse.token
                 }, 
-                sessionCookie: loginUrl.split('CRConsAPI;').length > 1 ? loginUrl.split('CRConsAPI;')[1] : ''
+                routingId: routingId ? ('jsessionid=' + routingId) : '', 
+                sessionCookie: jsessionId ? ('JSESSIONID=' + jsessionId) : ''
               });
             }
           });
@@ -447,8 +449,8 @@
           if(settings.requiresAuth && settings.data.indexOf('&' + luminateExtend.global.auth.type + '=') === -1) {
             settings.data += '&' + luminateExtend.global.auth.type + '=' + luminateExtend.global.auth.token;
           }
-          if(luminateExtend.global.sessionCookie && luminateExtend.global.sessionCookie !== '') {
-            requestUrl += ';' + luminateExtend.global.sessionCookie;
+          if(luminateExtend.global.routingId && luminateExtend.global.routingId !== '') {
+            requestUrl += ';' + luminateExtend.global.routingId;
           }
           settings.data += '&ts=' + new Date().getTime();
           
@@ -761,8 +763,9 @@
       $('#' + pingImgId).attr('src', ((window.location.protocol === 'https:') ? 
                                       luminateExtend.global.path.secure : 
                                       luminateExtend.global.path.nonsecure) + 
-                                     'EstablishSession?' + 
-                                     ((settings.data == null) ? '' : (settings.data + '&')) + 
+                                     'EstablishSession' + 
+                                     (luminateExtend.global.routingId && luminateExtend.global.routingId !== '' ? (';' + routingId) : '') + 
+                                     '?' + (settings.data == null ? '' : (settings.data + '&')) + 
                                      'NEXTURL=' + 
                                      encodeURIComponent(((window.location.protocol === 'https:') ? 
                                                          luminateExtend.global.path.secure : 

@@ -14,6 +14,7 @@
         "token": "[[S86:true]]", 
         "type": "auth"
       }, 
+      "routingId": "[[E130:"[[T7:PixelServer]]" dup dup ";" indexof 1 + swap length substring dup 0 swap "?" indexof substring]]", 
       "sessionCookie": "[[S29:SESSION_TAG]]=[[S29:SESSION_ID]]"
     }[[?xx::x[[S334:callback]]x::::)]]
   ::
@@ -47,7 +48,7 @@
             requestData = postMessageData.requestData;
             
             $.ajax({
-              url: postMessageData.requestUrl + ';[[S29:SESSION_TAG]]=[[S29:SESSION_ID]]', 
+              url: postMessageData.requestUrl + ';[[E130:"[[T7:PixelServer]]" dup dup ";" indexof 1 + swap length substring dup 0 swap "?" indexof substring]]', 
               data: requestData, 
               contentType: postMessageData.requestContentType, 
               type: 'POST', 
@@ -104,7 +105,7 @@
           }
           
           $.ajax({
-            url: hashData('requestUrl') + ';[[S29:SESSION_TAG]]=[[S29:SESSION_ID]]', 
+            url: hashData('requestUrl') + ';[[E130:"[[T7:PixelServer]]" dup dup ";" indexof 1 + swap length substring dup 0 swap "?" indexof substring]]', 
             data: requestData, 
             contentType: hashData('requestContentType'), 
             type: 'POST', 
