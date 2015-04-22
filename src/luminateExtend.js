@@ -28,7 +28,7 @@
   buildServerUrl = function(useHTTPS, data) {
     return (useHTTPS ? (luminateExtend.global.path.secure + 'S') : luminateExtend.global.path.nonsecure) + 
            'PageServer' + 
-           (luminateExtend.global.routingId && luminateExtend.global.routingId !== '' ? (';' + routingId) : '') + 
+           (luminateExtend.global.routingId && luminateExtend.global.routingId !== '' ? (';' + luminateExtend.global.routingId) : '') + 
            '?pagename=luminateExtend_server&pgwrap=n' + 
            (data ? ('&' + data) : '');
   }, 
@@ -784,7 +784,7 @@
                                       luminateExtend.global.path.secure : 
                                       luminateExtend.global.path.nonsecure) + 
                                      'EstablishSession' + 
-                                     (luminateExtend.global.routingId && luminateExtend.global.routingId !== '' ? (';' + routingId) : '') + 
+                                     (luminateExtend.global.routingId && luminateExtend.global.routingId !== '' ? (';' + luminateExtend.global.routingId) : '') + 
                                      '?' + (settings.data == null ? '' : (settings.data + '&')) + 
                                      'NEXTURL=' + 
                                      encodeURIComponent(((window.location.protocol === 'https:') ? 
