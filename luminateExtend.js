@@ -311,8 +311,13 @@
             dataType: 'json', 
             success: function(data) {
               var getLoginUrlResponse = data.getLoginUrlResponse, 
+              loginUrl = getLoginUrlResponse.url, 
               routingId = getLoginUrlResponse.routing_id, 
               jsessionId = getLoginUrlResponse.JSESSIONID;
+              
+              if(!routingId && loginUrl.indexOf('CRConsAPI;jsessionid=') !== -1) {
+                routingId = loginUrl.split('CRConsAPI;jsessionid=')[1].split('?')[0];
+              }
               
               getAuthCallback({
                 auth: {
