@@ -48,7 +48,7 @@
             requestData = postMessageData.requestData;
             
             $.ajax({
-              url: postMessageData.requestUrl + ';[[E130:"[[T7:PixelServer]]" dup dup ";" indexof 1 + swap length substring dup 0 swap "?" indexof substring]]', 
+              url: postMessageData.requestUrl, 
               data: requestData, 
               contentType: postMessageData.requestContentType, 
               type: 'POST', 
@@ -105,7 +105,7 @@
           }
           
           $.ajax({
-            url: hashData('requestUrl') + ';[[E130:"[[T7:PixelServer]]" dup dup ";" indexof 1 + swap length substring dup 0 swap "?" indexof substring]]', 
+            url: hashData('requestUrl'), 
             data: requestData, 
             contentType: hashData('requestContentType'), 
             type: 'POST', 

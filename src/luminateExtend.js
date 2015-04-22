@@ -446,11 +446,14 @@
       var doRequest;
       if(useAjax) {
         doRequest = function() {
+          if(luminateExtend.global.routingId && luminateExtend.global.routingId !== '') {
+            requestUrl += ';' + luminateExtend.global.routingId;
+          }
           if(settings.requiresAuth && settings.data.indexOf('&' + luminateExtend.global.auth.type + '=') === -1) {
             settings.data += '&' + luminateExtend.global.auth.type + '=' + luminateExtend.global.auth.token;
           }
-          if(luminateExtend.global.routingId && luminateExtend.global.routingId !== '') {
-            requestUrl += ';' + luminateExtend.global.routingId;
+          if(luminateExtend.global.sessionCookie && luminateExtend.global.sessionCookie !== '') {
+            settings.data += '&' + luminateExtend.global.sessionCookie;
           }
           settings.data += '&ts=' + new Date().getTime();
           
@@ -476,8 +479,14 @@
           postMessageFrameId = 'luminateApiPostMessage' + postMessageTimestamp, 
           postMessageUrl = buildServerUrl(settings.useHTTPS, 'action=postMessage');
           
+          if(luminateExtend.global.routingId && luminateExtend.global.routingId !== '') {
+            requestUrl += ';' + luminateExtend.global.routingId;
+          }
           if(settings.requiresAuth && settings.data.indexOf('&' + luminateExtend.global.auth.type + '=') === -1) {
             settings.data += '&' + luminateExtend.global.auth.type + '=' + luminateExtend.global.auth.token;
+          }
+          if(luminateExtend.global.sessionCookie && luminateExtend.global.sessionCookie !== '') {
+            settings.data += '&' + luminateExtend.global.sessionCookie;
           }
           settings.data += '&ts=' + postMessageTimestamp;
           
@@ -541,8 +550,14 @@
           hashTransportClientUrl = window.location.protocol + '//' + document.domain + 
                                    '/luminateExtend_client.html';
           
+          if(luminateExtend.global.routingId && luminateExtend.global.routingId !== '') {
+            requestUrl += ';' + luminateExtend.global.routingId;
+          }
           if(settings.requiresAuth && settings.data.indexOf('&' + luminateExtend.global.auth.type + '=') === -1) {
             settings.data += '&' + luminateExtend.global.auth.type + '=' + luminateExtend.global.auth.token;
+          }
+          if(luminateExtend.global.sessionCookie && luminateExtend.global.sessionCookie !== '') {
+            settings.data += '&' + luminateExtend.global.sessionCookie;
           }
           settings.data += '&ts=' + hashTransportTimestamp;
           
