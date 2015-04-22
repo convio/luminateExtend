@@ -50,10 +50,10 @@ Before using luminateExtend.js, there are a few basic steps you must follow:
    For security reasons, the API and this library limit requests to a list of domains whitelisted by 
    your organization. If you haven't already done so, go to Setup -> Site Options -> Open API 
    Configuration, and click "Edit Javascript/Flash configuration". For the purposes of using this 
-   library, the only option you need to worry about on this page is **2. Trust JavaScript/Flash API from 
-   these domains**. Add any domains where you will use this library to the list. As noted on the page, 
-   you can use an asterisk as a wildcard if your website has multiple subdomains, e.g. 
-   "\*.myorganization.com".
+   library, the only options you need to worry about on this page are **1. Allow JavaScript/Flash API 
+   from these domains** and **2. Trust JavaScript/Flash API from these domains**. Add any domains where 
+   you will use this library to these lists. As noted on the page, you can use an asterisk as a wildcard 
+   if your website has multiple subdomains, e.g. "\*.myorganization.com".
  
  * Create luminateExtend_server PageBuilder page 
    
@@ -88,16 +88,15 @@ website, including the library on a page is easy &mdash; simply pull in the libr
 jQuery is included. (Change out the file path as needed, depending on where you uploaded the file on your site.)
 
 ```  html
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 <script src="../js/luminateExtend.min.js"></script>
 ```
 
-If you prefer to use a CDN, luminateExtend.js is available via [cdnjs](http://cdnjs.com/libraries/luminateExtend). 
-Thanks cdnjs and CloudFlare!
+If you prefer to use a CDN, luminateExtend.js is available via [cdnjs](http://cdnjs.com/libraries/luminateExtend).
 
 ```  html
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/luminateExtend/1.7.0/luminateExtend.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/luminateExtend/1.6.0/luminateExtend.min.js"></script>
 ```
 
 As of v1.6, luminateExtend.js can be used with [Zepto](http://zeptojs.com) in lieu of jQuery if you so choose. 
@@ -105,7 +104,7 @@ As of v1.6, luminateExtend.js can be used with [Zepto](http://zeptojs.com) in li
 
 ```  html
 <script src="//cdnjs.cloudflare.com/ajax/libs/zepto/1.1.2/zepto.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/luminateExtend/1.7.0/luminateExtend.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/luminateExtend/1.6.0/luminateExtend.min.js"></script>
 ```
 
 <a name="luminateExtendObj"></a>
