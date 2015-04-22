@@ -1,6 +1,6 @@
 /*
  * luminateExtend.js
- * Version: 1.7.0 (28-APR-2015)
+ * Version: 1.7.0 (23-APR-2015)
  * Requires: jQuery v1.5.1+ or Zepto v1.1+
  * Includes: SimpleDateFormatJS v1.3 (https://github.com/noahcooper/SimpleDateFormatJS)
  */
