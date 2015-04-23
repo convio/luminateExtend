@@ -42,39 +42,36 @@
       <!--[if gte IE 9]><!-->
         <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
       <!--<![endif]-->
-      
-      <script>
-        $(function() {
-          var postMessageHandler = function(e) {
-            var postMessageSource = e.source, 
-            postMessageOrigin = e.origin, 
-            postMessageData = $.parseJSON(e.data), 
-            requestData = postMessageData.requestData;
-            
-            $.ajax({
-              url: postMessageData.requestUrl, 
-              data: requestData, 
-              contentType: postMessageData.requestContentType, 
-              type: 'POST', 
-              success: function(data) {
-                postMessageSource.postMessage('{' + 
-                  '"postMessageFrameId": "' + postMessageData.postMessageFrameId + '", ' + 
-                  '"response": "' + encodeURIComponent(data) + '"' + 
-                '}', postMessageOrigin);
-              }
-            });
-          };
-          
-          if(typeof window.addEventListener != 'undefined') {
-            window.addEventListener('message', postMessageHandler, false);
-          }
-          else if(typeof window.attachEvent != 'undefined') {
-            window.attachEvent('onmessage', postMessageHandler);
-          }
-        });
-      </script>
     </head>
     <body>
+      <script>
+        var postMessageHandler = function(e) {
+          var postMessageSource = e.source, 
+          postMessageOrigin = e.origin, 
+          postMessageData = $.parseJSON(e.data), 
+          requestData = postMessageData.requestData;
+          
+          $.ajax({
+            url: postMessageData.requestUrl, 
+            data: requestData, 
+            contentType: postMessageData.requestContentType, 
+            type: 'POST', 
+            success: function(data) {
+              postMessageSource.postMessage('{' + 
+                '"postMessageFrameId": "' + postMessageData.postMessageFrameId + '", ' + 
+                '"response": "' + encodeURIComponent(data) + '"' + 
+              '}', postMessageOrigin);
+            }
+          });
+        };
+        
+        if(typeof window.addEventListener != 'undefined') {
+          window.addEventListener('message', postMessageHandler, false);
+        }
+        else if(typeof window.attachEvent != 'undefined') {
+          window.attachEvent('onmessage', postMessageHandler);
+        }
+      </script>
     </body>
     </html>
   ::
@@ -99,33 +96,31 @@
     <html>
     <head>
       <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-      <script>
-        $(function() {
-          var hashData = function(name) {
-            return decodeURIComponent(window.location.hash.split('&' + name + '=')[1].split('&')[0]);
-          }, 
-          requestData = hashData('requestData');
-          
-          if(requestData.indexOf('&auth=') == -1) {
-            requestData += '&auth=[[S86:true]]';
-          }
-          
-          $.ajax({
-            url: hashData('requestUrl'), 
-            data: requestData, 
-            contentType: hashData('requestContentType'), 
-            type: 'POST', 
-            success: function(data) {
-              $('#luminateApiHashResponseFrame').attr('src', hashData('hashTransportClientUrl') + 
-                                                             '#&hashTransportFrameId=' + hashData('hashTransportFrameId') + 
-                                                             '&responseData=' + encodeURIComponent(data));
-            }
-          });
-        });
-      </script>
     </head>
     <body>
       <iframe id="luminateApiHashResponseFrame" name="luminateApiHashResponseFrame"></iframe>
+      <script>
+        var hashData = function(name) {
+          return decodeURIComponent(window.location.hash.split('&' + name + '=')[1].split('&')[0]);
+        }, 
+        requestData = hashData('requestData');
+        
+        if(requestData.indexOf('&auth=') == -1) {
+          requestData += '&auth=[[S86:true]]';
+        }
+        
+        $.ajax({
+          url: hashData('requestUrl'), 
+          data: requestData, 
+          contentType: hashData('requestContentType'), 
+          type: 'POST', 
+          success: function(data) {
+            $('#luminateApiHashResponseFrame').attr('src', hashData('hashTransportClientUrl') + 
+                                                           '#&hashTransportFrameId=' + hashData('hashTransportFrameId') + 
+                                                           '&responseData=' + encodeURIComponent(data));
+          }
+        });
+      </script>
     </body>
     </html>
   ::

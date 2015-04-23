@@ -354,6 +354,7 @@
       contentType: 'application/x-www-form-urlencoded', 
       data: '', 
       requiresAuth: false, 
+      usePostMessage: false, 
       useHashTransport: false, 
       useHTTPS: null
     }, options || {});
@@ -435,12 +436,12 @@
       useAjax = false, 
       usePostMessage = false;
       if(window.location.protocol === requestUrl.split('//')[0] && document.domain === requestPath.split('/')[0] && 
-         !settings.useHashTransport) {
-        isLuminateOnlineAndSameProtocol = true, 
+         !settings.usePostMessage && !settings.useHashTransport) {
+        isLuminateOnlineAndSameProtocol = true;
         useAjax = true;
       }
       else {
-        if(luminateExtend.global.supportsCORS && !settings.useHashTransport) {
+        if(luminateExtend.global.supportsCORS && !settings.usePostMessage && !settings.useHashTransport) {
           useAjax = true;
         }
         else if('postMessage' in window && !settings.useHashTransport) {
