@@ -84,7 +84,6 @@ window.getUser = function() {
     api: 'cons', 
     callback: getUserCallback, 
     data: 'method=getUser', 
-    requestType: 'POST', 
     requiresAuth: true
   });
 };
@@ -238,7 +237,7 @@ To use the sign-up form, you'll first need to edit the form's action to use your
 You'll also need to edit the Survey ID to use the appropriate Survey from your organization's site:
 
 ```html
-<input type="hidden" name="survey_id" value="18561">
+<input type="hidden" name="survey_id" value="1234">
 ```
 
 Reading the HTML for the sign-up form above, you'll note that the form tag has a callback defined for handling the API response, submitSurveyCallback. If the Survey is submitted without error, a thank you message is shown to the user in place of the form. If one or more errors are returned, they are displayed above the form.

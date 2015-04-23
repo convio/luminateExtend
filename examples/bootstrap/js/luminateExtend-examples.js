@@ -23,7 +23,6 @@
         api: 'cons', 
         callback: getUserCallback, 
         data: 'method=getUser', 
-        requestType: 'POST', 
         requiresAuth: true
       });
     };

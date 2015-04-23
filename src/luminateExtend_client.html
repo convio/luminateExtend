@@ -1,20 +1,20 @@
-<!DOCTYPE HTML>
+<!doctype html>
 <html>
 <head>
-<!--
-luminateExtend_client.html
-Version: 1.6 (28-JAN-2014)
--->
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-<script>
-$(function() {
-  var hashData = function(name) {
-    return decodeURIComponent(window.location.hash.split('&' + name + '=')[1].split('&')[0]);
-  };
-  
-  parent.parent.luminateExtend.api.request.hashTransportEventHandler.handler(hashData('hashTransportFrameId'), $.parseJSON(hashData('responseData')));
-});
-</script>
+  <!--
+  luminateExtend_client.html
+  Version: 1.7.0 (23-APR-2015)
+  -->
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+  <script>
+    $(function() {
+      var hashData = function(name) {
+        return decodeURIComponent(window.location.hash.split('&' + name + '=')[1].split('&')[0]);
+      };
+      
+      parent.parent.luminateExtend.api.request.hashTransportEventHandler.handler(hashData('hashTransportFrameId'), $.parseJSON(hashData('responseData')));
+    });
+  </script>
 </head>
 <body>
 </body>
