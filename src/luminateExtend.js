@@ -354,7 +354,6 @@
       contentType: 'application/x-www-form-urlencoded', 
       data: '', 
       requiresAuth: false, 
-      usePostMessage: false, 
       useHashTransport: false, 
       useHTTPS: null
     }, options || {});
@@ -435,16 +434,15 @@
       var isLuminateOnlineAndSameProtocol = false, 
       useAjax = false, 
       usePostMessage = false;
-      if(window.location.protocol === requestUrl.split('//')[0] && document.domain === requestPath.split('/')[0] && 
-         !settings.usePostMessage && !settings.useHashTransport) {
-        isLuminateOnlineAndSameProtocol = true;
-        useAjax = true;
-      }
-      else {
-        if(luminateExtend.global.supportsCORS && !settings.usePostMessage && !settings.useHashTransport) {
+      if(!settings.useHashTransport) {
+        if(window.location.protocol === requestUrl.split('//')[0] && document.domain === requestPath.split('/')[0]) {
+          isLuminateOnlineAndSameProtocol = true;
           useAjax = true;
         }
-        else if('postMessage' in window && !settings.useHashTransport) {
+        else if(luminateExtend.global.supportsCORS) {
+          useAjax = true;
+        }
+        else if('postMessage' in window) {
           usePostMessage = true;
         }
       }
