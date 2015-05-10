@@ -1,7 +1,7 @@
 luminateExtend.js
 =================
 
-Version: 1.7.0 (23-APR-2015)  
+Version: 1.7.1 (12-MAY-2015)  
 Requires: jQuery v1.5.1+ or Zepto v1.1+
 
 luminateExtend.js is a JavaScript library for use with 
@@ -88,14 +88,14 @@ website, including the library on a page is easy &mdash; simply pull in the libr
 jQuery is included. (Change out the file path as needed, depending on where you uploaded the file on your site.)
 
 ```  html
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <script src="../js/luminateExtend.min.js"></script>
 ```
 
 If you prefer to use a CDN, luminateExtend.js is available via [cdnjs](http://cdnjs.com/libraries/luminateExtend).
 
 ```  html
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/luminateExtend/1.7.0/luminateExtend.min.js"></script>
 ```
 
@@ -121,7 +121,7 @@ luminateExtend.library
 `luminateExtend.library` contains information about the library.
 
 ```  js
-console.log(luminateExtend.library.version); // logs a value like "1.7.0"
+console.log(luminateExtend.library.version); // logs a value like "1.7.1"
 ```
 
 The library object contains the following:
