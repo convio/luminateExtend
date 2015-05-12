@@ -1,6 +1,6 @@
 /*
  * luminateExtend.js
- * Version: 1.7.0 (23-APR-2015)
+ * Version: 1.7.1 (12-MAY-2015)
  * Requires: jQuery v1.5.1+ or Zepto v1.1+
  * Includes: SimpleDateFormatJS v1.3 (https://github.com/noahcooper/SimpleDateFormatJS)
  */
@@ -146,7 +146,7 @@
   
   /* library info */
   luminateExtend.library = {
-    version: '1.7.0'
+    version: '1.7.1'
   };
   
   /* global settings */
@@ -374,9 +374,13 @@
        luminateExtend.global.path.secure && 
        luminateExtend.global.apiKey && 
        settings.api) {
-      if(settings.contentType !== 'multipart/form-data') {
+      if(settings.contentType.split(';')[0] === 'multipart/form-data') {
+        settings.contentType = 'multipart/form-data';
+      }
+      else {
         settings.contentType = 'application/x-www-form-urlencoded';
       }
+      settings.contentType += '; charset=UTF-8';
       
       settings.data = 'luminateExtend=' + luminateExtend.library.version + 
                       ((settings.data === '') ? '' : ('&' + settings.data));
