@@ -96,15 +96,15 @@ If you prefer to use a CDN, luminateExtend.js is available via [cdnjs](http://cd
 
 ```  html
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/luminateExtend/1.7.0/luminateExtend.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/luminateExtend/1.7.1/luminateExtend.min.js"></script>
 ```
 
 As of v1.6, luminateExtend.js can be used with [Zepto](http://zeptojs.com) in lieu of jQuery if you so choose. 
 (Note: You must use Zepto 1.1 or higher -- Zepto 1.0 did not support cross-domain requests with cookies.)
 
 ```  html
-<script src="//cdnjs.cloudflare.com/ajax/libs/zepto/1.1.2/zepto.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/luminateExtend/1.7.0/luminateExtend.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/zepto/1.1.6/zepto.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/luminateExtend/1.7.1/luminateExtend.min.js"></script>
 ```
 
 <a name="luminateExtendObj"></a>
