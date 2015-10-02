@@ -1,6 +1,8 @@
 luminateExtend.js
 =================
 
+[![Join the chat at https://gitter.im/noahcooper/luminateExtend](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/noahcooper/luminateExtend?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 Version: 1.7.1 (12-MAY-2015)  
 Requires: jQuery v1.5.1+ or Zepto v1.1+
 
