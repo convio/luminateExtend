@@ -86,7 +86,7 @@ If you prefer to use a CDN, luminateExtend.js is available via [cdnjs](http://cd
 
 ```  html
 <script src="//code.jquery.com/jquery-1.12.4.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/luminateExtend/1.7.1/luminateExtend.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/luminateExtend/1.8.0/luminateExtend.min.js"></script>
 ```
 
 As of v1.6, luminateExtend.js can be used with [Zepto](http://zeptojs.com) in lieu of jQuery if you so choose. 
@@ -94,7 +94,7 @@ As of v1.6, luminateExtend.js can be used with [Zepto](http://zeptojs.com) in li
 
 ```  html
 <script src="//cdnjs.cloudflare.com/ajax/libs/zepto/1.2.0/zepto.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/luminateExtend/1.7.1/luminateExtend.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/luminateExtend/1.8.0/luminateExtend.min.js"></script>
 ```
 
 <a name="luminateExtendObj"></a>
