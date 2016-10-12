@@ -1,7 +1,7 @@
 luminateExtend.js
 =================
 
-Version: 1.7.1 (12-MAY-2015)  
+Version: 1.8.0 (12-OCT-2016)  
 Requires: jQuery v1.5.1+ or Zepto v1.1+
 
 luminateExtend.js is a JavaScript library for use with 
@@ -67,16 +67,6 @@ Before using luminateExtend.js, there are a few basic steps you must follow:
    
    The library uses a hidden request to this PageBuilder page to handle cross-domain communication in 
    older browsers. See the description of [luminateExtend.api.request](#apiObj) for more details.
- 
- * Upload luminateExtend_client.html to your external website
-   
-   On the website where you will be using the library (e.g. your organization's Drupal or Wordpress 
-   site), upload the attached file, 
-   [luminateExtend_client.html](https://github.com/noahcooper/luminateExtend/blob/master/luminateExtend_client.html). 
-   The file should be placed in the root of your website.
-   
-   The library uses a hidden request to this page to handle cross-domain communication in IE7. See the 
-   description of [luminateExtend.api](#apiObj) for more details.
 
 <a name="includingLib"></a>
 Including the library
@@ -88,14 +78,14 @@ website, including the library on a page is easy &mdash; simply pull in the libr
 jQuery is included. (Change out the file path as needed, depending on where you uploaded the file on your site.)
 
 ```  html
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="//code.jquery.com/jquery-1.12.4.min.js"></script>
 <script src="../js/luminateExtend.min.js"></script>
 ```
 
 If you prefer to use a CDN, luminateExtend.js is available via [cdnjs](http://cdnjs.com/libraries/luminateExtend).
 
 ```  html
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="//code.jquery.com/jquery-1.12.4.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/luminateExtend/1.7.1/luminateExtend.min.js"></script>
 ```
 
@@ -103,7 +93,7 @@ As of v1.6, luminateExtend.js can be used with [Zepto](http://zeptojs.com) in li
 (Note: You must use Zepto 1.1 or higher -- Zepto 1.0 did not support cross-domain requests with cookies.)
 
 ```  html
-<script src="//cdnjs.cloudflare.com/ajax/libs/zepto/1.1.6/zepto.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/zepto/1.2.0/zepto.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/luminateExtend/1.7.1/luminateExtend.min.js"></script>
 ```
 
@@ -121,7 +111,7 @@ luminateExtend.library
 `luminateExtend.library` contains information about the library.
 
 ```  js
-console.log(luminateExtend.library.version); // logs a value like "1.7.1"
+console.log(luminateExtend.library.version); // logs a value like "1.8.0"
 ```
 
 The library object contains the following:
@@ -138,28 +128,24 @@ luminateExtend.init
 called once per page, e.g. immediately below where the library is included in the head.
 
 ```  js
-$(function() {
-  luminateExtend.init({
-    apiKey: '123456789', 
-    path: {
-      nonsecure: 'http://www.myorganization.com/site/', 
-      secure: 'https://secure2.convio.net/myorg/site/'
-    }
-  });
+luminateExtend.init({
+  apiKey: '123456789', 
+  path: {
+    nonsecure: 'http://www.myorganization.com/site/', 
+    secure: 'https://secure2.convio.net/myorg/site/'
+  }
 });
 ```
 
 luminateExtend is itself an alias for the init method when called directly.
 
 ```  js
-$(function() {
-  luminateExtend({
-    apiKey: '123456789', 
-    path: {
-      nonsecure: 'http://www.myorganization.com/site/', 
-      secure: 'https://secure2.convio.net/myorg/site/'
-    }
-  });
+luminateExtend({
+  apiKey: '123456789', 
+  path: {
+    nonsecure: 'http://www.myorganization.com/site/', 
+    secure: 'https://secure2.convio.net/myorg/site/'
+  }
 });
 ```
 
@@ -282,9 +268,7 @@ request method uses XHR in these browsers, and as of v1.3, sets the withCredenti
 allow for cookies to be sent with each request. For older browsers which do not support CORS, namely IE8 
 and IE9, [window.postMessage](https://developer.mozilla.org/en-US/docs/DOM/window.postMessage) is used as 
 a polyfill. (Note that the Microsoft-proprietary XDomainRequest is not used because of its limitations, 
-most importantly, the inability to set the Content-Type request header and the same-scheme policy.) For 
-even *older* browsers such as IE7 which do not support window.postMessage, this method falls back to using 
-a hash change transport.
+most importantly, the inability to set the Content-Type request header and the same-scheme policy.)
 
 The request method accepts one argument, an options object, or, as of v1.6, an array of options objects 
 may be provided in order to make multiple requests.
@@ -602,7 +586,7 @@ Browser support
 
 luminateExtend.js includes support for the following browsers:
 
- * IE7+
+ * IE8+
  * Firefox 3.5+
  * Chrome 2+
  * Safari 4+

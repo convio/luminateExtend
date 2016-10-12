@@ -1,6 +1,6 @@
 /*
  * luminateExtend.js
- * Version: 1.7.1 (12-MAY-2015)
+ * Version: 1.8.0 (12-OCT-2016)
  * Requires: jQuery v1.5.1+ or Zepto v1.1+
  * Includes: SimpleDateFormatJS v1.3 (https://github.com/noahcooper/SimpleDateFormatJS)
  */
@@ -354,7 +354,6 @@
       contentType: 'application/x-www-form-urlencoded', 
       data: '', 
       requiresAuth: false, 
-      useHashTransport: false, 
       useHTTPS: null
     }, options || {});
     
@@ -438,17 +437,15 @@
       var isLuminateOnlineAndSameProtocol = false, 
       useAjax = false, 
       usePostMessage = false;
-      if(!settings.useHashTransport) {
-        if(window.location.protocol === requestUrl.split('//')[0] && document.domain === requestPath.split('/')[0]) {
-          isLuminateOnlineAndSameProtocol = true;
-          useAjax = true;
-        }
-        else if(luminateExtend.global.supportsCORS) {
-          useAjax = true;
-        }
-        else if('postMessage' in window) {
-          usePostMessage = true;
-        }
+      if(window.location.protocol === requestUrl.split('//')[0] && document.domain === requestPath.split('/')[0]) {
+        isLuminateOnlineAndSameProtocol = true;
+        useAjax = true;
+      }
+      else if(luminateExtend.global.supportsCORS) {
+        useAjax = true;
+      }
+      else if('postMessage' in window) {
+        usePostMessage = true;
       }
       
       var doRequest;
@@ -548,54 +545,6 @@
           });
           
           $('#' + postMessageFrameId).attr('src', postMessageUrl);
-        };
-      }
-      else {
-        doRequest = function() {
-          var hashTransportTimestamp = new Date().getTime(), 
-          hashTransportFrameId = 'luminateApiHashTransport' + hashTransportTimestamp, 
-          hashTransportUrl = buildServerUrl(settings.useHTTPS, 'action=hashTransport'), 
-          hashTransportClientUrl = window.location.protocol + '//' + document.domain + 
-                                   '/luminateExtend_client.html';
-          
-          if(luminateExtend.global.routingId && luminateExtend.global.routingId !== '') {
-            requestUrl += ';' + luminateExtend.global.routingId;
-          }
-          if(settings.requiresAuth && settings.data.indexOf('&' + luminateExtend.global.auth.type + '=') === -1) {
-            settings.data += '&' + luminateExtend.global.auth.type + '=' + luminateExtend.global.auth.token;
-          }
-          if(luminateExtend.global.sessionCookie && luminateExtend.global.sessionCookie !== '') {
-            settings.data += '&' + luminateExtend.global.sessionCookie;
-          }
-          settings.data += '&ts=' + hashTransportTimestamp;
-          
-          hashTransportUrl += '#&hashTransportClientUrl=' + encodeURIComponent(hashTransportClientUrl) + 
-                              '&hashTransportFrameId=' + hashTransportFrameId + 
-                              '&requestUrl=' + encodeURIComponent(requestUrl) + 
-                              '&requestContentType=' + encodeURIComponent(settings.contentType) + 
-                              '&requestData=' + encodeURIComponent(settings.data);
-          
-          if(!luminateExtend.api.request.hashTransportEventHandler) {
-            luminateExtend.api.request.hashTransportEventHandler = {};
-            
-            luminateExtend.api.request.hashTransportEventHandler.handler = function(frameId, data) {
-              if(luminateExtend.api.request.hashTransportEventHandler[frameId]) {
-                luminateExtend.api.request.hashTransportEventHandler[frameId](frameId, data);
-              }
-            };
-          }
-          
-          luminateExtend.api.request.hashTransportEventHandler[hashTransportFrameId] = function(frameId, data) {
-            apiCallbackHandler(settings, data);
-            
-            $('#' + frameId).remove();
-            
-            delete luminateExtend.api.request.hashTransportEventHandler[frameId];
-          };
-          
-          $('body').append('<iframe style="position: absolute; top: 0; left: -999em;" ' + 
-                           'name="' + hashTransportFrameId + '" id="' + hashTransportFrameId + '" ' + 
-                           'src="' + hashTransportUrl + '"></iframe>');
         };
       }
       

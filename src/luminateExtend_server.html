@@ -1,6 +1,6 @@
 [[?COMMENT::::::
   luminateExtend_server.html
-  Version: 1.7.1 (12-MAY-2015)
+  Version: 1.8.0 (12-OCT-2016)
 ]]
 [[?xgetAuthx::x[[S334:action]]x::
   [[U8:application/javascript]]
@@ -25,111 +25,63 @@
     }[[?xx::x[[S334:callback]]x::::)]]
   ]]
 ::
-[[?xpostMessagex::x[[S334:action]]x::
-  [[?
-    [[?,[[T5:[[E130:"[[T1:[[S0:CONVIO_API_CROSSDOMAINS_TRUSTED]]]]" "+" "" replaceall]]]],::,[[E130:"[[S50:Referer]]" dup dup "://" indexof 3 + swap length substring dup 0 swap "/" indexof substring]],::T::]]
-    [[?,[[T5:[[E130:"[[T1:[[S0:CONVIO_API_CROSSDOMAINS_TRUSTED]]]]" "+" "" replaceall]]]],::,www.[[E130:"[[S50:Referer]]" dup dup "://" indexof 3 + swap length substring dup 0 swap "/" indexof substring]],::T::]]
-    [[?,[[T5:[[E130:"[[T1:[[S0:CONVIO_API_CROSSDOMAINS_TRUSTED]]]]" "+" "" replaceall]]]],::,*.[[E130:"[[S50:Referer]]" dup dup "://" indexof 3 + swap length substring dup 0 swap "/" indexof substring]],::T::]]
-    [[?,[[T5:[[E130:"[[T1:[[S0:CONVIO_API_CROSSDOMAINS_TRUSTED]]]]" "+" "" replaceall]]]],::,[[E130:"[[S50:Referer]]" dup dup "." indexof 1 + swap length substring dup 0 swap "/" indexof substring]],::T::]]
-    [[?,[[T5:[[E130:"[[T1:[[S0:CONVIO_API_CROSSDOMAINS_TRUSTED]]]]" "+" "" replaceall]]]],::,*.[[E130:"[[S50:Referer]]" dup dup "." indexof 1 + swap length substring dup 0 swap "/" indexof substring]],::T::]]
-  ::T::
-    <!doctype html>
-    <html>
-    <head>
-      <!--[if lt IE 9]>
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-      <![endif]-->
-      <!--[if gte IE 9]><!-->
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-      <!--<![endif]-->
-    </head>
-    <body>
-      <script>
-        var postMessageHandler = function(e) {
-          var postMessageSource = e.source, 
-          postMessageOrigin = e.origin, 
-          postMessageData = $.parseJSON(e.data), 
-          requestData = postMessageData.requestData;
+  [[?xpostMessagex::x[[S334:action]]x::
+    [[?
+      [[?,[[T5:[[E130:"[[T1:[[S0:CONVIO_API_CROSSDOMAINS_TRUSTED]]]]" "+" "" replaceall]]]],::,[[E130:"[[S50:Referer]]" dup dup "://" indexof 3 + swap length substring dup 0 swap "/" indexof substring]],::T::]]
+      [[?,[[T5:[[E130:"[[T1:[[S0:CONVIO_API_CROSSDOMAINS_TRUSTED]]]]" "+" "" replaceall]]]],::,www.[[E130:"[[S50:Referer]]" dup dup "://" indexof 3 + swap length substring dup 0 swap "/" indexof substring]],::T::]]
+      [[?,[[T5:[[E130:"[[T1:[[S0:CONVIO_API_CROSSDOMAINS_TRUSTED]]]]" "+" "" replaceall]]]],::,*.[[E130:"[[S50:Referer]]" dup dup "://" indexof 3 + swap length substring dup 0 swap "/" indexof substring]],::T::]]
+      [[?,[[T5:[[E130:"[[T1:[[S0:CONVIO_API_CROSSDOMAINS_TRUSTED]]]]" "+" "" replaceall]]]],::,[[E130:"[[S50:Referer]]" dup dup "." indexof 1 + swap length substring dup 0 swap "/" indexof substring]],::T::]]
+      [[?,[[T5:[[E130:"[[T1:[[S0:CONVIO_API_CROSSDOMAINS_TRUSTED]]]]" "+" "" replaceall]]]],::,*.[[E130:"[[S50:Referer]]" dup dup "." indexof 1 + swap length substring dup 0 swap "/" indexof substring]],::T::]]
+    ::T::
+      <!doctype html>
+      <html>
+      <head>
+        <!--[if lt IE 9]>
+          <script src="//code.jquery.com/jquery-1.12.4.min.js"></script>
+        <![endif]-->
+        <!--[if gte IE 9]><!-->
+          <script src="//code.jquery.com/jquery-2.2.4.min.js"></script>
+        <!--<![endif]-->
+      </head>
+      <body>
+        <script>
+          var postMessageHandler = function(e) {
+            var postMessageSource = e.source, 
+            postMessageOrigin = e.origin, 
+            postMessageData = $.parseJSON(e.data), 
+            requestData = postMessageData.requestData;
+            
+            $.ajax({
+              url: postMessageData.requestUrl, 
+              data: requestData, 
+              contentType: postMessageData.requestContentType, 
+              type: 'POST', 
+              success: function(data) {
+                postMessageSource.postMessage('{' + 
+                  '"postMessageFrameId": "' + postMessageData.postMessageFrameId + '", ' + 
+                  '"response": "' + encodeURIComponent(data) + '"' + 
+                '}', postMessageOrigin);
+              }
+            });
+          };
           
-          $.ajax({
-            url: postMessageData.requestUrl, 
-            data: requestData, 
-            contentType: postMessageData.requestContentType, 
-            type: 'POST', 
-            success: function(data) {
-              postMessageSource.postMessage('{' + 
-                '"postMessageFrameId": "' + postMessageData.postMessageFrameId + '", ' + 
-                '"response": "' + encodeURIComponent(data) + '"' + 
-              '}', postMessageOrigin);
-            }
-          });
-        };
-        
-        if(typeof window.addEventListener != 'undefined') {
-          window.addEventListener('message', postMessageHandler, false);
-        }
-        else if(typeof window.attachEvent != 'undefined') {
-          window.attachEvent('onmessage', postMessageHandler);
-        }
-      </script>
-    </body>
-    </html>
-  ::
-    <!doctype html>
-    <html>
-    <head>
-    </head>
-    <body>
-    </body>
-    </html>
-  ]]
-::
-[[?xhashTransportx::x[[S334:action]]x::
-  [[?
-    [[?,[[T5:[[E130:"[[T1:[[S0:CONVIO_API_CROSSDOMAINS_TRUSTED]]]]" "+" "" replaceall]]]],::,[[E130:"[[S50:Referer]]" dup dup "://" indexof 3 + swap length substring dup 0 swap "/" indexof substring]],::T::]]
-    [[?,[[T5:[[E130:"[[T1:[[S0:CONVIO_API_CROSSDOMAINS_TRUSTED]]]]" "+" "" replaceall]]]],::,www.[[E130:"[[S50:Referer]]" dup dup "://" indexof 3 + swap length substring dup 0 swap "/" indexof substring]],::T::]]
-    [[?,[[T5:[[E130:"[[T1:[[S0:CONVIO_API_CROSSDOMAINS_TRUSTED]]]]" "+" "" replaceall]]]],::,*.[[E130:"[[S50:Referer]]" dup dup "://" indexof 3 + swap length substring dup 0 swap "/" indexof substring]],::T::]]
-    [[?,[[T5:[[E130:"[[T1:[[S0:CONVIO_API_CROSSDOMAINS_TRUSTED]]]]" "+" "" replaceall]]]],::,[[E130:"[[S50:Referer]]" dup dup "." indexof 1 + swap length substring dup 0 swap "/" indexof substring]],::T::]]
-    [[?,[[T5:[[E130:"[[T1:[[S0:CONVIO_API_CROSSDOMAINS_TRUSTED]]]]" "+" "" replaceall]]]],::,*.[[E130:"[[S50:Referer]]" dup dup "." indexof 1 + swap length substring dup 0 swap "/" indexof substring]],::T::]]
-  ::T::
-    <!doctype html>
-    <html>
-    <head>
-      <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    </head>
-    <body>
-      <iframe id="luminateApiHashResponseFrame" name="luminateApiHashResponseFrame"></iframe>
-      <script>
-        var hashData = function(name) {
-          return decodeURIComponent(window.location.hash.split('&' + name + '=')[1].split('&')[0]);
-        }, 
-        requestData = hashData('requestData');
-        
-        if(requestData.indexOf('&auth=') == -1) {
-          requestData += '&auth=[[S86:true]]';
-        }
-        
-        $.ajax({
-          url: hashData('requestUrl'), 
-          data: requestData, 
-          contentType: hashData('requestContentType'), 
-          type: 'POST', 
-          success: function(data) {
-            $('#luminateApiHashResponseFrame').attr('src', hashData('hashTransportClientUrl') + 
-                                                           '#&hashTransportFrameId=' + hashData('hashTransportFrameId') + 
-                                                           '&responseData=' + encodeURIComponent(data));
+          if(typeof window.addEventListener != 'undefined') {
+            window.addEventListener('message', postMessageHandler, false);
           }
-        });
-      </script>
-    </body>
-    </html>
-  ::
-    <!doctype html>
-    <html>
-    <head>
-    </head>
-    <body>
-    </body>
-    </html>
-  ]]
-::]]]]]]
+          else if(typeof window.attachEvent != 'undefined') {
+            window.attachEvent('onmessage', postMessageHandler);
+          }
+        </script>
+      </body>
+      </html>
+    ::
+      <!doctype html>
+      <html>
+      <head>
+      </head>
+      <body>
+      </body>
+      </html>
+    ]]
+  ::]]
+]]
