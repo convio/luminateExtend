@@ -1,6 +1,6 @@
 [[?COMMENT::::::
   luminateExtend_server.html
-  Version: 1.8.0 (12-OCT-2016)
+  Version: 1.8.1 (18-OCT-2016)
 ]]
 [[?xgetAuthx::x[[S334:action]]x::
   [[U8:application/javascript]]
@@ -56,6 +56,7 @@
               data: requestData, 
               contentType: postMessageData.requestContentType, 
               type: 'POST', 
+              cache: false, 
               success: function(data) {
                 postMessageSource.postMessage('{' + 
                   '"postMessageFrameId": "' + postMessageData.postMessageFrameId + '", ' + 
