@@ -1,0 +1,27 @@
+{
+  "name": "luminateExtend",
+  "description": "A JavaScript library for use with Blackbaud's Luminate Online product suite",
+  "version": "1.8.1",
+  "main": "luminateExtend.js",
+  "authors": [
+    "noahcooper"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "luminate",
+    "blackbaud",
+    "teamraiser",
+    "team",
+    "raiser",
+    "convio"
+  ],
+  "homepage": "https://github.com/noahcooper/luminateExtend",
+  "moduleType": [],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
