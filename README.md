@@ -99,10 +99,26 @@ As of v1.6, luminateExtend.js can be used with [Zepto](http://zeptojs.com) in li
 ```
 
 ### Install with NPM
+```
+npm install luminateExtend --save
+```
+
+#### Load luminateExtend module
 ```js
 var jQuery = require('jquery');
 var luminateExtend = require('luminateExtend');
 ```
+
+### Install with Bower
+```
+bower install luminateExtend
+```
+
+```html
+<script src="//code.jquery.com/jquery-1.12.4.min.js"></script>
+<script src="bower_components/luminateExtend/luminateExtend.js"></script>
+```
+
 
 <a name="luminateExtendObj"></a>
 The luminateExtend object

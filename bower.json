@@ -6,6 +6,9 @@
   "authors": [
     "noahcooper"
   ],
+  "dependencies": {
+    "jquery": ">=1.5.1"
+  },
   "license": "MIT",
   "keywords": [
     "luminate",
