@@ -15,7 +15,7 @@
       return factory(jquery, window, document);
     });
   } else if(typeof module === "object" && typeof module.exports === "object") {
-    module.exports = factory(require('jQuery'), window, document);
+    module.exports = factory(require('jquery'), window, document);
   }
   // Otherwise, we're working in a browser, so just pass in the global
   // jQuery or Zepto object.
