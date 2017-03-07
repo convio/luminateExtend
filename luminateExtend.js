@@ -326,7 +326,7 @@
         if(settings.callback) {
           settings.callback();
         } else {
-          return {auth: luminateExtend.global.auth};
+          return luminateExtend.global.auth;
         }
       }
       else {
@@ -337,7 +337,7 @@
           if(settings.callback) {
             settings.callback();
           } else {
-            return {auth: luminateExtend.global.auth};
+            return uminateExtend.global.auth;
           }
         };
         
