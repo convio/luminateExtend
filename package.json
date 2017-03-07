@@ -1,0 +1,32 @@
+{
+  "name": "luminateExtend",
+  "description": "A JavaScript library for use with Blackbaud's Luminate Online product suite",
+  "version": "1.8.1",
+  "author": "noahcooper",
+  "maintainers": [
+    {
+      "name": "noahcooper",
+      "email": "",
+      "web": "https://github.com/noahcooper/luminateExtend"
+    }
+  ],
+  "dependencies": {
+    "jquery": ">=1.5.1"
+  },
+  "bugs": {
+    "web": "https://github.com/noahcooper/luminateExtend/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/noahcooper/luminateExtend.git"
+  },
+  "keywords": [
+    "luminate",
+    "blackbaud",
+    "teamraiser",
+    "team raiser",
+    "convio"
+  ],
+  "main": "luminateExtend.js",
+  "homepage": "https://github.com/noahcooper/luminateExtend"
+}

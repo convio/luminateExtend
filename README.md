@@ -72,6 +72,7 @@ Before using luminateExtend.js, there are a few basic steps you must follow:
 Including the library
 ---------------------
 
+### Quick start
 Once you've uploaded 
 [luminateExtend.min.js](https://github.com/noahcooper/luminateExtend/blob/master/luminateExtend.min.js) to your 
 website, including the library on a page is easy &mdash; simply pull in the library somewhere below where 
@@ -96,6 +97,28 @@ As of v1.6, luminateExtend.js can be used with [Zepto](http://zeptojs.com) in li
 <script src="//cdnjs.cloudflare.com/ajax/libs/zepto/1.2.0/zepto.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/luminateExtend/1.8.1/luminateExtend.min.js"></script>
 ```
+
+### Install with NPM
+```
+npm install luminateExtend --save
+```
+
+#### Load luminateExtend module
+```js
+var jQuery = require('jquery');
+var luminateExtend = require('luminateExtend');
+```
+
+### Install with Bower
+```
+bower install luminateExtend
+```
+
+```html
+<script src="//code.jquery.com/jquery-1.12.4.min.js"></script>
+<script src="bower_components/luminateExtend/luminateExtend.js"></script>
+```
+
 
 <a name="luminateExtendObj"></a>
 The luminateExtend object

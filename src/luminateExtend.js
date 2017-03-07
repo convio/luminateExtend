@@ -1,12 +1,31 @@
 /*
  * luminateExtend.js
- * Version: 1.8.1 (18-OCT-2016)
+ * Version: 1.8.1 (23-FEB-2017)
  * Requires: jQuery v1.5.1+ or Zepto v1.1+
  * Includes: SimpleDateFormatJS v1.3 (https://github.com/noahcooper/SimpleDateFormatJS)
  */
 
-(function($) {
-  /* private helper functions */
+
+(function (factory) {
+  // If there is a variable named module and it has an exports property,
+  // then we're working in a Node-like environment. Use require to load
+  // the jQuery object that the module system is using and pass it in.
+  if (typeof define === 'function' && define.amd) {
+    define(['jquery'], function(jquery){
+      return factory(jquery, window, document);
+    });
+  } else if(typeof module === "object" && typeof module.exports === "object") {
+    module.exports = factory(require('jquery'), window, document);
+  }
+  // Otherwise, we're working in a browser, so just pass in the global
+  // jQuery or Zepto object.
+  else {
+    factory(typeof jQuery === 'undefined' && typeof Zepto === 'function' ? Zepto : jQuery, window, document);
+  }
+}(function($, window, document, undefined) {
+  // This code will receive whatever jQuery object was passed in from
+  // the function above and will attach the tipso plugin to it.
+  // 
   var validateLocale = function(locale) {
     /* if a locale is provided that is not supported, default to "en_US" */
     if(locale && $.inArray(locale, ['es_US', 'en_CA', 'fr_CA', 'en_GB', 'en_AU']) < 0) {
@@ -33,10 +52,32 @@
            (data ? ('&' + data) : '');
   }, 
   
-  apiCallbackHandler = function(requestSettings, responseData) {
-    if(requestSettings.responseFilter && 
+  apiCallbackHandler = function(requestSettings, responseData, jqXHR_textStatus) {
+    // test if response data is a jqXHR object. This means, we have had a AJAX error for some reason
+    if (typeof responseData.getResponseHeader === 'function') {
+      // if the XML HTTP status is 0, it could be due to a Cross-site scripting issue related to CORS header. 
+      // Normally we would use the error directly from the ajax request but a status of 0 has an empty response text
+      if (responseData.status == 0) {
+        var port = window.location.port;
+        var addendum = '. You need to whitelist the domain and port API requests are originating from';
+
+        if (port !== '') {
+          port = ':' + port;
+        } else {
+          addendum = '';
+        }
+        
+        var message = 'Check your Luminate API settings to make sure ' + window.location.hostname + port + ' is whitelisted' + addendum;
+
+        responseData = new luminateExtend.api.error(message);
+      } else {
+        responseData = new luminateExtend.api.error(jqXHR_textStatus);
+      }
+      
+    } else if(requestSettings.responseFilter && 
        requestSettings.responseFilter.array && 
        requestSettings.responseFilter.filter) {
+      
       if(luminateExtend.utils.stringToObj(requestSettings.responseFilter.array, responseData)) {
         var filterKey = requestSettings.responseFilter.filter.split('==')[0].split('!=')[0].replace(/^\s+|\s+$/g, ''), 
         filterOperator, 
@@ -104,7 +145,7 @@
       if(typeof requestSettings.callback === 'function') {
         callbackFn = requestSettings.callback;
       }
-      else if(requestSettings.callback.error && responseData.errorResponse) {
+      else if((requestSettings.callback.error && responseData.errorResponse) || responseData instanceof Error) {
         callbackFn = requestSettings.callback.error;
       }
       else if(requestSettings.callback.success && !responseData.errorResponse) {
@@ -114,22 +155,21 @@
     
     var isLoginRequest = requestSettings.data.indexOf('&method=login') !== -1 && requestSettings.data.indexOf('&method=loginTest') === -1, 
     isLogoutRequest = requestSettings.data.indexOf('&method=logout') !== -1;
-    
-    if(!isLoginRequest && !isLogoutRequest) {
+
+    if((!isLoginRequest && !isLogoutRequest) || responseData instanceof Error) {
       callbackFn(responseData);
     }
-    
     /* get a new auth token after login or logout */
     else {
       var newAuthCallback = function() {
         callbackFn(responseData);
-      }, 
+      },
       getAuthOptions = {
         callback: newAuthCallback, 
         useCache: false, 
         useHTTPS: requestSettings.useHTTPS
       };
-      
+
       if(isLoginRequest && responseData.loginResponse && responseData.loginResponse.nonce) {
         getAuthOptions.nonce = 'NONCE_TOKEN=' + responseData.loginResponse.nonce;
       }
@@ -146,7 +186,7 @@
   
   /* library info */
   luminateExtend.library = {
-    version: '1.7.1'
+    version: '1.8.1'
   };
   
   /* global settings */
@@ -350,6 +390,7 @@
   luminateExtend.api.getAuthLoad = true;
   
   var sendRequest = function(options) {
+
     var settings = $.extend({
       contentType: 'application/x-www-form-urlencoded', 
       data: '', 
@@ -449,6 +490,7 @@
       }
       
       var doRequest;
+
       if(useAjax) {
         doRequest = function() {
           if(luminateExtend.global.routingId && luminateExtend.global.routingId !== '') {
@@ -471,10 +513,9 @@
             contentType: settings.contentType, 
             /* set dataType explicitly as API sends Content-Type: text/plain rather than application/json (E-62659) */
             dataType: 'json', 
-            type: 'POST', 
-            success: function(data) {
-              apiCallbackHandler(settings, data);
-            }
+            type: 'POST',
+          }).always(function(xhr_or_data, status, xhr_error) {
+            apiCallbackHandler(settings, xhr_or_data, status);
           });
         };
       }
@@ -568,7 +609,7 @@
     if(!$.isArray(requests)) {
       sendRequest(requests);
     }
-    
+      
     else {
       requests.reverse();
 
@@ -618,6 +659,21 @@
         sendRequest(this);
       });
     }
+  };
+
+  luminateExtend.api.error = function(message) {
+    function LuminateError(message) {
+        this.name = 'LuminateError';
+        this.default_message = 'Error communicating with the Luminate API. Check your Luminate API settings';
+        
+        this.message = message || this.default_message;
+        this.stack = (new Error()).stack;
+    }
+
+    LuminateError.prototype = Object.create(Error.prototype);
+    LuminateError.prototype.constructor = LuminateError;
+
+    return new LuminateError(message);
   };
   
   /* session variables */
@@ -1014,4 +1070,4 @@
       return formattedDate;
     }
   };
-})(typeof jQuery === 'undefined' && typeof Zepto === 'function' ? Zepto : jQuery);
+}));
