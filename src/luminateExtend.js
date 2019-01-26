@@ -1,8 +1,8 @@
 /*
  * luminateExtend.js
- * Version: 1.8.1 (18-OCT-2016)
+ * Version: 1.8.2 (26-JAN-2019)
  * Requires: jQuery v1.5.1+ or Zepto v1.1+
- * Includes: SimpleDateFormatJS v1.3 (https://github.com/noahcooper/SimpleDateFormatJS)
+ * Includes: SimpleDateFormatJS v1.4 (https://github.com/noahcooper/SimpleDateFormatJS)
  */
 
 (function($) {
@@ -146,7 +146,7 @@
   
   /* library info */
   luminateExtend.library = {
-    version: '1.7.1'
+    version: '1.8.2'
   };
   
   /* global settings */
@@ -808,10 +808,10 @@
                                               .replace(/m+(?=m)/g, 'm'), 
         
         formattedPart = patternPartFormatted.replace(/yyy/g, dateParts.year)
-                                                .replace(/yy/g, dateParts.year.substring(2))
-                                                .replace(/y/g, dateParts.year)
-                                                .replace(/dd/g, dateParts.date)
-                                                .replace(/d/g, oneDigitNumber(dateParts.date)), 
+                                            .replace(/yy/g, dateParts.year.substring(2))
+                                            .replace(/y/g, dateParts.year)
+                                            .replace(/dd/g, dateParts.date)
+                                            .replace(/d/g, oneDigitNumber(dateParts.date)), 
         
         adjustTimePattern = function(timeParts, timePatternPart, operator) {
           for(var i = 1; i < timeParts.length; i++) {
@@ -936,14 +936,22 @@
                                  'novembre', 
                                  'd&' + '#233;cembre'];
         }
+        var formattedMonthShorthand3 = formattedMonthNames[Number(dateParts.month) - 1].substring(0, 3);
+        if(locale === 'fr_CA') {
+          if(formattedMonthShorthand3 === 'f&' + '#') {
+            formattedMonthShorthand3 = 'f&' + '#233;v';
+          }
+          else if(formattedMonthShorthand3 === 'ao&') {
+            formattedMonthShorthand3 = 'ao&' + '#251;';
+          }
+          else if(formattedMonthShorthand3 === 'd&' + '#') {
+            formattedMonthShorthand3 = 'd&' + '#233;c';
+          }
+        }
         formattedPart = formattedPart.replace(/MMMM/g, formattedMonthNames[Number(dateParts.month) - 1])
-                                     .replace(/MMM/g, formattedMonthNames[Number(dateParts.month) - 1]
-                                                      .substring(0, 3))
+                                     .replace(/MMM/g, formattedMonthShorthand3)
                                      .replace(/MM/g, dateParts.month)
-                                     .replace(/M/g, oneDigitNumber(dateParts.month))
-                                     .replace(/march/g, 'March')
-                                     .replace(/may/g, 'May')
-                                     .replace(/Mayo/g, 'mayo');
+                                     .replace(/M/g, oneDigitNumber(dateParts.month));
         
         var formattedDayNames = ['Sunday', 
                                  'Monday', 
@@ -970,14 +978,28 @@
                                'vendredi', 
                                'samedi'];
         }
+        var formattedDayShorthand3 = formattedDayNames[dateParts.day].substring(0, 3);
+        if(locale === 'es_US') {
+          if(formattedDayShorthand3 === 'mi&') {
+            formattedDayShorthand3 = 'mi&' + 'eacute;';
+          }
+          else if(formattedDayShorthand3 === 's&' + 'a') {
+            formattedDayShorthand3 = 's&' + 'aacute;b';
+          }
+        }
         formattedPart = formattedPart.replace(/EEEE/g, formattedDayNames[dateParts.day])
-                                     .replace(/EEE/g, formattedDayNames[dateParts.day].substring(0, 3))
-                                     .replace(/EE/g, formattedDayNames[dateParts.day].substring(0, 3))
-                                     .replace(/E/g, formattedDayNames[dateParts.day].substring(0, 3));
+                                     .replace(/EEE/g, formattedDayShorthand3)
+                                     .replace(/EE/g, formattedDayShorthand3)
+                                     .replace(/E/g, formattedDayShorthand3);
         
         formattedPart = formattedPart.replace(/A/g, dateParts.ampm)
-                                     .replace(/april/g, 'April')
-                                     .replace(/august/g, 'August');
+                                     .replace(/apr/g, 'Apr')
+                                     .replace(/aug/g, 'Aug');
+        
+        if(locale !== 'es_US' && locale !== 'fr_CA') {
+          formattedPart = formattedPart.replace(/mar/g, 'Mar')
+                                       .replace(/may/g, 'May');
+        }
         
         return formattedPart;
       };
