@@ -1,6 +1,6 @@
 /*
  * luminateExtend.js
- * Version: 1.8.2 (26-JAN-2019)
+ * Version: 1.8.3 (13-NOV-2019)
  * Requires: jQuery v1.5.1+ or Zepto v1.1+
  * Includes: SimpleDateFormatJS v1.4 (https://github.com/noahcooper/SimpleDateFormatJS)
  */
@@ -146,7 +146,7 @@
   
   /* library info */
   luminateExtend.library = {
-    version: '1.8.2'
+    version: '1.8.3'
   };
   
   /* global settings */
@@ -403,10 +403,18 @@
         settings.data += '&response_format=json';
       }
       if(luminateExtend.global.apiCommon.source && settings.data.indexOf('&source=') === -1) {
-        settings.data += '&source=' + luminateExtend.global.apiCommon.source;
+        var sourceCode = luminateExtend.global.apiCommon.source;
+        if(sourceCode.length > 255) {
+          sourceCode = sourceCode.substring(0, 255);
+        }
+        settings.data += '&source=' + sourceCode;
       }
       if(luminateExtend.global.apiCommon.subSource && settings.data.indexOf('&sub_source=') === -1) {
-        settings.data += '&sub_source=' + luminateExtend.global.apiCommon.subSource;
+        var subSourceCode = luminateExtend.global.apiCommon.subSource;
+        if(subSourceCode.length > 255) {
+          subSourceCode = subSourceCode.substring(0, 255);
+        }
+        settings.data += '&sub_source=' + subSourceCode;
       }
       if(settings.data.indexOf('&suppress_response_codes=') === -1) {
         settings.data += '&suppress_response_codes=true';

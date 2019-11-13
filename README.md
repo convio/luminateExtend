@@ -1,7 +1,7 @@
 luminateExtend.js
 =================
 
-Version: 1.8.2 (26-JAN-2019)  
+Version: 1.8.3 (13-NOV-2019)  
 Requires: jQuery v1.5.1+ or Zepto v1.1+
 
 luminateExtend.js is a JavaScript library for use with 
@@ -111,7 +111,7 @@ luminateExtend.library
 `luminateExtend.library` contains information about the library.
 
 ```  js
-console.log(luminateExtend.library.version); // logs a value like "1.8.2"
+console.log(luminateExtend.library.version); // logs a value like "1.8.3"
 ```
 
 The library object contains the following:
