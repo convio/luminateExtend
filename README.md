@@ -63,7 +63,7 @@ Before using luminateExtend.js, there are a few basic steps you must follow:
    ensure that the option "This is a secure Page that will be encrypted via SSL" is *not* checked. 
    The other configuration options are not relevant for this page and can be skipped. In an HTML Content 
    component, copy and paste the code found in the attached file, 
-   [luminateExtend_server.html](https://github.com/noahcooper/luminateExtend/blob/master/luminateExtend_server.html).
+   [luminateExtend_server.html](https://github.com/convio/luminateExtend/blob/master/luminateExtend_server.html).
    
    The library uses a hidden request to this PageBuilder page to handle cross-domain communication in 
    older browsers. See the description of [luminateExtend.api.request](#apiObj) for more details.
@@ -73,7 +73,7 @@ Including the library
 ---------------------
 
 Once you've uploaded 
-[luminateExtend.min.js](https://github.com/noahcooper/luminateExtend/blob/master/luminateExtend.min.js) to your 
+[luminateExtend.min.js](https://github.com/convio/luminateExtend/blob/master/luminateExtend.min.js) to your 
 website, including the library on a page is easy &mdash; simply pull in the library somewhere below where 
 jQuery is included. (Change out the file path as needed, depending on where you uploaded the file on your site.)
 
@@ -598,7 +598,7 @@ Reporting issues
 ----------------
 
 Should you encounter any issues when using this library, please report them here, using the 
-["Issues"](https://github.com/noahcooper/luminateExtend/issues) tab above. If you have general 
+["Issues"](https://github.com/convio/luminateExtend/issues) tab above. If you have general 
 questions about the library, or about the API in general, the fastest way to get answers is to use 
 the [Open APIs](http://community.convio.com/t5/Open-APIs/ct-p/OpenAPIs) section on 
 http://community.convio.com.

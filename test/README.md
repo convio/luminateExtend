@@ -6,12 +6,12 @@ Test suites built using [QUnit](http://qunitjs.com/).
 Running the tests
 -----------------
 
-If you haven't already done so, you'll need to follow the [basic setup instructions](https://github.com/noahcooper/luminateExtend#libSetup) 
+If you haven't already done so, you'll need to follow the [basic setup instructions](https://github.com/convio/luminateExtend#libSetup) 
 for using luminateExtend.js.
 
 Once you've completed setup, download the HTML and JavaScript files found here to your desktop. You'll need to make a change to one of these files.
 
-At the very top of [setup.js](https://raw.github.com/noahcooper/luminateExtend/master/tests/js/setup.js), you'll need to change the API Key and the non-secure and secure paths for your organization:
+At the very top of [setup.js](https://raw.github.com/convio/luminateExtend/master/tests/js/setup.js), you'll need to change the API Key and the non-secure and secure paths for your organization:
 
 ```js
 luminateExtend({
