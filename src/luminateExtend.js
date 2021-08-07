@@ -1,6 +1,6 @@
 /*
  * luminateExtend.js
- * Version: 1.8.3 (13-NOV-2019)
+ * Version: 1.9.0 (07-AUG-2021)
  * Requires: jQuery v1.5.1+ or Zepto v1.1+
  * Includes: SimpleDateFormatJS v1.4 (https://github.com/noahcooper/SimpleDateFormatJS)
  */
@@ -146,7 +146,7 @@
   
   /* library info */
   luminateExtend.library = {
-    version: '1.8.3'
+    version: '1.9.0'
   };
   
   /* global settings */
@@ -729,8 +729,7 @@
       
       var pingImgId = 'luminatePing' + new Date().getTime();
       
-      $('body').append('<img style="position: absolute; left: -999em; top: 0;" ' + 
-                       'id="' + pingImgId + '" />');
+      $('body').append('<img style="position: absolute; left: -999em; top: 0;" id="' + pingImgId + '">');
       
       $('#' + pingImgId).bind('load', function() {
         $(this).remove();

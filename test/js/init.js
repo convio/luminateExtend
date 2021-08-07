@@ -41,6 +41,6 @@ test('luminateExtend.global.auth.token defaults to undefined', function() {
   ok(!luminateExtend.global.auth.token);
 });
 
-test('luminateExtend.global.locale is defaults to undefined', function() {
+test('luminateExtend.global.locale defaults to undefined', function() {
   ok(!luminateExtend.global.locale);
 });
