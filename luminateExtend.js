@@ -1,6 +1,6 @@
 /*
  * luminateExtend.js
- * Version: 1.8.3 (13-NOV-2019)
+ * Version: 1.9.0 (07-AUG-2021)
  * Requires: jQuery v1.5.1+ or Zepto v1.1+
  * Includes: SimpleDateFormatJS v1.4 (https://github.com/noahcooper/SimpleDateFormatJS)
  */
@@ -146,7 +146,7 @@
   
   /* library info */
   luminateExtend.library = {
-    version: '1.8.3'
+    version: '1.9.0'
   };
   
   /* global settings */
@@ -407,14 +407,14 @@
         if(sourceCode.length > 255) {
           sourceCode = sourceCode.substring(0, 255);
         }
-        settings.data += '&source=' + luminateExtend.global.apiCommon.source;
+        settings.data += '&source=' + sourceCode;
       }
       if(luminateExtend.global.apiCommon.subSource && settings.data.indexOf('&sub_source=') === -1) {
         var subSourceCode = luminateExtend.global.apiCommon.subSource;
         if(subSourceCode.length > 255) {
           subSourceCode = subSourceCode.substring(0, 255);
         }
-        settings.data += '&sub_source=' + luminateExtend.global.apiCommon.subSource;
+        settings.data += '&sub_source=' + subSourceCode;
       }
       if(settings.data.indexOf('&suppress_response_codes=') === -1) {
         settings.data += '&suppress_response_codes=true';
@@ -729,8 +729,7 @@
       
       var pingImgId = 'luminatePing' + new Date().getTime();
       
-      $('body').append('<img style="position: absolute; left: -999em; top: 0;" ' + 
-                       'id="' + pingImgId + '" />');
+      $('body').append('<img style="position: absolute; left: -999em; top: 0;" id="' + pingImgId + '">');
       
       $('#' + pingImgId).bind('load', function() {
         $(this).remove();
