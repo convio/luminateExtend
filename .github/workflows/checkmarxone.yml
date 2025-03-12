@@ -1,0 +1,28 @@
+name: Checkmarx AST Github Action
+on:
+  push:
+    branches:
+      - main
+      - master
+
+    
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: Checkmarx AST Github Action
+      uses: Checkmarx/ast-github-action@2.0.36
+      with:
+          base_uri: https://us.ast.checkmarx.net
+          cx_tenant: blackbaud
+          cx_client_id: ${{ secrets.CX_CLIENT_ID }}
+          cx_client_secret: ${{ secrets.CX_CLIENT_SECRET }}
+          project_name: luminateExtend
+          branch: ${{ github.head_ref || github.ref }}
+          #github_token: # optional, default is ${{ github.token }}
+          additional_params: --async --project-groups CustomerSuccess --sast-preset-name "BlackbaudSAST" --sast-filter !cvs,!.svn,!.hg,!.git,!.bzr,!bin,!obj,!backup,!.idea,!node_modules,!**/*.test/**,!**/tests/**,!**/*.Test/**,!**/Tests/**,!**/*.ITests/**,!**/*.UnitTests/**,!**/UnitTests/**,!**/*.Steps/**,!**/*.TestTools/**,!**/SpecFlow.*/**,!**/SpecFlow.*.nupkg,!**/SpecRun.Runner.*/**,!**/SpecRun.Runner,!.UnitTests,!**/*.DS_Store,!**/*.ipr,!**/*.iws,!**/*.bak,!**/*.tmp,!**/*.aac,!**/*.aif,!**/*.iff,!**/*.m3u,!**/*.mid,!**/*.mp3,!**/*.mpa,!**/*.ra,!**/*.wav,!**/*.wma,!**/*.3g2,!**/*.3gp,!**/*.asf,!**/*.asx,!**/*.avi,!**/*.flv,!**/*.mov,!**/*.mp4,!**/*.mpg,!**/*.rm,!**/*.swf,!**/*.vob,!**/*.wmv,!**/*.bmp,!**/*.gif,!**/*.jpg,!**/*.png,!**/*.psd,!**/*.tif,!**/*.swf,!**/*.jar,!**/*.zip,!**/*.rar,!**/*.exe,!**/*.dll,!**/*.pdb,!**/*.7z,!**/*.gz,!**/*.tar.gz,!**/*.tar,!**/*.gz,!**/*.ahtm,!**/*.ahtml,!**/*.fhtml,!**/*.hdm,!**/*.hdml,!**/*.hsql,!**/*.ht,!**/*.hta,!**/*.htc,!**/*.htd,!**/*.war,!**/*.ear,!**/*.htmls,!**/*.ihtml,!**/*.mht,!**/*.mhtm,!**/*.mhtml,!**/*.ssi,!**/*.stm,!**/*.stml,!**/*.ttml,!**/*.txn,!**/*.xhtm,!**/*.xhtml,!**/*.class,!**/*.iml
+          repo_name: ${{ github.event.repository.name }}
+          #namespace: # optional, default is ${{ github.repository_owner }}
+          #pr_number: # optional, default is ${{ github.event.number }}
