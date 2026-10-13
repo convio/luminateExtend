@@ -1,6 +1,6 @@
 /*
  * luminateExtend.js
- * Version: 1.9.0 (07-AUG-2021)
+ * Version: 1.9.1 (07-AUG-2021)
  * Requires: jQuery v1.5.1+ or Zepto v1.1+
  * Includes: SimpleDateFormatJS v1.4 (https://github.com/noahcooper/SimpleDateFormatJS)
  */
@@ -146,7 +146,7 @@
   
   /* library info */
   luminateExtend.library = {
-    version: '1.9.0'
+    version: '1.9.1'
   };
   
   /* global settings */
@@ -271,7 +271,7 @@
   luminateExtend.api.getAuth = function(options) {
     var settings = $.extend({
       useCache: true, 
-      useHTTPS: false
+      useHTTPS: true
     }, options || {});
     
     /* don't try to get an auth token if there's already a request outstanding */

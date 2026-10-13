@@ -1,13 +1,13 @@
 luminateExtend.js
 =================
 
-Version: 1.9.0 (07-AUG-2021)
+Version: 1.9.1 (07-AUG-2021)
 Requires: jQuery v1.5.1+ or Zepto v1.1+
 
 luminateExtend.js is a JavaScript library for use with 
 [Luminate Online](https://www.blackbaud.com/online-marketing/luminate-online), a product of Blackbaud. 
 Built on top of jQuery, it provides a JavaScript wrapper around the 
-[Luminate Online REST API](http://open.convio.com/api), with some helper functions and other magic 
+[Luminate Online REST API](https://open.convio.com/api), with some helper functions and other magic 
 sprinkled in. The library includes support for [all major browsers](#libBrowsers), and can be used both 
 within and outside of Luminate Online.
 
@@ -82,19 +82,19 @@ jQuery is included. (Change out the file path as needed, depending on where you 
 <script src="../js/luminateExtend.min.js"></script>
 ```
 
-If you prefer to use a CDN, luminateExtend.js is available via [cdnjs](http://cdnjs.com/libraries/luminateExtend).
+If you prefer to use a CDN, luminateExtend.js is available via [cdnjs](https://cdnjs.com/libraries/luminateExtend).
 
 ```  html
 <script src="//code.jquery.com/jquery-1.12.4.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/luminateExtend/1.9.0/luminateExtend.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/luminateExtend/1.9.1/luminateExtend.min.js"></script>
 ```
 
-As of v1.6, luminateExtend.js can be used with [Zepto](http://zeptojs.com) in lieu of jQuery if you so choose. 
+As of v1.6, luminateExtend.js can be used with [Zepto](https://zeptojs.com) in lieu of jQuery if you so choose. 
 (Note: You must use Zepto 1.1 or higher -- Zepto 1.0 did not support cross-domain requests with cookies.)
 
 ```  html
 <script src="//cdnjs.cloudflare.com/ajax/libs/zepto/1.2.0/zepto.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/luminateExtend/1.9.0/luminateExtend.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/luminateExtend/1.9.1/luminateExtend.min.js"></script>
 ```
 
 <a name="luminateExtendObj"></a>
@@ -111,7 +111,7 @@ luminateExtend.library
 `luminateExtend.library` contains information about the library.
 
 ```  js
-console.log(luminateExtend.library.version); // logs a value like "1.9.0"
+console.log(luminateExtend.library.version); // logs a value like "1.9.1"
 ```
 
 The library object contains the following:
@@ -131,7 +131,7 @@ called once per page, e.g. immediately below where the library is included in th
 luminateExtend.init({
   apiKey: '123456789', 
   path: {
-    nonsecure: 'http://www.myorganization.com/site/', 
+    nonsecure: 'https://www.myorganization.com/site/', 
     secure: 'https://secure2.convio.net/myorg/site/'
   }
 });
@@ -143,7 +143,7 @@ luminateExtend is itself an alias for the init method when called directly.
 luminateExtend({
   apiKey: '123456789', 
   path: {
-    nonsecure: 'http://www.myorganization.com/site/', 
+    nonsecure: 'https://www.myorganization.com/site/', 
     secure: 'https://secure2.convio.net/myorg/site/'
   }
 });
@@ -153,7 +153,7 @@ The init method accepts an object containing the following:
 
 `apiCommon`
 
-An object containing the [common parameters](http://open.convio.com/api/#main.common_parameters.html) 
+An object containing the [common parameters](https://open.convio.com/api/#main.common_parameters.html) 
 to use with all API requests, including **categoryId**, **centerId**, **source**, and **subSource**.
 
 `apiKey`
@@ -163,7 +163,7 @@ Online, this can be defined dynamically using "[[S0:CONVIO_API_KEY]]".
 
 `auth`
 
-An object containing [authentication](http://open.convio.com/api/#main.auth_token.html) information for 
+An object containing [authentication](https://open.convio.com/api/#main.auth_token.html) information for 
 the current user. This object contains **token**, the authentication token string, and **type**, either 
 "auth" or "sso_auth_token", depending on how the token was obtained. If you don't have an authentication 
 token for the user, not a problem &mdash; [luminateExtend.api](#apiObj) will automatically obtain a token 
@@ -180,8 +180,8 @@ is immediately set, it is included in each API request, and the the default loca
 `path`
 
 An object containing the URL path to your organization's Luminate Online website. **nonsecure** is the path 
-for requests made over HTTP, e.g. "http://www.myorganization.com/site/". **secure** is the path for 
-requests made over HTTPS, e.g. "https://secure2.convio.net/myorg/site/".
+used when requests are not forced over HTTPS, e.g. "https://www.myorganization.com/site/". **secure** is the 
+path for requests made over HTTPS, e.g. "https://secure2.convio.net/myorg/site/".
 
 <a name="globalObj"></a>
 luminateExtend.global
@@ -261,7 +261,7 @@ luminateExtend.api({
 });
 ```
 
-The API supports the [Cross-Origin Resource Sharing (CORS)](http://www.w3.org/TR/cors/) spec. With CORS, 
+The API supports the [Cross-Origin Resource Sharing (CORS)](https://www.w3.org/TR/cors/) spec. With CORS, 
 modern browsers including Firefox 3.5+, Chrome 2+, Safari 4+, Opera 12+, and IE10+ allow for natively 
 making cross-domain XMLHttpRequests thanks to the Access-Control-Allow-Origin HTTP response header. The 
 request method uses XHR in these browsers, and as of v1.3, sets the withCredentials property to true to 
@@ -309,7 +309,7 @@ response.
 **contentType:** The Content-Type for the request, either "application/x-www-form-urlencoded", the 
 default, or "multipart/form-data". Note that due to browser limitations, it is not currently possible to 
 use the library with API methods which involve a file upload, e.g. the TeamRaiser 
-[uploadPersonalPhoto](http://open.convio.com/api/#teamraiser_api.uploadPersonalPhoto_method.html) method.
+[uploadPersonalPhoto](https://open.convio.com/api/#teamraiser_api.uploadPersonalPhoto_method.html) method.
 
 **data:** The data string to be sent with the request. The api_key, response_format, 
 suppress_response_codes, and v parameters are automatically appended to this string, along with any 
@@ -390,7 +390,7 @@ Here is an example of a fully functional login form, which will call the globall
 after login:
 
 ``` html
-<form method="POST" action="http://www.myorganization.com/site/CRConsAPI" class="luminateApi" 
+<form method="POST" action="https://www.myorganization.com/site/CRConsAPI" class="luminateApi" 
 data-luminateApi='{"callback": "loginCallback"}'>
   <input type="hidden" name="method" value="login" />
   <p><label for="login_username">Username:</label><br />
@@ -436,7 +436,7 @@ The parse method accepts two arguments:
 an array for multiple types. The string "all" can be used to evaluate all luminate tags. Currently the only 
 supported tag type is "cons". If no value is provided, the default is "all".
 
-luminate:cons tags are evaluated using the [getUser](http://open.convio.com/api/#constituent_api) API 
+luminate:cons tags are evaluated using the [getUser](https://open.convio.com/api/#constituent_api) API 
 method. The field attribute is used to indicate which constituent field should be rendered.
 
 ``` html
@@ -486,7 +486,7 @@ The utils object contains the following:
 When the API returns a list of objects, the response format varies depending on the length of the list. 
 If there is more than one of an object, an array is used, while if there is exactly one of an object, an 
 array is *not* used. For example, when using the TeamRaiser 
-[getTeamraisersByDistance](http://open.convio.com/api/#teamraiser_api.getTeamraisersByDistance_method.html) 
+[getTeamraisersByDistance](https://open.convio.com/api/#teamraiser_api.getTeamraisersByDistance_method.html) 
 method, the response for two events might look like this:
 
 ``` js
@@ -523,7 +523,7 @@ However, if event 12001 were later unpublished, the response would become:
 ```
 
 The ensureArray method is used to guarantee that a given object is an array, regardless of length. This 
-is necessary when iterating over a list, i.e. using [$.each()](http://api.jquery.com/jQuery.each/). The 
+is necessary when iterating over a list, i.e. using [$.each()](https://api.jquery.com/jQuery.each/). The 
 method accepts one argument, an object which may or may not be an array.
 
 ``` js
@@ -600,7 +600,7 @@ Reporting issues
 Should you encounter any issues when using this library, please report them here, using the 
 ["Issues"](https://github.com/convio/luminateExtend/issues) tab above. If you have general 
 questions about the library, or about the API in general, the fastest way to get answers is to use 
-the [Open APIs](http://community.convio.com/t5/Open-APIs/ct-p/OpenAPIs) section on 
-http://community.convio.com.
+the [Open APIs](https://community.convio.com/t5/Open-APIs/ct-p/OpenAPIs) section on 
+https://community.convio.com.
 
 Enjoy!
