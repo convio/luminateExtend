@@ -1,6 +1,6 @@
 /*
  * luminateExtend.js
- * Version: 1.9.1 (07-AUG-2021)
+ * Version: 1.9.1 (15-OCT-2026)
  * Requires: jQuery v1.5.1+ or Zepto v1.1+
  * Includes: SimpleDateFormatJS v1.4 (https://github.com/noahcooper/SimpleDateFormatJS)
  */
@@ -427,7 +427,7 @@
       }
       
       var requestUrl = 'http://', 
-      requestPath = luminateExtend.global.path.nonsecure.split('http://')[1];
+      requestPath = luminateExtend.global.path.nonsecure.replace(/^https?:\/\//, '');
       if(settings.api === 'CRDonationAPI' || settings.api === 'CRTeamraiserAPI' || 
          (settings.api !== 'CRConnectAPI' && ((window.location.protocol === 'https:' && 
           settings.useHTTPS == null) || settings.useHTTPS == true))) {
@@ -438,7 +438,7 @@
       }
       if(settings.useHTTPS) {
         requestUrl = 'https://', 
-        requestPath = luminateExtend.global.path.secure.split('https://')[1];
+        requestPath = luminateExtend.global.path.secure.replace(/^https?:\/\//, '');
       }
       requestUrl += requestPath + settings.api;
       

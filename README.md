@@ -1,7 +1,7 @@
 luminateExtend.js
 =================
 
-Version: 1.9.1 (07-AUG-2021)
+Version: 1.9.1 (15-OCT-2026)
 Requires: jQuery v1.5.1+ or Zepto v1.1+
 
 luminateExtend.js is a JavaScript library for use with 
@@ -360,7 +360,8 @@ method, the callback is passed no data.
 **useCache:** A boolean indicating whether or not to use the existing authentication token if one is 
 available. The default is true.
 
-**useHTTPS:** A boolean indicating whether or not to use HTTPS when making the request.
+**useHTTPS:** A boolean indicating whether or not to use HTTPS when making the request. The default is 
+true.
 
 `bind`
 
