@@ -1,7 +1,7 @@
 luminateExtend.js - Foundation Examples
 =======================================
 
-These examples show how luminateExtend.js can be used to build a website with [Foundation 4](http://foundation.zurb.com/docs/v/4.3.2/).
+These examples show how luminateExtend.js can be used to build a website with [Foundation 4](https://get.foundation/).
 
 Getting started with the example website
 ----------------------------------------
@@ -18,7 +18,7 @@ Once you've completed setup, download the HTML and JavaScript files found here t
 luminateExtend({
   apiKey: '123456789', 
   path: {
-    nonsecure: 'http://shortname.convio.net/site/', 
+    nonsecure: 'https://shortname.convio.net/site/', 
     secure: 'https://secure2.convio.net/shortname/site/'
   }
 });
@@ -34,7 +34,7 @@ At the top right of each page on the example site, users are either presented wi
 You'll need to edit the login form within each HTML file to change the login form's action to use your organization's domain:
 
 ```html
-<form class="luminateApi hide" id="login-form" method="POST" action="http://shortname.convio.net/site/CRConsAPI" data-luminateApi='{"callback": "loginCallback"}'>
+<form class="luminateApi hide" id="login-form" method="POST" action="https://shortname.convio.net/site/CRConsAPI" data-luminateApi='{"callback": "loginCallback"}'>
   <input type="hidden" name="method" value="login">
   <div class="row collapse">
     <div class="small-5 columns">
@@ -50,7 +50,7 @@ You'll need to edit the login form within each HTML file to change the login for
 </form>
 ```
 
-On each page load, the [loginTest](http://open.convio.com/api/#single_sign_on_api.loginTest_method.html) API method is used to check if the user is currently logged in. If this API method does not return an error, then the user is logged in.
+On each page load, the [loginTest](https://developer.blackbaud.com/lo-api/) API method is used to check if the user is currently logged in. If this API method does not return an error, then the user is logged in.
 
 ```js
 /* example: check if the user is logged in onload */
@@ -122,7 +122,7 @@ window.loginCallback = {
 Donation form
 -------------
 
-[donate.html](https://raw.github.com/convio/luminateExtend/master/examples/foundation/donate.html) contains a minimalistic donation form which uses the [donate](http://open.convio.com/api/#donation_api.donate_method.html) API method to process gifts. In this example, the form's donation levels and fields are hardcoded in the page's HTML. A more robust version of this form would use the [getDonationFormInfo](http://open.convio.com/api/#donation_api.getDonationFormInfo_method.html) API method to dynamically build these fields onload.
+[donate.html](https://raw.github.com/convio/luminateExtend/master/examples/foundation/donate.html) contains a minimalistic donation form which uses the [donate](https://developer.blackbaud.com/lo-api/) API method to process gifts. In this example, the form's donation levels and fields are hardcoded in the page's HTML. A more robust version of this form would use the [getDonationFormInfo](https://developer.blackbaud.com/lo-api/) API method to dynamically build these fields onload.
 
 To use the donation form, you'll first need to edit the donation form's action to use your organization's domain:
 
@@ -219,12 +219,12 @@ window.donateCallback = {
 Newsletter sign-up form
 -----------------------
 
-[sign-up.html](https://raw.github.com/convio/luminateExtend/master/examples/foundation/sign-up.html) is a typical newsletter sign-up form which collects users' names and email addresses using a Luminate Online Survey and the [submitSurvey](http://open.convio.com/api/#survey_api.submitSurvey_method.html) API method.
+[sign-up.html](https://raw.github.com/convio/luminateExtend/master/examples/foundation/sign-up.html) is a typical newsletter sign-up form which collects users' names and email addresses using a Luminate Online Survey and the [submitSurvey](https://developer.blackbaud.com/lo-api/) API method.
 
 To use the sign-up form, you'll first need to edit the form's action to use your organization's domain:
 
 ```html
-<form class="luminateApi survey-form" method="POST" action="http://shortname.convio.net/site/CRSurveyAPI" data-luminateApi='{"callback": "submitSurveyCallback", "requiresAuth": "true"}'>
+<form class="luminateApi survey-form" method="POST" action="https://shortname.convio.net/site/CRSurveyAPI" data-luminateApi='{"callback": "submitSurveyCallback", "requiresAuth": "true"}'>
 ```
 
 You'll also need to edit the Survey ID to use the appropriate Survey from your organization's site:
@@ -295,9 +295,9 @@ window.submitSurveyCallback = {
 Action alert list
 -----------------
 
-[action-center.html](https://raw.github.com/convio/luminateExtend/master/examples/foundation/action-center.html) is a page that allows users to see a list of active action alerts for your organization, with a link to the alert and a counter showing how many people have taken action to-date. This example could be further extended to allow for the alerts to be taken via API as well using the [takeAction](http://open.convio.com/api/#advocacy_api.takeAction_method.html) method.
+[action-center.html](https://raw.github.com/convio/luminateExtend/master/examples/foundation/action-center.html) is a page that allows users to see a list of active action alerts for your organization, with a link to the alert and a counter showing how many people have taken action to-date. This example could be further extended to allow for the alerts to be taken via API as well using the [takeAction](https://developer.blackbaud.com/lo-api/) method.
 
-The getAdvocacyAlerts function builds the list of alerts using the [getAdvocacyAlerts](http://open.convio.com/api/#advocacy_api.getAdvocacyAlerts_method.html) API method.
+The getAdvocacyAlerts function builds the list of alerts using the [getAdvocacyAlerts](https://developer.blackbaud.com/lo-api/) API method.
 
 ```js
 /* example: display a list of action alerts for the organization in the specified container */
@@ -336,7 +336,7 @@ $(function() {
 TeamRaiser ZIP Code radius search
 ---------------------------------
 
-[walk-for-health.html](https://raw.github.com/convio/luminateExtend/master/examples/foundation/walk-for-health.html) lets users search for TeamRaiser events in their local area using the [getTeamraisersByDistance](http://open.convio.com/api/#teamraiser_api.getTeamraisersByDistance_method.html) API method. Each event in the search results includes basic information such as the event name and date, as well as links to form or join a team.
+[walk-for-health.html](https://raw.github.com/convio/luminateExtend/master/examples/foundation/walk-for-health.html) lets users search for TeamRaiser events in their local area using the [getTeamraisersByDistance](https://developer.blackbaud.com/lo-api/) API method. Each event in the search results includes basic information such as the event name and date, as well as links to form or join a team.
 
 To use the event search form, you'll need to edit the form's action to use your organization's domain:
 

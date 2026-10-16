@@ -1,7 +1,7 @@
 luminateExtend.js - Tests
 =========================
 
-Test suites built using [QUnit](http://qunitjs.com/).
+Test suites built using [QUnit](https://qunitjs.com/).
 
 Running the tests
 -----------------
@@ -17,7 +17,7 @@ At the very top of [setup.js](https://raw.github.com/convio/luminateExtend/maste
 luminateExtend({
   apiKey: '123456789', 
   path: {
-    nonsecure: 'http://shortname.convio.net/site/', 
+    nonsecure: 'https://shortname.convio.net/site/', 
     secure: 'https://secure2.convio.net/shortname/site/'
   }
 });

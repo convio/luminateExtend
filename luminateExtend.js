@@ -1,6 +1,6 @@
 /*
  * luminateExtend.js
- * Version: 1.9.0 (07-AUG-2021)
+ * Version: 1.9.1 (15-OCT-2026)
  * Requires: jQuery v1.5.1+ or Zepto v1.1+
  * Includes: SimpleDateFormatJS v1.4 (https://github.com/noahcooper/SimpleDateFormatJS)
  */
@@ -146,7 +146,7 @@
   
   /* library info */
   luminateExtend.library = {
-    version: '1.9.0'
+    version: '1.9.1'
   };
   
   /* global settings */
@@ -236,7 +236,7 @@
             requestData = (formActionQuery.length > 1) ? formActionQuery[1] : '', 
             requestForm = '#' + $(this).attr('id'), 
             requestRequiresAuth = false, 
-            requestUseHTTPS = false;
+            requestUseHTTPS = formAction.indexOf('http:') !== 0;
             
             if(formApiData) {
               if(formApiData.callback) {
@@ -244,10 +244,6 @@
               }
               if(formApiData.requiresAuth && formApiData.requiresAuth === 'true') {
                 requestRequiresAuth = true;
-              }
-              if(formAction.indexOf('https:') === 0 || 
-                 (window.location.protocol === 'https:' && formAction.indexOf('http') === -1)) {
-                requestUseHTTPS = true;
               }
             }
             
@@ -271,7 +267,7 @@
   luminateExtend.api.getAuth = function(options) {
     var settings = $.extend({
       useCache: true, 
-      useHTTPS: false
+      useHTTPS: true
     }, options || {});
     
     /* don't try to get an auth token if there's already a request outstanding */
@@ -426,21 +422,17 @@
         settings.data += '&v=1.0';
       }
       
-      var requestUrl = 'http://', 
-      requestPath = luminateExtend.global.path.nonsecure.split('http://')[1];
-      if(settings.api === 'CRDonationAPI' || settings.api === 'CRTeamraiserAPI' || 
-         (settings.api !== 'CRConnectAPI' && ((window.location.protocol === 'https:' && 
-          settings.useHTTPS == null) || settings.useHTTPS == true))) {
+      /* HTTPS is used unless useHTTPS is explicitly false; CRDonationAPI and CRTeamraiserAPI always use HTTPS */
+      if(settings.api === 'CRDonationAPI' || settings.api === 'CRTeamraiserAPI' || settings.useHTTPS !== false) {
         settings.useHTTPS = true;
       }
       else {
         settings.useHTTPS = false;
       }
-      if(settings.useHTTPS) {
-        requestUrl = 'https://', 
-        requestPath = luminateExtend.global.path.secure.split('https://')[1];
-      }
-      requestUrl += requestPath + settings.api;
+      /* keep the scheme of the configured path so the API, auth and bridge URLs and the postMessage origin agree */
+      var requestBase = settings.useHTTPS ? luminateExtend.global.path.secure : luminateExtend.global.path.nonsecure, 
+      requestPath = requestBase.replace(/^https?:\/\//, ''), 
+      requestUrl = requestBase + settings.api;
       
       var isLuminateOnlineAndSameProtocol = false, 
       useAjax = false, 
@@ -739,17 +731,12 @@
         }
       });
       
-      $('#' + pingImgId).attr('src', ((window.location.protocol === 'https:') ? 
-                                      luminateExtend.global.path.secure : 
-                                      luminateExtend.global.path.nonsecure) + 
+      $('#' + pingImgId).attr('src', luminateExtend.global.path.secure + 
                                      'EstablishSession' + 
                                      (luminateExtend.global.routingId && luminateExtend.global.routingId !== '' ? (';' + luminateExtend.global.routingId) : '') + 
                                      '?' + (settings.data == null ? '' : (settings.data + '&')) + 
                                      'NEXTURL=' + 
-                                     encodeURIComponent(((window.location.protocol === 'https:') ? 
-                                                         luminateExtend.global.path.secure : 
-                                                         luminateExtend.global.path.nonsecure) + 
-                                                        'PixelServer'));
+                                     encodeURIComponent(luminateExtend.global.path.secure + 'PixelServer'));
     }, 
     
     simpleDateFormat: function(unformattedDate, pattern, locale) {
