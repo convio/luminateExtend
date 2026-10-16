@@ -235,15 +235,18 @@ test('luminateExtend.api.request() can make multiple requests synchronously', fu
 });
 var getRequestUrl = function(requestOptions) {
   var originalAjax = $.ajax, 
+  originalSupportsCORS = luminateExtend.global.supportsCORS, 
   requestUrl;
   $.ajax = function(ajaxOptions) {
     requestUrl = ajaxOptions.url;
   };
+  luminateExtend.global.supportsCORS = true;
   try {
     luminateExtend.api.request(requestOptions);
   }
   finally {
     $.ajax = originalAjax;
+    luminateExtend.global.supportsCORS = originalSupportsCORS;
   }
   return requestUrl;
 };
@@ -267,7 +270,7 @@ test('luminateExtend.api.request() uses the nonsecure path when useHTTPS is fals
     api: 'cons', 
     data: 'method=listUserFields', 
     useHTTPS: false
-  }).indexOf(luminateExtend.global.path.nonsecure.replace(/^https?:\/\//, 'http://') + 'CRConsAPI') === 0);
+  }).indexOf(luminateExtend.global.path.nonsecure + 'CRConsAPI') === 0);
 });
 
 test('luminateExtend.api.request() always uses HTTPS for CRDonationAPI', function() {

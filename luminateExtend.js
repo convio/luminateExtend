@@ -429,13 +429,10 @@
       else {
         settings.useHTTPS = false;
       }
-      var requestUrl = 'http://', 
-      requestPath = luminateExtend.global.path.nonsecure.replace(/^https?:\/\//, '');
-      if(settings.useHTTPS) {
-        requestUrl = 'https://', 
-        requestPath = luminateExtend.global.path.secure.replace(/^https?:\/\//, '');
-      }
-      requestUrl += requestPath + settings.api;
+      /* keep the scheme of the configured path so the API, auth and bridge URLs and the postMessage origin agree */
+      var requestBase = settings.useHTTPS ? luminateExtend.global.path.secure : luminateExtend.global.path.nonsecure, 
+      requestPath = requestBase.replace(/^https?:\/\//, ''), 
+      requestUrl = requestBase + settings.api;
       
       var isLuminateOnlineAndSameProtocol = false, 
       useAjax = false, 
