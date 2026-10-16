@@ -233,3 +233,47 @@ test('luminateExtend.api.request() can make multiple requests synchronously', fu
     }
   }]);
 });
+var getRequestUrl = function(requestOptions) {
+  var originalAjax = $.ajax, 
+  requestUrl;
+  $.ajax = function(ajaxOptions) {
+    requestUrl = ajaxOptions.url;
+  };
+  try {
+    luminateExtend.api.request(requestOptions);
+  }
+  finally {
+    $.ajax = originalAjax;
+  }
+  return requestUrl;
+};
+
+test('luminateExtend.api.request() uses HTTPS by default', function() {
+  ok(getRequestUrl({
+    api: 'cons', 
+    data: 'method=listUserFields'
+  }).indexOf(luminateExtend.global.path.secure + 'CRConsAPI') === 0);
+});
+
+test('luminateExtend.api.request() uses HTTPS by default for CRConnectAPI', function() {
+  ok(getRequestUrl({
+    api: 'connect', 
+    data: 'method=getContacts'
+  }).indexOf('https://') === 0);
+});
+
+test('luminateExtend.api.request() uses the nonsecure path when useHTTPS is false', function() {
+  ok(getRequestUrl({
+    api: 'cons', 
+    data: 'method=listUserFields', 
+    useHTTPS: false
+  }).indexOf(luminateExtend.global.path.nonsecure.replace(/^https?:\/\//, 'http://') + 'CRConsAPI') === 0);
+});
+
+test('luminateExtend.api.request() always uses HTTPS for CRDonationAPI', function() {
+  ok(getRequestUrl({
+    api: 'donation', 
+    data: 'method=getDonationFormInfo&form_id=1', 
+    useHTTPS: false
+  }).indexOf(luminateExtend.global.path.secure + 'CRDonationAPI') === 0);
+});

@@ -5,7 +5,7 @@ test('luminateExtend is defined once library is included', function() {
 luminateExtend({
   apiKey: '123456789', 
   path: {
-    nonsecure: 'http://shortname.convio.net/site/', 
+    nonsecure: 'https://shortname.convio.net/site/', 
     secure: 'https://secure2.convio.net/shortname/site/'
   }, 
   custom: {
@@ -18,7 +18,7 @@ test('luminateExtend.global.apiKey is correct following init', function() {
 });
 
 test('luminateExtend.global.path.nonsecure is correct following init', function() {
-  ok(luminateExtend.global.path.nonsecure === 'http://shortname.convio.net/site/');
+  ok(luminateExtend.global.path.nonsecure === 'https://shortname.convio.net/site/');
 });
 
 test('luminateExtend.global.path.secure is correct following init', function() {
