@@ -236,7 +236,12 @@
             requestData = (formActionQuery.length > 1) ? formActionQuery[1] : '', 
             requestForm = '#' + $(this).attr('id'), 
             requestRequiresAuth = false, 
-            requestUseHTTPS = formAction.indexOf('http:') !== 0;
+            requestUseHTTPS = true;
+            
+            if(formAction.indexOf('http:') === 0 || 
+               (window.location.protocol === 'http:' && formAction.indexOf('https') === -1)) {
+              requestUseHTTPS = false;
+            }
             
             if(formApiData) {
               if(formApiData.callback) {

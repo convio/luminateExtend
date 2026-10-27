@@ -1,7 +1,7 @@
 luminateExtend.js - Foundation Examples
 =======================================
 
-These examples show how luminateExtend.js can be used to build a website with [Foundation 4](https://get.foundation/).
+These examples show how luminateExtend.js can be used to build a website with [Foundation 4](https://get.foundation/sites/docs/v/4.3.2/index.html).
 
 Getting started with the example website
 ----------------------------------------
@@ -50,7 +50,7 @@ You'll need to edit the login form within each HTML file to change the login for
 </form>
 ```
 
-On each page load, the [loginTest](https://developer.blackbaud.com/lo-api/) API method is used to check if the user is currently logged in. If this API method does not return an error, then the user is logged in.
+On each page load, the [loginTest](https://developer.blackbaud.com/lo-api/loapi/single-sign-on/loginTest) API method is used to check if the user is currently logged in. If this API method does not return an error, then the user is logged in.
 
 ```js
 /* example: check if the user is logged in onload */
@@ -122,7 +122,7 @@ window.loginCallback = {
 Donation form
 -------------
 
-[donate.html](https://raw.github.com/convio/luminateExtend/master/examples/foundation/donate.html) contains a minimalistic donation form which uses the [donate](https://developer.blackbaud.com/lo-api/) API method to process gifts. In this example, the form's donation levels and fields are hardcoded in the page's HTML. A more robust version of this form would use the [getDonationFormInfo](https://developer.blackbaud.com/lo-api/) API method to dynamically build these fields onload.
+[donate.html](https://raw.github.com/convio/luminateExtend/master/examples/foundation/donate.html) contains a minimalistic donation form which uses the [donate](https://developer.blackbaud.com/lo-api/loapi/donations/donate) API method to process gifts. In this example, the form's donation levels and fields are hardcoded in the page's HTML. A more robust version of this form would use the [getDonationFormInfo](https://developer.blackbaud.com/lo-api/loapi/donations/getDonationFormInfo) API method to dynamically build these fields onload.
 
 To use the donation form, you'll first need to edit the donation form's action to use your organization's domain:
 
@@ -219,7 +219,7 @@ window.donateCallback = {
 Newsletter sign-up form
 -----------------------
 
-[sign-up.html](https://raw.github.com/convio/luminateExtend/master/examples/foundation/sign-up.html) is a typical newsletter sign-up form which collects users' names and email addresses using a Luminate Online Survey and the [submitSurvey](https://developer.blackbaud.com/lo-api/) API method.
+[sign-up.html](https://raw.github.com/convio/luminateExtend/master/examples/foundation/sign-up.html) is a typical newsletter sign-up form which collects users' names and email addresses using a Luminate Online Survey and the [submitSurvey](https://developer.blackbaud.com/lo-api/loapi/surveys/submitSurvey) API method.
 
 To use the sign-up form, you'll first need to edit the form's action to use your organization's domain:
 
@@ -295,9 +295,9 @@ window.submitSurveyCallback = {
 Action alert list
 -----------------
 
-[action-center.html](https://raw.github.com/convio/luminateExtend/master/examples/foundation/action-center.html) is a page that allows users to see a list of active action alerts for your organization, with a link to the alert and a counter showing how many people have taken action to-date. This example could be further extended to allow for the alerts to be taken via API as well using the [takeAction](https://developer.blackbaud.com/lo-api/) method.
+[action-center.html](https://raw.github.com/convio/luminateExtend/master/examples/foundation/action-center.html) is a page that allows users to see a list of active action alerts for your organization, with a link to the alert and a counter showing how many people have taken action to-date. This example could be further extended to allow for the alerts to be taken via API as well using the [takeAction](https://developer.blackbaud.com/lo-api/loapi/advocacy/takeAction) method.
 
-The getAdvocacyAlerts function builds the list of alerts using the [getAdvocacyAlerts](https://developer.blackbaud.com/lo-api/) API method.
+The getAdvocacyAlerts function builds the list of alerts using the [getAdvocacyAlerts](https://developer.blackbaud.com/lo-api/loapi/advocacy/getAdvocacyAlerts) API method.
 
 ```js
 /* example: display a list of action alerts for the organization in the specified container */
@@ -336,7 +336,7 @@ $(function() {
 TeamRaiser ZIP Code radius search
 ---------------------------------
 
-[walk-for-health.html](https://raw.github.com/convio/luminateExtend/master/examples/foundation/walk-for-health.html) lets users search for TeamRaiser events in their local area using the [getTeamraisersByDistance](https://developer.blackbaud.com/lo-api/) API method. Each event in the search results includes basic information such as the event name and date, as well as links to form or join a team.
+[walk-for-health.html](https://raw.github.com/convio/luminateExtend/master/examples/foundation/walk-for-health.html) lets users search for TeamRaiser events in their local area using the [getTeamraisersByDistance](https://developer.blackbaud.com/lo-api/loapi/teamraiser/getTeamraisersByDistance) API method. Each event in the search results includes basic information such as the event name and date, as well as links to form or join a team.
 
 To use the event search form, you'll need to edit the form's action to use your organization's domain:
 

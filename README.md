@@ -153,7 +153,7 @@ The init method accepts an object containing the following:
 
 `apiCommon`
 
-An object containing the [common parameters](https://developer.blackbaud.com/lo-api/) 
+An object containing the [common parameters](https://developer.blackbaud.com/lo-api/loapi/getting-started/reference/parameters#parameters-for-client--server-apis) 
 to use with all API requests, including **categoryId**, **centerId**, **source**, and **subSource**.
 
 `apiKey`
@@ -163,7 +163,7 @@ Online, this can be defined dynamically using "[[S0:CONVIO_API_KEY]]".
 
 `auth`
 
-An object containing [authentication](https://developer.blackbaud.com/lo-api/) information for 
+An object containing [authentication](https://developer.blackbaud.com/lo-api/loapi/getting-started/reference/authentication) information for 
 the current user. This object contains **token**, the authentication token string, and **type**, either 
 "auth" or "sso_auth_token", depending on how the token was obtained. If you don't have an authentication 
 token for the user, not a problem &mdash; [luminateExtend.api](#apiObj) will automatically obtain a token 
@@ -180,7 +180,7 @@ is immediately set, it is included in each API request, and the the default loca
 `path`
 
 An object containing the URL path to your organization's Luminate Online website. **nonsecure** is the path 
-for requests made with useHTTPS set to false, e.g. "https://www.myorganization.com/site/". **secure** is the path for 
+for requests made over HTTP, e.g. "http://www.myorganization.com/site/". **secure** is the path for 
 requests made over HTTPS, e.g. "https://secure2.convio.net/myorg/site/".
 
 <a name="globalObj"></a>
@@ -309,7 +309,7 @@ response.
 **contentType:** The Content-Type for the request, either "application/x-www-form-urlencoded", the 
 default, or "multipart/form-data". Note that due to browser limitations, it is not currently possible to 
 use the library with API methods which involve a file upload, e.g. the TeamRaiser 
-[uploadPersonalPhoto](https://developer.blackbaud.com/lo-api/) method.
+[uploadPersonalPhoto](https://developer.blackbaud.com/lo-api/loapi/teamraiser/uploadPersonalPhoto) method.
 
 **data:** The data string to be sent with the request. The api_key, response_format, 
 suppress_response_codes, and v parameters are automatically appended to this string, along with any 
@@ -339,8 +339,9 @@ luminateExtend.api.request({
 
 **useHTTPS:** A boolean indicating whether or not to use HTTPS when making the request. Some API servlets 
 (namely CRDonationAPI and CRTeamraiserAPI) must always be called over a secure channel, in which case 
-this setting is ignored. Otherwise, the default is true. As of v1.9.1, requests use HTTPS unless useHTTPS 
-is explicitly set to false.
+this setting is ignored. Otherwise, the default is true as of v1.9.1, except for form actions that are 
+explicitly set to HTTP or on pages served over HTTP where the form action does not provide a protocol, in 
+which case it still will default to false.
 
 `getAuth`
 
@@ -381,7 +382,8 @@ When the request method is called ...
  * The value for `contentType` is set to the value of the enctype attribute if defined.
  * Any query strings included in the form action are passed as `data`.
  * The form's ID is passed as the value for `form`, and if the form has no ID, one is added.
- * The value for `useHTTPS` is true unless the form action is an absolute URL using the http: protocol.
+ * The value for `useHTTPS` is true unless the form action is an absolute URL using the http: protocol, or 
+ the form action does not provide a protocol and the requesting page is served over HTTP.
  * The values for `callback` and `requiresAuth` are set using an HTML5 data- attribute, data-luminateApi. 
  This attribute should be an object. Note that as the callback is provided as a string, it must be 
  defined in the global scope.
@@ -486,7 +488,7 @@ The utils object contains the following:
 When the API returns a list of objects, the response format varies depending on the length of the list. 
 If there is more than one of an object, an array is used, while if there is exactly one of an object, an 
 array is *not* used. For example, when using the TeamRaiser 
-[getTeamraisersByDistance](https://developer.blackbaud.com/lo-api/) 
+[getTeamraisersByDistance](https://developer.blackbaud.com/lo-api/loapi/teamraiser/getTeamraisersByDistance) 
 method, the response for two events might look like this:
 
 ``` js
