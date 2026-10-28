@@ -131,7 +131,7 @@ called once per page, e.g. immediately below where the library is included in th
 luminateExtend.init({
   apiKey: '123456789', 
   path: {
-    nonsecure: 'https://www.myorganization.com/site/', 
+    nonsecure: 'http://www.myorganization.com/site/', 
     secure: 'https://secure2.convio.net/myorg/site/'
   }
 });
@@ -143,7 +143,7 @@ luminateExtend is itself an alias for the init method when called directly.
 luminateExtend({
   apiKey: '123456789', 
   path: {
-    nonsecure: 'https://www.myorganization.com/site/', 
+    nonsecure: 'http://www.myorganization.com/site/', 
     secure: 'https://secure2.convio.net/myorg/site/'
   }
 });
@@ -392,7 +392,7 @@ Here is an example of a fully functional login form, which will call the globall
 after login:
 
 ``` html
-<form method="POST" action="https://www.myorganization.com/site/CRConsAPI" class="luminateApi" 
+<form method="POST" action="https://secure2.convio.net/myorg/site/CRConsAPI" class="luminateApi" 
 data-luminateApi='{"callback": "loginCallback"}'>
   <input type="hidden" name="method" value="login" />
   <p><label for="login_username">Username:</label><br />

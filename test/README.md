@@ -17,7 +17,7 @@ At the very top of [setup.js](https://raw.github.com/convio/luminateExtend/maste
 luminateExtend({
   apiKey: '123456789', 
   path: {
-    nonsecure: 'https://shortname.convio.net/site/', 
+    nonsecure: 'http://shortname.convio.net/site/', 
     secure: 'https://secure2.convio.net/shortname/site/'
   }
 });

@@ -18,7 +18,7 @@ Once you've completed setup, download the HTML and JavaScript files found here t
 luminateExtend({
   apiKey: '123456789', 
   path: {
-    nonsecure: 'https://shortname.convio.net/site/', 
+    nonsecure: 'http://shortname.convio.net/site/', 
     secure: 'https://secure2.convio.net/shortname/site/'
   }
 });
@@ -34,7 +34,7 @@ At the top right of each page on the example site, users are either presented wi
 You'll need to edit the login form within each HTML file to change the login form's action to use your organization's domain:
 
 ```html
-<form class="luminateApi hide" id="login-form" method="POST" action="https://shortname.convio.net/site/CRConsAPI" data-luminateApi='{"callback": "loginCallback"}'>
+<form class="luminateApi hide" id="login-form" method="POST" action="https://secure2.convio.net/shortname/site/CRConsAPI" data-luminateApi='{"callback": "loginCallback"}'>
   <input type="hidden" name="method" value="login">
   <div class="row collapse">
     <div class="small-5 columns">
@@ -224,7 +224,7 @@ Newsletter sign-up form
 To use the sign-up form, you'll first need to edit the form's action to use your organization's domain:
 
 ```html
-<form class="luminateApi survey-form" method="POST" action="https://shortname.convio.net/site/CRSurveyAPI" data-luminateApi='{"callback": "submitSurveyCallback", "requiresAuth": "true"}'>
+<form class="luminateApi survey-form" method="POST" action="https://secure2.convio.net/shortname/site/CRSurveyAPI" data-luminateApi='{"callback": "submitSurveyCallback", "requiresAuth": "true"}'>
 ```
 
 You'll also need to edit the Survey ID to use the appropriate Survey from your organization's site:
