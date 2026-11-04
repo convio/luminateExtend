@@ -1,7 +1,7 @@
 luminateExtend.js - Tests
 =========================
 
-Test suites built using [QUnit](http://qunitjs.com/).
+Test suites built using [QUnit](https://qunitjs.com/).
 
 Running the tests
 -----------------
